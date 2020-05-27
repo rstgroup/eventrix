@@ -1,0 +1,11 @@
+language: node_js
+cache: false
+node_js:
+- stable
+before_install: npm install -g npm@latest && yarn cache clean
+after_success: make report-cov-coveralls
+script:
+  - npm run coverage -- --no-cache --runInBand
+
+after_script:
+  - npm run coverage:report
