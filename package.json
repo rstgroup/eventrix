@@ -1,6 +1,6 @@
 {
   "name": "eventrix",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "store based on events",
   "main": "/dist/index.js",
   "scripts": {
@@ -70,10 +70,10 @@
     "verbose": true,
     "coverageThreshold": {
       "global": {
-        "branches": 85,
-        "functions": 85,
-        "lines": 85,
-        "statements": 85
+        "branches": 50,
+        "functions": 50,
+        "lines": 50,
+        "statements": 50
       }
     },
     "collectCoverage": true
