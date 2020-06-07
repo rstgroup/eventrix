@@ -1,6 +1,6 @@
 {
   "name": "eventrix",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "store based on events",
   "main": "/dist/index.js",
   "repository": "https://github.com/mprzodala/eventrix",
