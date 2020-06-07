@@ -3,6 +3,8 @@
   "version": "1.0.1",
   "description": "store based on events",
   "main": "/dist/index.js",
+  "repository": "https://github.com/mprzodala/eventrix",
+  "homepage": "https://github.com/mprzodala/eventrix",
   "scripts": {
     "start": "webpack-dev-server --hot --progress --colors",
     "test": "jest",

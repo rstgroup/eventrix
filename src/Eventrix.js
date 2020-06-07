@@ -1,10 +1,10 @@
-import Store from './Store';
+import StateManager from './StateManager';
 import EventsEmitter from './EventsEmitter';
 
 class Eventrix {
     constructor(initialState, eventsReceivers) {
         this.eventsEmitter = new EventsEmitter();
-        this.store = new Store(this.eventsEmitter, initialState, eventsReceivers);
+        this.stateManager = new StateManager(this.eventsEmitter, initialState, eventsReceivers);
 
         this.getState = this.getState.bind(this);
         this.emit = this.emit.bind(this);
@@ -14,7 +14,7 @@ class Eventrix {
         this.removeReceiver = this.removeReceiver.bind(this);
     }
     getState(path) {
-        return this.store.getState(path);
+        return this.stateManager.getState(path);
     }
     emit(name, value) {
         this.eventsEmitter.emit(name, value);
@@ -26,10 +26,10 @@ class Eventrix {
         this.eventsEmitter.unlisten(name, listener);
     }
     useReceiver(receiver) {
-        this.store.useReceiver(receiver);
+        this.stateManager.useReceiver(receiver);
     }
     removeReceiver(receiver) {
-        this.store.removeReceiver(receiver);
+        this.stateManager.removeReceiver(receiver);
     }
 }
 

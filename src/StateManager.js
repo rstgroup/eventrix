@@ -2,7 +2,7 @@ import get from 'lodash/get';
 import set from 'lodash/set';
 import {isPromise} from "./helpers";
 
-class Store {
+class StateManager {
     constructor(eventsEmitter, initialState, eventsReceivers) {
         this.eventsEmitter = eventsEmitter;
         this.state = initialState || {};
@@ -100,7 +100,8 @@ class Store {
         if (pathElements.length === 1) {
             return;
         }
-        return pathElements.pop().join('.');
+        pathElements.pop();
+        return pathElements.join('.');
     }
 
     getState(path) {
@@ -108,4 +109,4 @@ class Store {
     }
 }
 
-export default Store;
+export default StateManager;

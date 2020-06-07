@@ -13,7 +13,7 @@
 
 ### Features
 
-- Store
+- StateManager
     - listen on set new state
     - emit events after change state
 - EventsEmitter
