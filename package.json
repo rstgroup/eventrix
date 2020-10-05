@@ -11,7 +11,6 @@
     "test:watch": "jest --watch",
     "build": "webpack -p --config webpack-prod.config.js",
     "build:demo": "webpack -p --config webpack.config.js",
-    "prepublish": "npm run lint && npm run test && npm run build",
     "coverage": "jest --coverage",
     "coverage:report": "cat ./coverage/lcov.info | coveralls",
     "lint": "eslint -c .eslintrc.json **/*.js? --ignore-path .gitignore",
@@ -29,13 +28,12 @@
   "dependencies": {
     "lodash": "^4.17.4",
     "prop-types": "^15.6.0",
-    "react": "^15.6.0 || ^16.0.0",
-    "react-dom": "^15.5.4 || ^16.0.0"
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.0",
     "@babel/core": "^7.7.0",
-    "@babel/polyfill": "^7.0.0",
     "@babel/plugin-proposal-class-properties": "^7.2.1",
     "@babel/plugin-proposal-decorators": "^7.1.2",
     "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
@@ -44,12 +42,13 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.4.3",
     "@babel/plugin-proposal-throw-expressions": "^7.0.0",
     "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.7.1",
-    "babel-loader": "^8.0.6",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.6.3",
     "@babel/traverse": "^7.7.0",
     "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.6",
     "coveralls": "^3.1.0",
     "enzyme": "^3.4.4",
     "enzyme-adapter-react-16": "^1.2.0",

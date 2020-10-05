@@ -1,6 +1,7 @@
 import get from 'lodash/get';
 import set from 'lodash/set';
-import {isPromise} from "./helpers";
+import { isPromise } from "./helpers";
+import EventsReceiver from './EventsReceiver';
 
 class StateManager {
     constructor(eventsEmitter, initialState, eventsReceivers) {
@@ -11,7 +12,11 @@ class StateManager {
         if (eventsReceivers && Array.isArray(eventsReceivers)) {
             eventsReceivers.forEach(receiver => {
                 this.useReceiver(receiver);
-            })
+            });
+            this.useReceiver(new EventsReceiver('setState', (name, data, store) => {
+                const { stateName, value } = data;
+                store.setState(stateName, value);
+            }));
         }
     }
 
@@ -89,7 +94,7 @@ class StateManager {
     emitEvents(path) {
         const pathElements = path.split('.');
         const value = this.getState(path);
-        this.eventsEmitter.emit(path, value);
+        this.eventsEmitter.emit(`setState:${path}`, value);
         if (pathElements.length > 1) {
             this.emitEvents(this.getParentPath(path));
         }

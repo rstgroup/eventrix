@@ -29,7 +29,8 @@ describe('StateManager', () => {
     it('should register initial events receivers', () => {
         expect(stateManager.receivers).toEqual({
             testEvent: eventsReceivers,
-            secondTestEvent: eventsReceivers
+            secondTestEvent: eventsReceivers,
+            setState: stateManager.receivers.setState,
         });
     });
     it('should register events receiver only one time', () => {
@@ -49,6 +50,7 @@ describe('StateManager', () => {
         expect(stateManager.receivers).toEqual({
             testEvent: [],
             secondTestEvent: [],
+            setState: stateManager.receivers.setState,
         });
     });
     it('should not unregister events receiver when event not exists', () => {
@@ -73,9 +75,9 @@ describe('StateManager', () => {
     });
     it('should emit change state event', () => {
         stateManager.setState('a.b.c', 'test');
-        expect(eventsEmitter.emit).toHaveBeenCalledWith('a.b.c', 'test');
-        expect(eventsEmitter.emit).toHaveBeenCalledWith('a.b', { c: 'test' });
-        expect(eventsEmitter.emit).toHaveBeenCalledWith('a', { b: { c: 'test' } });
+        expect(eventsEmitter.emit).toHaveBeenCalledWith('setState:a.b.c', 'test');
+        expect(eventsEmitter.emit).toHaveBeenCalledWith('setState:a.b', { c: 'test' });
+        expect(eventsEmitter.emit).toHaveBeenCalledWith('setState:a', { b: { c: 'test' } });
     });
     it('should get parent path from path', () => {
         expect(stateManager.getParentPath('a.b.c')).toEqual('a.b');

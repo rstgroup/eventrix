@@ -1,1 +1,10 @@
+export { default as Eventrix } from './Eventrix';
+export { default as EventsReceiver } from './EventsReceiver';
+export { default as EventrixContext} from './context/context';
+export { default as EventrixProvider} from './context/EventrixProvider';
+export { default as withEventrixState } from './hocs/withEventrixState';
+export { default as withEventrix } from './hocs/withEventrix';
+export { default as useEventrixState } from './hooks/useEventrixState';
+export { default as useEventrixEmit } from './hooks/useEventrixEmit';
+export { default as useEventrixEvent } from './hooks/useEventrixEvent';
 export { default } from './Eventrix';
