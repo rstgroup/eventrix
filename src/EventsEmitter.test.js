@@ -100,6 +100,29 @@ describe('EventsEmitter', () => {
             expect(mockListener).toBeCalledWith(data, ['test']);
         });
 
+        it('should call all matched events listeners with data', () => {
+            const store = {
+                runReceivers: () => ['test'],
+            };
+            eventsEmitter.useStore(store);
+            const fooMockListener = jest.fn();
+            const fooBarMockListener = jest.fn();
+            const fooBarFooMockListener = jest.fn();
+            eventsEmitter.listen('foo', fooMockListener);
+            eventsEmitter.listen('foo.bar', fooBarMockListener);
+            eventsEmitter.listen('foo.bar.foo', fooBarFooMockListener);
+            const data = {
+                bar: {
+                    foo: 'test',
+                }
+            };
+            eventsEmitter.emit('foo*', data);
+            expect(mockListener).not.toBeCalled();
+            expect(fooMockListener).toBeCalledWith(data, ['test']);
+            expect(fooBarMockListener).toBeCalledWith(data.bar, ['test']);
+            expect(fooBarFooMockListener).toBeCalledWith(data.bar.foo, ['test']);
+        });
+
         it('should wait for events receivers handler and call all events listeners with data', () => {
             const store = {
                 runReceivers: () => Promise.resolve(['testResponse']),

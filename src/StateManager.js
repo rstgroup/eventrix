@@ -13,11 +13,11 @@ class StateManager {
             eventsReceivers.forEach(receiver => {
                 this.useReceiver(receiver);
             });
-            this.useReceiver(new EventsReceiver('setState', (name, data, store) => {
-                const { stateName, value } = data;
-                store.setState(stateName, value);
-            }));
         }
+        this.useReceiver(new EventsReceiver('setState', (name, data, store) => {
+            const { stateName, value } = data;
+            store.setState(stateName, value);
+        }));
     }
 
     useReceiver(receiver) {
@@ -88,15 +88,18 @@ class StateManager {
 
     setState(path, value) {
         set(this.state, path, value);
-        this.emitEvents(path);
+        this.emitEvents(path, true);
     }
 
-    emitEvents(path) {
+    emitEvents(path, isFullPath) {
         const pathElements = path.split('.');
         const value = this.getState(path);
         this.eventsEmitter.emit(`setState:${path}`, value);
         if (pathElements.length > 1) {
             this.emitEvents(this.getParentPath(path));
+        }
+        if (isFullPath) {
+            this.eventsEmitter.emit(`setState:${path}*`, value);
         }
     }
 

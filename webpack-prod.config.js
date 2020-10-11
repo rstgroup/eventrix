@@ -1,9 +1,8 @@
-const path = require('path');
-const pkg = require('./package.json');
+const package = require('./package.json');
 
 const externals = new Set([
-    ...Object.keys(pkg.dependencies || {}),
-    ...Object.keys(pkg.peerDependencies || {}),
+    ...Object.keys(package.dependencies || {}),
+    ...Object.keys(package.peerDependencies || {}),
 ]);
 
 const config = {
@@ -11,7 +10,7 @@ const config = {
         index: './src/index.js',
     },
     output: {
-        path: path.join(__dirname, '/dist'),
+        path: __dirname,
         filename: '[name].js',
         libraryTarget: 'umd',
     },

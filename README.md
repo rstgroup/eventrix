@@ -112,7 +112,7 @@ import React from 'react';
 import { useEventrixEvent, useEventrixEmit } from 'eventrix';
 
 const UndoDeleteUserButton = () => {
-    const eventData = useEventrixEvent('removeUser');
+    const [eventData, setEventData] = useEventrixEvent('removeUser');
     const emit = useEventrixEmit();
     return (
         <button onClick={() => emit('addUser', eventData)}>
@@ -131,9 +131,7 @@ $ npm install eventrix --save
 ### How to use
 
 ```js
-
-//example code
-
+https://codesandbox.io/s/eventrix-example-wepzu
 ```
 
 ### Default events

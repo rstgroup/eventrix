@@ -1,3 +1,4 @@
+import get from 'lodash/get';
 import { isPromise } from './helpers';
 
 class EventsEmitter {
@@ -41,16 +42,35 @@ class EventsEmitter {
         this.listeners[name].splice(index, 1);
     }
 
+    getEventData(name, eventName, data) {
+        const path = eventName.slice(name.length, eventName.length);
+        return path ? get(data, path) : data;
+    }
+
+    runMatchedListeners(name, data, receiversData) {
+        if (name.indexOf('*') === name.length - 1) {
+            const eventNameToMatch = name.slice(0, -1);
+            const listenEvents = Object.keys(this.listeners);
+            const matchedEvents = listenEvents.filter((eventName) => eventName.indexOf(eventNameToMatch) === 0);
+            return matchedEvents.forEach(eventName => {
+                if(this.listeners[eventName] && Array.isArray(this.listeners[eventName])) {
+                    this.listeners[eventName].forEach(listener => listener(this.getEventData(name, eventName, data), receiversData));
+                }
+            });
+        }
+        if (this.listeners[name] && Array.isArray(this.listeners[name])) {
+            this.listeners[name].forEach(listener => listener(data, receiversData));
+        }
+    }
+
     emit(name, data) {
         const receiversResponse = this.store.runReceivers(name, data);
-        if (this.listeners[name] && Array.isArray(this.listeners[name])) {
-            if (isPromise(receiversResponse)) {
-                return receiversResponse.then(receiversData => {
-                    this.listeners[name].forEach(listener => listener(data, receiversData));
-                })
-            }
-            this.listeners[name].forEach(listener => listener(data, receiversResponse));
+        if (isPromise(receiversResponse)) {
+            return receiversResponse.then(receiversData => {
+                this.runMatchedListeners(name, data, receiversData);
+            })
         }
+        this.runMatchedListeners(name, data, receiversResponse);
     }
 }
 

@@ -7,17 +7,17 @@ import { EventrixContext } from '../context';
 
 function useEventrixEvent(eventName, Context = EventrixContext) {
     const { eventrix } = useContext(Context);
-    const [eventData, setState] = useState();
+    const [eventData, setEventData] = useState();
     useEffect(() => {
         function listener(data) {
-            setState(data);
+            setEventData(data);
         }
         eventrix.listen(eventName, listener);
         return () => {
             eventrix.unlisten(eventName, listener);
         };
     });
-    return eventData;
+    return [eventData, setEventData];
 }
 
 export default useEventrixEvent;
