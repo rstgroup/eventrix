@@ -99,7 +99,7 @@ class StateManager {
             this.emitEvents(this.getParentPath(path));
         }
         if (isFullPath) {
-            this.eventsEmitter.emit(`setState:${path}*`, value);
+            this.eventsEmitter.emit(`setState:${path}.*`, value);
         }
     }
 
