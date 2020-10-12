@@ -27,7 +27,13 @@ const withEventrixState = (BaseComponent, stateNames, mapStateToProps, Context =
             });
         }
         onStateUpdate(stateName, state) {
-            this.setState({ [stateName]: state });
+            if (Array.isArray(state)) {
+                return this.setState({ [stateName]: [...state] });
+            }
+            if (typeof state === 'object' && state !== null) {
+                return this.setState({ [stateName]: { ...state } });
+            }
+            return this.setState({ [stateName]: state });
         }
         getStateNames() {
             if (typeof stateNames === 'function') {

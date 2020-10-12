@@ -1,11 +1,7 @@
 .idea/
 node_modules/
 coverage/
-/Bootstrap.js
-/AutocompleteField.js
-/FormController.js
+/index.js
 /dist
-Separate.js
-main.js
 package-lock.json
 yarn.lock

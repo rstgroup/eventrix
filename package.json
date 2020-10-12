@@ -2,7 +2,7 @@
   "name": "eventrix",
   "version": "1.1.2",
   "description": "store based on events",
-  "main": "/dist/index.js",
+  "main": "index.js",
   "repository": "https://github.com/mprzodala/eventrix",
   "homepage": "https://github.com/mprzodala/eventrix",
   "scripts": {

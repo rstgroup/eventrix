@@ -10,7 +10,13 @@ function useEventrixState(stateName, Context = EventrixContext) {
     const [state, setState] = useState(eventrix.getState(stateName));
     useEffect(() => {
         function onSetEventrixState(value) {
-            setState(value);
+            if (Array.isArray(value)) {
+                return setState([...value]);
+            }
+            if (typeof value === 'object' && value !== null) {
+                return setState({ ...value });
+            }
+            return setState(value);
         }
         eventrix.listen(`setState:${stateName}`, onSetEventrixState);
         onSetEventrixState(eventrix.getState(stateName));
