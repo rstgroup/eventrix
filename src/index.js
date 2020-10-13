@@ -6,5 +6,8 @@ export { default as withEventrixState } from './hocs/withEventrixState';
 export { default as withEventrix } from './hocs/withEventrix';
 export { default as useEventrixState } from './hooks/useEventrixState';
 export { default as useEventrixEmit } from './hooks/useEventrixEmit';
+export { default as useEmit } from './hooks/useEmit';
 export { default as useEventrixEvent } from './hooks/useEventrixEvent';
+export { default as useEvent } from './hooks/useEvent';
+export { default as useEventState } from './hooks/useEventState';
 export { default } from './Eventrix';
