@@ -5,20 +5,19 @@ import {
 } from 'react';
 import { EventrixContext } from '../context';
 
-function useEventrixEvent(eventName, Context = EventrixContext) {
-    console.warn('useEventrixEvent is deprecated please use useEventState');
+function useEventState(eventName, Context = EventrixContext) {
     const { eventrix } = useContext(Context);
-    const [eventData, setEventData] = useState();
+    const [eventState, setEventState] = useState();
     useEffect(() => {
         function listener(data) {
-            setEventData(data);
+            setEventState(data);
         }
         eventrix.listen(eventName, listener);
         return () => {
             eventrix.unlisten(eventName, listener);
         };
     });
-    return [eventData, setEventData];
+    return [eventState, setEventState];
 }
 
-export default useEventrixEvent;
+export default useEventState;

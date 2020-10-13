@@ -6,9 +6,10 @@
 
 1. [Features](#features)
 1. [Installation](#installation)
+1. [Eventrix](#eventrix)
 1. [React HOCs](#react-hocs)
 1. [React HOOKS](#react-hooks)
-1. [How to use](#how-to-use)
+1. [Examples](#examples)
 1. [Contribute](#contribute)
 1. [License](#license)
 
@@ -23,10 +24,55 @@
 - EventsReceiver
     - parse data from events to store
 
+### Installation
+
+```bash
+$ npm install eventrix --save
+```
+
+### Eventrix
+
+| Method | attributes | description |
+|---|---|---|
+| constructor | initialState: `any`, eventsReceivers: `EventReceiver[]` | Eventrix class constructor |
+| listen | eventName: `string`, listener(eventData, receiversData): void | Subscribe on event emitted |
+| unlisten | eventName: `string`, listener(eventData, receiversData): void | Unsubscribe on event |
+| emit | eventName: `string`, data: `any` | Emit event for eventrix instance it will run listeners and events receivers |
+| getState | path: `string` | Get eventrix state |
+| useReceiver | receiver: `EventsReceiver` | Register events receiver in eventrix instance it will be used on events emitted |
+| removeReceiver | receiver: `EventsReceiver` | Unregister events receiver from eventrix instance |
+
+##### Basic example
+
+```js
+import { Eventrix, EventsReceiver } from 'eventrix'
+
+const usersEventsReceiver = new EventsReceiver(
+    'createUserEventName',
+    (eventName, eventData, stateManager) => {
+        const user = eventData.user;
+        const users = stateManager.getState('usersList');
+        stateManager.setState('usersList', [user, ...users]);
+    }
+);
+
+const initialState = {
+    usersList: [],
+}
+
+const eventsReceivers = [
+    usersEventsReceiver,
+];
+
+const eventrix = new Eventrix(initialState, eventsReceivers);
+
+export default eventrix;
+```
+
 ### React HOCs
 
-- withEventrix
-    - pass eventrix to props
+##### withEventrix
+pass eventrix instance from context to props
     
 ```jsx
 import React from 'react';
@@ -47,8 +93,8 @@ class UsersList extends React.Component {
 export default withEventrix(UsersList);
 ```
 
-- withEventrixState
-    - rerender component on state manager state change
+##### withEventrixState
+rerender component on eventrix state change
 
 ```jsx
 import React from 'react';
@@ -70,8 +116,8 @@ export default withEventrixState(UsersList, ['users']);
     
 ### React HOOKS
 
-- useEventrixState
-    - return eventrix state form state and setState method
+##### useEventrixState
+return eventrix state and setState method
 
 ```jsx
 import React from 'react';
@@ -87,15 +133,15 @@ const UsersList = () => {
 }
 ```
 
-- useEventrixEmit
-    - return eventrix emit method
+##### useEmit
+return eventrix emit method
 
 ```jsx
 import React from 'react';
-import { useEventrixEmit } from 'eventrix';
+import { useEmit } from 'eventrix';
 
 const RemoveUserButton = ({ user }) => {
-    const emit = useEventrixEmit();
+    const emit = useEmit();
     return (
         <button onClick={() => emit('removeUser', user)}>
             Remove user
@@ -104,35 +150,55 @@ const RemoveUserButton = ({ user }) => {
 }
 ```
 
-- useEventrixEvent
-    - rerender component on emit event and return event data
+##### useEvent
+save emitted event data in state and return state;
 
 ```jsx
-import React from 'react';
-import { useEventrixEvent, useEventrixEmit } from 'eventrix';
+import React, { useState } from 'react';
+import { useEvent, useEmit } from 'eventrix';
 
 const UndoDeleteUserButton = () => {
-    const [eventData, setEventData] = useEventrixEvent('removeUser');
-    const emit = useEventrixEmit();
+    const [removedUser, setRemovedUser] = useState();
+    const emit = useEmit();
+    useEvent('removeUser', (eventData) => {
+        const user = eventData;
+        setRemovedUser(user);
+    });
+    
+    if (!removedUser) {
+        return null;
+    }
     return (
-        <button onClick={() => emit('addUser', eventData)}>
+        <button onClick={() => emit('addUser', removedUser)}>
             Undo user delete
         </button>
     );
 }
 ```
 
-### Installation
+##### useEventState
+save emitted event data in state and return state;
 
-```bash
-$ npm install eventrix --save
+```jsx
+import React from 'react';
+import { useEventState, useEmit } from 'eventrix';
+
+const UndoDeleteUserButton = () => {
+    const [eventState, setEventState] = useEventState('removeUser');
+    const emit = useEmit();
+    return (
+        <button onClick={() => emit('addUser', eventState)}>
+            Undo user delete
+        </button>
+    );
+}
 ```
 
-### How to use
+### Examples
 
-```js
-https://codesandbox.io/s/eventrix-example-wepzu
-```
+[Todo List](https://codesandbox.io/s/eventrix-todo-example-r5qeb) 
+
+[Users List](https://codesandbox.io/s/eventrix-users-example-wepzu)
 
 ### Default events
 
@@ -147,8 +213,8 @@ https://codesandbox.io/s/eventrix-example-wepzu
 - use eslint rules
 - write clean code
 - unit tests (min 85% of your code should be tested)
-- [code of conduct](https://github.com/rstgroup/eventrix/blob/master/documentation/code_of_conduct.md)
+- [code of conduct](https://github.com/mprzodala/eventrix/blob/master/docs/code_of_conduct.md)
 
 ### License
 
-eventrix package are [MIT licensed](https://github.com/rstgroup/eventrix/blob/master/LICENSE)
+eventrix package are [MIT licensed](https://github.com/mprzodala/eventrix/blob/master/LICENSE)
