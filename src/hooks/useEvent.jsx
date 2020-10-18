@@ -11,7 +11,7 @@ function useEvent(eventName, callback, Context = EventrixContext) {
         return () => {
             eventrix.unlisten(eventName, callback);
         };
-    });
+    }, [eventName, callback]);
 }
 
 export default useEvent;

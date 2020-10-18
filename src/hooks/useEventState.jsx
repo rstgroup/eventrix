@@ -16,7 +16,7 @@ function useEventState(eventName, Context = EventrixContext) {
         return () => {
             eventrix.unlisten(eventName, listener);
         };
-    });
+    }, [eventName]);
     return [eventState, setEventState];
 }
 

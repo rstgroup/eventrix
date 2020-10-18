@@ -19,7 +19,9 @@ function useEventrixState(stateName, Context = EventrixContext) {
             return setState(value);
         }
         eventrix.listen(`setState:${stateName}`, onSetEventrixState);
-        onSetEventrixState(eventrix.getState(stateName));
+        if (state === undefined) {
+            onSetEventrixState(eventrix.getState(stateName));
+        }
         return () => {
             eventrix.unlisten(`setState:${stateName}`, onSetEventrixState);
         };
