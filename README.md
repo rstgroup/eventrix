@@ -11,6 +11,7 @@
 1. [React HOCs](#react-hocs)
 1. [React HOOKS](#react-hooks)
 1. [Examples](#examples)
+1. [Redux adapter](https://github.com/mprzodala/eventrix/blob/master/docs/reduxAdapter.md)
 1. [Contribute](#contribute)
 1. [License](#license)
 
