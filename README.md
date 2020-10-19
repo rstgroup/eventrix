@@ -77,7 +77,7 @@ pass eventrix instance from context to props
     
 ```jsx
 import React from 'react';
-import { withEventrix } from 'eventrix';
+import { withEventrix } from 'eventrix/react';
 
 class UsersList extends React.Component {
     render() {
@@ -99,7 +99,7 @@ rerender component on eventrix state change
 
 ```jsx
 import React from 'react';
-import { withEventrixState } from 'eventrix';
+import { withEventrixState } from 'eventrix/react';
 
 class UsersList extends React.Component {
     render() {
@@ -122,7 +122,7 @@ return eventrix state and setState method
 
 ```jsx
 import React from 'react';
-import { useEventrixState } from 'eventrix';
+import { useEventrixState } from 'eventrix/react';
 
 const UsersList = () => {
     const [users, setUsers] = useEventrixState('users');
@@ -139,7 +139,7 @@ return eventrix emit method
 
 ```jsx
 import React from 'react';
-import { useEmit } from 'eventrix';
+import { useEmit } from 'eventrix/react';
 
 const RemoveUserButton = ({ user }) => {
     const emit = useEmit();
@@ -156,7 +156,7 @@ save emitted event data in state and return state;
 
 ```jsx
 import React, { useState } from 'react';
-import { useEvent, useEmit } from 'eventrix';
+import { useEvent, useEmit } from 'eventrix/react';
 
 const UndoDeleteUserButton = () => {
     const [removedUser, setRemovedUser] = useState();
@@ -182,7 +182,7 @@ save emitted event data in state and return state;
 
 ```jsx
 import React from 'react';
-import { useEventState, useEmit } from 'eventrix';
+import { useEventState, useEmit } from 'eventrix/react';
 
 const UndoDeleteUserButton = () => {
     const [eventState, setEventState] = useEventState('removeUser');

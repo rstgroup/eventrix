@@ -9,6 +9,7 @@ const config = {
     entry: {
         index: './src/index.js',
         'redux-adapter/index': './src/redux/index.js',
+        'react/index': './src/react/index.js',
     },
     output: {
         path: __dirname,
