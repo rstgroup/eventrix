@@ -6,3 +6,4 @@ export { default as useEventrixState } from './hooks/useEventrixState';
 export { default as useEmit } from './hooks/useEmit';
 export { default as useEvent } from './hooks/useEvent';
 export { default as useEventState } from './hooks/useEventState';
+export { default as useFetchToState } from './hooks/useFetchToState';

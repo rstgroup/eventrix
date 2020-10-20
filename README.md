@@ -71,6 +71,29 @@ const eventrix = new Eventrix(initialState, eventsReceivers);
 export default eventrix;
 ```
 
+##### fetchToStateReceiver
+
+| Attribute name | Type | description |
+|---|---|---|
+| eventName | `string` | EventsReceiver event name |
+| statePath | `string`,`function(eventData: any, nextState: any): string` | State name or path to state that will be replaced by fetch method response |
+| fetchMethod | `function(eventData: any, state: any): Promise` | Fetch method. Method will be called when eventName emitted and must return Promise |
+
+
+```js
+import { fetchToStateReceiver } from 'eventrix';
+import axios from 'axios';
+
+const removeUser = (eventData, state) => {
+    return axios.delete(`http://somedomain.com/users/${eventData.id}`).then(() => {
+        return state.users.filter(item => item.id !== eventData.id);
+    });
+}
+const receiver = fetchToStateReceiver('users:remove', 'users', removeUser);
+
+export default receiver;
+```
+
 ### React HOCs
 
 ##### withEventrix
@@ -196,6 +219,30 @@ const UndoDeleteUserButton = () => {
 }
 ```
 
+##### useFetchToState
+fetch data and put it to state
+
+```jsx
+import React from 'react';
+import axios from 'axios';
+import { useFetchToState } from 'eventrix/react';
+
+const removeUserFetch = (userData, state) => {
+    return axios.delete(`http://somedomain.com/users/${userData.id}`).then(() => {
+        return state.users.filter(item => item.id !== userData.id);
+    });
+}
+
+const DeleteUserButton = ({ user }) => {
+    const [emitFetch] = useFetchToState('users:remove', 'users', removeUserFetch);
+    return (
+        <button onClick={() => emitFetch(user)}>
+            Remove user
+        </button>
+    );
+}
+```
+
 ### Examples
 
 [Todo List](https://codesandbox.io/s/eventrix-todo-example-r5qeb) 
@@ -206,8 +253,7 @@ const UndoDeleteUserButton = () => {
 
 | Name | Description | Example | Event data |
 |---|---|---|---|
-| `setState:statePath` | state change event | `setState:users` | state: any |
-
+| `setState:statePath` | state changed event | `setState:users` | state: any |
 
 
 ### Contribute
