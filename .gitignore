@@ -4,5 +4,6 @@ coverage/
 /index.js
 /dist
 /redux-adapter
+/react
 package-lock.json
 yarn.lock
