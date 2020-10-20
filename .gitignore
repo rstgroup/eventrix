@@ -3,5 +3,6 @@ node_modules/
 coverage/
 /index.js
 /dist
+/redux-adapter
 package-lock.json
 yarn.lock

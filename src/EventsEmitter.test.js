@@ -116,11 +116,11 @@ describe('EventsEmitter', () => {
                     foo: 'test',
                 }
             };
-            eventsEmitter.emit('foo*', data);
+            eventsEmitter.emitWild('foo', data);
             expect(mockListener).not.toBeCalled();
-            expect(fooMockListener).toBeCalledWith(data, ['test']);
-            expect(fooBarMockListener).toBeCalledWith(data.bar, ['test']);
-            expect(fooBarFooMockListener).toBeCalledWith(data.bar.foo, ['test']);
+            expect(fooMockListener).toBeCalledWith(data, []);
+            expect(fooBarMockListener).toBeCalledWith(data.bar, []);
+            expect(fooBarFooMockListener).toBeCalledWith(data.bar.foo, []);
         });
 
         it('should wait for events receivers handler and call all events listeners with data', () => {

@@ -17,6 +17,7 @@ describe('StateManager', () => {
             unlisten: jest.fn(),
             useStore: jest.fn(),
             emit: jest.fn(),
+            emitWild: jest.fn(),
         };
         eventsReceiver = jest.fn(() => ({ testData: {} }));
         eventsReceivers = [new EventsReceiver(['testEvent', 'secondTestEvent'], eventsReceiver)];
@@ -25,6 +26,11 @@ describe('StateManager', () => {
 
     it('should set initial state', () => {
         expect(stateManager.state).toEqual(initialState);
+    });
+    it('should replace old state when path is empty', () => {
+        const newState = { a: { b: 'c' } };
+        stateManager.setState('', newState);
+        expect(stateManager.state).toEqual(newState);
     });
     it('should register initial events receivers', () => {
         expect(stateManager.receivers).toEqual({
@@ -78,7 +84,7 @@ describe('StateManager', () => {
         expect(eventsEmitter.emit).toHaveBeenCalledWith('setState:a.b.c', 'test');
         expect(eventsEmitter.emit).toHaveBeenCalledWith('setState:a.b', { c: 'test' });
         expect(eventsEmitter.emit).toHaveBeenCalledWith('setState:a', { b: { c: 'test' } });
-        expect(eventsEmitter.emit).toHaveBeenCalledWith('setState:a.b.c.*', 'test');
+        expect(eventsEmitter.emitWild).toHaveBeenCalledWith('setState:a.b.c.', 'test');
     });
     it('should get parent path from path', () => {
         expect(stateManager.getParentPath('a.b.c')).toEqual('a.b');

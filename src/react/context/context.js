@@ -1,5 +1,5 @@
 import React from 'react';
-import Eventrix from '../Eventrix';
+import Eventrix from '../../Eventrix';
 
 const EventrixContext = React.createContext({
     eventrix: new Eventrix({}),

@@ -43,34 +43,38 @@ class EventsEmitter {
     }
 
     getEventData(name, eventName, data) {
+        if (name === eventName) {
+            return data;
+        }
         const path = eventName.slice(name.length, eventName.length);
-        return path ? get(data, path) : data;
+        const hasDotAsFirstChar = path.indexOf('.') === 0;
+        return path ? get(data, hasDotAsFirstChar ? path.slice(1, path.length) : path) : data;
     }
 
-    runMatchedListeners(name, data, receiversData) {
-        if (name.indexOf('*') === name.length - 1) {
-            const eventNameToMatch = name.slice(0, -1);
-            const listenEvents = Object.keys(this.listeners);
-            const matchedEvents = listenEvents.filter((eventName) => eventName.indexOf(eventNameToMatch) === 0);
-            return matchedEvents.forEach(eventName => {
-                if(this.listeners[eventName] && Array.isArray(this.listeners[eventName])) {
-                    this.listeners[eventName].forEach(listener => listener(this.getEventData(name, eventName, data), receiversData));
-                }
-            });
-        }
+    runListeners(name, data, receiversData) {
         if (this.listeners[name] && Array.isArray(this.listeners[name])) {
             this.listeners[name].forEach(listener => listener(data, receiversData));
         }
+    }
+
+    emitWild(name, data) {
+        const listenEvents = Object.keys(this.listeners);
+        const matchedEvents = listenEvents.filter((eventName) => eventName.indexOf(name) === 0);
+        return matchedEvents.forEach(eventName => {
+            if(this.listeners[eventName] && Array.isArray(this.listeners[eventName])) {
+                this.listeners[eventName].forEach(listener => listener(this.getEventData(name, eventName, data), []));
+            }
+        });
     }
 
     emit(name, data) {
         const receiversResponse = this.store.runReceivers(name, data);
         if (isPromise(receiversResponse)) {
             return receiversResponse.then(receiversData => {
-                this.runMatchedListeners(name, data, receiversData);
+                this.runListeners(name, data, receiversData);
             })
         }
-        this.runMatchedListeners(name, data, receiversResponse);
+        this.runListeners(name, data, receiversResponse);
     }
 }
 

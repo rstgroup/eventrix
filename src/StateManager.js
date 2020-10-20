@@ -87,8 +87,12 @@ class StateManager {
     }
 
     setState(path, value) {
-        set(this.state, path, value);
-        this.emitEvents(path, true);
+        if (path) {
+            set(this.state, path, value);
+            this.emitEvents(path, true);
+            return;
+        }
+        this.state = value;
     }
 
     emitEvents(path, isFullPath) {
@@ -99,7 +103,8 @@ class StateManager {
             this.emitEvents(this.getParentPath(path));
         }
         if (isFullPath) {
-            this.eventsEmitter.emit(`setState:${path}.*`, value);
+            this.eventsEmitter.emit('setState:*', this.getState());
+            this.eventsEmitter.emitWild(`setState:${path}.`, value);
         }
     }
 
@@ -113,6 +118,9 @@ class StateManager {
     }
 
     getState(path) {
+        if (!path) {
+            return this.state;
+        }
         return get(this.state, path);
     }
 }
