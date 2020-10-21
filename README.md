@@ -1,4 +1,4 @@
-![Eventrix](assets/logo-md.png)
+![Eventrix](logo-md.png)
 
 [![Build Status](https://travis-ci.org/mprzodala/eventrix.svg?branch=master)](https://travis-ci.org/mprzodala/eventrix)
 [![Coverage Status](https://coveralls.io/repos/github/mprzodala/eventrix/badge.svg?branch=master)](https://coveralls.io/github/mprzodala/eventrix?branch=master)
@@ -7,6 +7,7 @@
 
 1. [Features](#features)
 1. [Installation](#installation)
+1. [Getting started](/eventrix/getting-started)
 1. [Eventrix](#eventrix)
 1. [React HOCs](#react-hocs)
 1. [React HOOKS](#react-hooks)
@@ -31,6 +32,11 @@
 ```bash
 $ npm install eventrix --save
 ```
+
+### Getting started
+
+
+[How to use eventrix step by step](https://mprzodala.github.io/eventrix/getting-started)
 
 ### Eventrix
 
