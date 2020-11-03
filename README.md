@@ -43,8 +43,8 @@ $ npm install eventrix --save
 | Method | attributes | description |
 |---|---|---|
 | constructor | initialState: `any`, eventsReceivers: `EventReceiver[]` | Eventrix class constructor |
-| listen | eventName: `string`, listener(eventData, receiversData): void | Subscribe on event emitted |
-| unlisten | eventName: `string`, listener(eventData, receiversData): void | Unsubscribe on event |
+| listen | eventName: `string`, listener(eventData, receiversData): void | Listen on event emitted |
+| unlisten | eventName: `string`, listener(eventData, receiversData): void | Remove listener |
 | emit | eventName: `string`, data: `any` | Emit event for eventrix instance it will run listeners and events receivers |
 | getState | path: `string` | Get eventrix state |
 | useReceiver | receiver: `EventsReceiver` | Register events receiver in eventrix instance it will be used on events emitted |
