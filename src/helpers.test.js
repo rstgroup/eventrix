@@ -4,7 +4,7 @@ describe('helpers', () => {
     describe('isPromise', () => {
         it('should return true when value is promise', () => {
             const promiseResolve = Promise.resolve({});
-            const promiseReject = Promise.reject({});
+            const promiseReject = Promise.reject().catch(() => {});
             const newPromise = new Promise((resolve) => {
                 resolve();
             });
