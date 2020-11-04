@@ -4,6 +4,8 @@ import { isPromise } from './helpers';
 class EventsEmitter {
     constructor() {
         this.listeners = {};
+        this.emit = this.emit.bind(this);
+        this.emitWild = this.emitWild.bind(this);
     }
 
     useStore(store) {
