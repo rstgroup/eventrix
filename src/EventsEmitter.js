@@ -77,6 +77,7 @@ class EventsEmitter {
             })
         }
         this.runListeners(name, data, receiversResponse);
+        return Promise.resolve(receiversResponse);
     }
 }
 
