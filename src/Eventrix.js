@@ -17,7 +17,7 @@ class Eventrix {
         return this.stateManager.getState(path);
     }
     emit(name, value) {
-        this.eventsEmitter.emit(name, value);
+        return this.eventsEmitter.emit(name, value);
     }
     listen(name, listener) {
         this.eventsEmitter.listen(name, listener);

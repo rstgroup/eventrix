@@ -7,7 +7,7 @@
 
 1. [Features](#features)
 1. [Installation](#installation)
-1. [Getting started](/eventrix/getting-started)
+1. [Getting started](https://mprzodala.github.io/eventrix/getting-started)
 1. [Eventrix](#eventrix)
 1. [React HOCs](#react-hocs)
 1. [React HOOKS](#react-hooks)
@@ -43,8 +43,8 @@ $ npm install eventrix --save
 | Method | attributes | description |
 |---|---|---|
 | constructor | initialState: `any`, eventsReceivers: `EventReceiver[]` | Eventrix class constructor |
-| listen | eventName: `string`, listener(eventData, receiversData): void | Subscribe on event emitted |
-| unlisten | eventName: `string`, listener(eventData, receiversData): void | Unsubscribe on event |
+| listen | eventName: `string`, listener(eventData, receiversData): void | Listen on event emitted |
+| unlisten | eventName: `string`, listener(eventData, receiversData): void | Remove listener |
 | emit | eventName: `string`, data: `any` | Emit event for eventrix instance it will run listeners and events receivers |
 | getState | path: `string` | Get eventrix state |
 | useReceiver | receiver: `EventsReceiver` | Register events receiver in eventrix instance it will be used on events emitted |
@@ -90,12 +90,84 @@ export default eventrix;
 import { fetchToStateReceiver } from 'eventrix';
 import axios from 'axios';
 
-const removeUser = (eventData, state) => {
+const removeUser = (eventData, state, emit) => {
     return axios.delete(`http://somedomain.com/users/${eventData.id}`).then(() => {
         return state.users.filter(item => item.id !== eventData.id);
     });
 }
 const receiver = fetchToStateReceiver('users:remove', 'users', removeUser);
+
+export default receiver;
+```
+
+##### fetchHandler
+
+| Attribute name | Type | description |
+|---|---|---|
+| fetchMethod | `function(eventData: any, state: any, emit): Promise` | This function mast return promise |
+| callbackEvents | `{  success, error }` | You mast describe events emit on fetch success and fetch error |
+| callbackEvents.success | `{ eventName: string, data: any, getData: function(response, eventData): any }` | This event name with data will be emitted when fetch has no error |
+| callbackEvents.error | `{ eventName: string, data: any, getData: function(error, eventData): any }` | This event name with data will be emitted when fetch has errors |
+
+
+example with `data` attribute 
+
+```js
+import { fetchToStateReceiver, fetchHandler } from 'eventrix';
+import axios from 'axios';
+
+const removeUser = (eventData, state, emit) => {
+    return axios.delete(`http://somedomain.com/users/${eventData.id}`).then(() => {
+        return state.users.filter(item => item.id !== eventData.id);
+    });
+}
+
+const removeUserWithHandler = fetchHandler(
+    removeUser,
+    {
+        success: {
+            eventName: 'users:remove:success',
+            data: 'User was removed',
+        },
+        error: {
+            eventName: 'users:remove:failed',
+            data: 'User was not removed',
+        }
+    }
+);
+
+const receiver = fetchToStateReceiver('users:remove', 'users', removeUserWithHandler);
+
+export default receiver;
+```
+
+example with `getData` attribute 
+
+```js
+import { fetchToStateReceiver, fetchHandler } from 'eventrix';
+import axios from 'axios';
+
+const removeUser = (eventData, state, emit) => {
+    return axios.delete(`http://somedomain.com/users/${eventData.id}`).then(() => {
+        return state.users.filter(item => item.id !== eventData.id);
+    });
+}
+
+const removeUserWithHandler = fetchHandler(
+    removeUser,
+    {
+        success: {
+            eventName: 'users:remove:success',
+            getData: (response, eventData) => `User with id: ${eventData.id} was removed`,
+        },
+        error: {
+            eventName: 'users:remove:failed',
+            getData: (error, eventData) => `User with id: ${eventData.id} was not removed`,
+        }
+    }
+);
+
+const receiver = fetchToStateReceiver('users:remove', 'users', removeUserWithHandler);
 
 export default receiver;
 ```
@@ -233,7 +305,7 @@ import React from 'react';
 import axios from 'axios';
 import { useFetchToState } from 'eventrix/react';
 
-const removeUserFetch = (userData, state) => {
+const removeUserFetch = (userData, state, emit) => {
     return axios.delete(`http://somedomain.com/users/${userData.id}`).then(() => {
         return state.users.filter(item => item.id !== userData.id);
     });
