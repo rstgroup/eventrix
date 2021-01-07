@@ -45,7 +45,7 @@ export interface Eventrix {
 }
 
 export interface EventrixProviderProps {
-    eventrix: Eventrix;
+    eventrix?: Eventrix;
     children: any;
 }
 

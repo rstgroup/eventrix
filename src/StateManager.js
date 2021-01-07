@@ -1,5 +1,6 @@
 import get from 'lodash/get';
 import set from 'lodash/set';
+import unset from 'lodash/unset';
 import { isPromise } from "./helpers";
 import EventsReceiver from './EventsReceiver';
 
@@ -88,7 +89,11 @@ class StateManager {
 
     setState(path, value) {
         if (path) {
-            set(this.state, path, value);
+            if (value === undefined) {
+                unset(this.state, path);
+            } else {
+                set(this.state, path, value);
+            }
             this.emitEvents(path, true);
             return;
         }

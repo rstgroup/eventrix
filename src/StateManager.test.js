@@ -86,6 +86,14 @@ describe('StateManager', () => {
         expect(eventsEmitter.emit).toHaveBeenCalledWith('setState:a', { b: { c: 'test' } });
         expect(eventsEmitter.emitWild).toHaveBeenCalledWith('setState:a.b.c.', 'test');
     });
+    it('should unset state when setState value is undefined', () => {
+        stateManager.setState('a.b.c', 'test');
+        stateManager.setState('a.b.c');
+        expect(eventsEmitter.emit).toHaveBeenCalledWith('setState:a.b.c', undefined);
+        expect(eventsEmitter.emit).toHaveBeenCalledWith('setState:a.b', {});
+        expect(eventsEmitter.emit).toHaveBeenCalledWith('setState:a', { b: {} });
+        expect(eventsEmitter.emitWild).toHaveBeenCalledWith('setState:a.b.c.', undefined);
+    });
     it('should get parent path from path', () => {
         expect(stateManager.getParentPath('a.b.c')).toEqual('a.b');
     });
