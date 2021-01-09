@@ -1,8 +1,12 @@
-import React, { ComponentClass, ComponentType } from 'react';
+import { ComponentClass, ComponentType } from 'react';
 
 export interface StateManager {
     setState<StateValue>(path: string, value: StateValue): void;
     getState<StateValue>(path: string): StateValue;
+}
+
+export interface Emit<EventData> {
+    (name: string, data: EventData): Promise<any>;
 }
 
 export interface EventsReceiver {
@@ -13,7 +17,7 @@ export interface EventsReceiver {
 }
 
 export interface FetchMethod {
-    (eventData: any, state: any, emit: Emit): Promise<any>
+    (eventData: any, state: any, emit: Emit<any>): Promise<any>
 }
 
 export interface FetchToStateReceiver {
@@ -85,12 +89,8 @@ export interface UseEventrixState {
     (stateName: string, Context?: any): any[];
 }
 
-export interface Emit<EventData> {
-    (name: string, data: EventData): Promise<any>;
-}
-
 export interface UseEmit {
-    (stateName: string, Context?: any): Emit;
+    (stateName: string, Context?: any): Emit<any>;
 }
 
 export interface EventCallback {
