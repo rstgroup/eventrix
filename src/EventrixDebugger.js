@@ -23,7 +23,7 @@ class EventrixDebugger {
     };
 
     start() {
-        this.eventsReceiver = new EventsReceiver(undefined, this.receiver);
+        this.eventsReceiver = new EventsReceiver('*', this.receiver);
         this.stateHistory.push({
             path: 'init',
             state: {...this.eventrix.getState()}

@@ -81,6 +81,9 @@ class StateManager {
                 }
             });
         }
+        if (this.receivers['*'] && Array.isArray(this.receivers['*'])) {
+            this.receivers['*'].forEach(receiver => receiver.handleEvent(name, data, this));
+        }
         if (promisesList.length) {
             return Promise.all(promisesList).then(receiversResponse => [...receiversResponse, ...receiversData]);
         }
