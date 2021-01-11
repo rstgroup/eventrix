@@ -3,7 +3,7 @@ export { default as Eventrix } from './Eventrix';
 export { default as EventsReceiver } from './EventsReceiver';
 export { fetchToStateReceiver as fetchToStateReceiver } from './EventsReceiver';
 export { fetchHandler as fetchHandler} from './EventsReceiver';
-export { default as eventrixDebugger} from './EventrixDebugger';
+export { default as EventrixDebugger} from './EventrixDebugger';
 //context
 export { default as EventrixContext} from './react/context/context';
 export { default as EventrixProvider} from './react/context/EventrixProvider';
