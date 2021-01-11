@@ -37,7 +37,7 @@ describe('EventrixDebugger', () => {
 
     it('should register state change', () => {
         eventrix.stateManager.setState('foo', { bar: 'foo1' });
-        expect(eDebugger.stateHistory.length).toEqual(3);
+        expect(eDebugger.stateHistory.length).toEqual(2);
     });
 
     it('should reset history', () => {

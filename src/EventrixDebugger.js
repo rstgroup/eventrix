@@ -10,6 +10,9 @@ class EventrixDebugger {
     }
 
     receiver = (name, data, stateManager) => {
+        if (name === 'setState:*') {
+            return;
+        }
         const receiversCount = this.getEventsReceiversCount(name);
         const listenersCount = this.getEventListenersCount(name);
         this.eventsHistory.push({name, data, receiversCount, listenersCount});
