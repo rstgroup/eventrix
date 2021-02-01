@@ -11,6 +11,7 @@
 1. [Eventrix](#eventrix)
 1. [React HOCs](#react-hocs)
 1. [React HOOKS](#react-hooks)
+1. [Decorators](#decorators)
 1. [Examples](#examples)
 1. [Redux adapter](https://github.com/mprzodala/eventrix/blob/master/docs/reduxAdapter.md)
 1. [Contribute](#contribute)
@@ -319,6 +320,81 @@ const DeleteUserButton = ({ user }) => {
         </button>
     );
 }
+```
+
+### Decorators
+
+##### @receiver
+class method fetch data and put it to state
+
+```jsx
+import React from 'react';
+import { useEventrix, receiver } from 'eventrix/decorators';
+
+@useEventrix
+class ClientsService {
+    constructor(services) {
+        this.axios = services.axios;
+    }
+
+    @receiver(['Clients:loadList'])
+    getList(eventName, eventData, stateManager) {
+        return this.axios.get('http://someDomain.com', { params: eventData })
+            .then(({ data }) => {
+                stateManager.setState('clients', data);
+            });
+    };
+}
+
+export default ClientsService;
+```
+
+##### @fetchToState
+class method fetch data and put it to state
+
+```jsx
+import React from 'react';
+import { useEventrix, fetchToState } from 'eventrix/decorators';
+
+@useEventrix
+class ClientsService {
+    constructor(services) {
+        this.axios = services.axios;
+    }
+
+    @fetchToState('Clients:loadList', 'clients')
+    getList(params, state, emit) {
+        return this.axios.get('http://someDomain.com', { params })
+            .then(({ data }) => {
+                return data;
+            });
+    };
+}
+
+export default ClientsService;
+```
+
+##### @listener
+invoke class method when event is emitted
+
+```jsx
+import React from 'react';
+import { useEventrix, listener } from 'eventrix/decorators';
+
+@useEventrix
+class ClientsService {
+    constructor(services) {
+        this.counter = 0;
+    }
+
+    @listener('Clients:create.success')
+    createCounter(params, state, emit) {
+        this.counter ++;
+        console.log(this.counter)
+    };
+}
+
+export default ClientsService;
 ```
 
 ### Examples
