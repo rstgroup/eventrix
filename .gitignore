@@ -5,5 +5,6 @@ coverage/
 /dist
 /redux-adapter
 /react
+/decorators
 package-lock.json
 yarn.lock

@@ -10,6 +10,7 @@ const config = {
         index: './src/index.js',
         'redux-adapter/index': './src/redux/index.js',
         'react/index': './src/react/index.js',
+        'decorators/index': './src/decorators/index.js',
     },
     output: {
         path: __dirname,
