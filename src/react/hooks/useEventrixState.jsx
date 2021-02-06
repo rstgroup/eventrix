@@ -1,34 +1,37 @@
+import cloneDeep from 'lodash/cloneDeep';
 import {
     useState,
     useContext,
     useEffect,
+    useCallback,
 } from 'react';
 import { EventrixContext } from '../context';
 
 function useEventrixState(stateName, Context = EventrixContext) {
     const { eventrix } = useContext(Context);
     const [state, setState] = useState(eventrix.getState(stateName));
+
+    const onSetEventrixState = useCallback(
+        value => setState(cloneDeep(value)),
+        [setState],
+    );
+
+    const setEventrixState = useCallback(
+        (value) => { eventrix.emit('setState', { stateName, value }); },
+        [eventrix.emit, stateName],
+    );
+
     useEffect(() => {
-        function onSetEventrixState(value) {
-            if (Array.isArray(value)) {
-                return setState([...value]);
-            }
-            if (typeof value === 'object' && value !== null) {
-                return setState({ ...value });
-            }
-            return setState(value);
-        }
-        eventrix.listen(`setState:${stateName}`, onSetEventrixState);
+        const stateEventName = `setState:${stateName}`;
+        eventrix.listen(stateEventName, onSetEventrixState);
         if (state === undefined) {
             onSetEventrixState(eventrix.getState(stateName));
         }
         return () => {
-            eventrix.unlisten(`setState:${stateName}`, onSetEventrixState);
+            eventrix.unlisten(stateEventName, onSetEventrixState);
         };
     }, [stateName]);
-    const setEventrixState = (value) => {
-        eventrix.emit('setState', { stateName, value });
-    };
+
     return [state, setEventrixState];
 }
 

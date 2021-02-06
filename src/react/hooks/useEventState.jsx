@@ -2,21 +2,26 @@ import {
     useState,
     useContext,
     useEffect,
+    useCallback,
 } from 'react';
 import { EventrixContext } from '../context';
 
 function useEventState(eventName, Context = EventrixContext) {
     const { eventrix } = useContext(Context);
     const [eventState, setEventState] = useState();
+
+    const listener = useCallback(
+        data => setEventState(data),
+        [setEventState],
+    );
+
     useEffect(() => {
-        function listener(data) {
-            setEventState(data);
-        }
         eventrix.listen(eventName, listener);
         return () => {
             eventrix.unlisten(eventName, listener);
         };
-    }, [eventName]);
+    }, [eventName, listener]);
+
     return [eventState, setEventState];
 }
 

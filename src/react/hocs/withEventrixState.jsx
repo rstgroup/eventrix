@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep';
 import React, { Component } from 'react';
 import { EventrixContext } from '../context';
 
@@ -8,9 +9,9 @@ const withEventrixState = (BaseComponent, stateNames, mapStateToProps, Context =
         constructor(props, context) {
             super(props, context);
             this.listeners = {};
-            this.onStateUpdate = this.onStateUpdate.bind(this);
             this.stateNames = [];
             this.state = {};
+            this.onStateUpdate = this.onStateUpdate.bind(this);
             this.getStateNames().forEach((stateName) => {
                 this.state[stateName] = context.eventrix.getState(stateName) || '';
                 this.listeners[stateName] = state => this.onStateUpdate(stateName, state);
@@ -27,13 +28,7 @@ const withEventrixState = (BaseComponent, stateNames, mapStateToProps, Context =
             });
         }
         onStateUpdate(stateName, state) {
-            if (Array.isArray(state)) {
-                return this.setState({ [stateName]: [...state] });
-            }
-            if (typeof state === 'object' && state !== null) {
-                return this.setState({ [stateName]: { ...state } });
-            }
-            return this.setState({ [stateName]: state });
+            return this.setState({ [stateName]: cloneDeep(state) });
         }
         getStateNames() {
             if (typeof stateNames === 'function') {
