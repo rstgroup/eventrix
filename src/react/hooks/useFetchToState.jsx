@@ -9,7 +9,7 @@ import { fetchToStateReceiver } from '../../EventsReceiver';
 function useFetchToState(eventName, statePath, fetchMethod, Context = EventrixContext) {
     const { eventrix } = useContext(Context);
     const emitFetch = useCallback(
-        (data) => { eventrix.emit(eventName, data); },
+        data => eventrix.emit(eventName, data),
         [eventrix.emit, eventName],
     );
 

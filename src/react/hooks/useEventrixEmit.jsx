@@ -1,10 +1,9 @@
-import { useContext } from 'react';
 import { EventrixContext } from '../context';
+import useEmit from './useEmit';
 
 function useEventrixEmit(stateName, Context = EventrixContext) {
     console.warn('useEventrixEmit is deprecated please use useEmit');
-    const { eventrix } = useContext(Context);
-    return eventrix.emit;
+    return useEmit(stateName, Context);
 }
 
 export default useEventrixEmit;
