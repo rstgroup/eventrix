@@ -24,9 +24,7 @@ function useEventrixState(stateName, Context = EventrixContext) {
     useEffect(() => {
         const stateEventName = `setState:${stateName}`;
         eventrix.listen(stateEventName, onSetEventrixState);
-        if (state === undefined) {
-            onSetEventrixState(eventrix.getState(stateName));
-        }
+        onSetEventrixState(eventrix.getState(stateName));
         return () => {
             eventrix.unlisten(stateEventName, onSetEventrixState);
         };
