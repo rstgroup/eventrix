@@ -67,9 +67,6 @@
     "webpack-dev-server": "3.9.0"
   },
   "jest": {
-    "setupFiles": [
-      "./enzymeConfig.js"
-    ],
     "verbose": true,
     "coverageThreshold": {
       "global": {

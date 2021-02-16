@@ -388,13 +388,119 @@ class ClientsService {
     }
 
     @listener('Clients:create.success')
-    createCounter(params, state, emit) {
+    createCounter(eventData) {
         this.counter ++;
         console.log(this.counter)
     };
 }
 
 export default ClientsService;
+```
+
+### React Class Component Decorators
+
+##### @useEventrix
+use eventrix context and extend component by eventrix
+
+```jsx
+import React from 'react';
+import { useEventrix } from 'eventrix/react';
+
+@useEventrix
+class Counter extends React.Component {
+    componentDidMount() {
+        this.eventrix.emit('componentMounted');
+    }
+    render() {
+        
+        return (
+            <div>Component with eventrix</div>
+        );
+    }
+}
+
+export default Counter;
+```
+
+##### @listener
+invoke component class method when event is emitted
+
+```jsx
+import React from 'react';
+import { useEventrix, listener } from 'eventrix/react';
+
+@useEventrix
+class Counter extends React.Component {
+    constructor(...args) {
+        super(...args)
+        this.state = {
+            counter: 0;
+        };
+    }
+
+    @listener('Clients:create.success')
+    createCounter(eventData) {
+        this.setState({ counter: this.state.counter + 1 });
+    };
+    render() {
+        return (
+            <div>Created clients number: {this.state.counter}</div>
+        );
+    }
+}
+
+export default Counter;
+```
+
+##### @stateListener
+invoke component class method when eventrix state changed
+
+```jsx
+import React from 'react';
+import { useEventrix, stateListener } from 'eventrix/react';
+
+@useEventrix
+class ClientsListCounter extends React.Component {
+    constructor(...args) {
+        super(...args)
+        this.state = {
+            clientsNumber: this.eventrix.getState('clients.list').length;
+        };
+    }
+
+    @stateListener('clients.list')
+    createCounter(clientsList) {
+        this.setState({ clientsNumber: clientsList.length });
+    };
+    
+    render() {
+        return (
+            <div>Clients number: {this.state.clientsNumber}</div>
+        );
+    }
+}
+
+export default ClientsListCounter;
+```
+
+##### @eventrixState
+extend component by eventrix state and rerender on eventrix state change
+
+```jsx
+import React from 'react';
+import { useEventrix, eventrixState } from 'eventrix/react';
+
+@useEventrix
+@eventrixState('clients.list', clientsList)
+class ClientsListCounter extends React.Component { 
+    render() {
+        return (
+            <div>Clients number: {this.state.clientsList.length}</div>
+        );
+    }
+}
+
+export default ClientsListCounter;
 ```
 
 ### Examples
