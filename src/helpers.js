@@ -49,3 +49,24 @@ export const setValue = (state, path, value) => {
     return state;
 };
 
+export const unsetValue = (state, path) => {
+    const pathKeys = path.split('.');
+    const [firstKey, ...restKeys] = pathKeys;
+    const lastIndex = pathKeys.length - 1;
+    if (lastIndex === 0) {
+        delete state[path];
+        return state;
+    }
+    const firstKeyValue = state[firstKey];
+    const subPath = (restKeys.length > 1) ? restKeys.join('.') : restKeys[0];
+    if (Array.isArray(firstKeyValue)) {
+        state[firstKey] = unsetValue([...firstKeyValue], subPath);
+        return state;
+    }
+    if (isObject(firstKeyValue)) {
+        state[firstKey] = unsetValue({...firstKeyValue}, subPath);
+        return state;
+    }
+    return state;
+};
+

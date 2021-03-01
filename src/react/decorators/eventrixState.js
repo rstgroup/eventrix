@@ -1,5 +1,3 @@
-import cloneDeep from 'lodash/cloneDeep';
-
 function eventrixState(statePath, stateName) {
     return function eventrixStateDecorator(Class) {
         return class extends Class {
@@ -18,7 +16,7 @@ function eventrixState(statePath, stateName) {
                     name: listenerName
                 });
                 this[listenerName] = (newState) => {
-                    this.setState({ [stateName]: cloneDeep(newState) });
+                    this.setState({ [stateName]: newState });
                 }
             }
         }

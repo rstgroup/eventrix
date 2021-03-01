@@ -1,4 +1,3 @@
-import cloneDeep from 'lodash/cloneDeep';
 import React, { Component } from 'react';
 import { EventrixContext } from '../context';
 
@@ -28,7 +27,7 @@ const withEventrixState = (BaseComponent, stateNames, mapStateToProps, Context =
             });
         }
         onStateUpdate(stateName, state) {
-            return this.setState({ [stateName]: cloneDeep(state) });
+            return this.setState({ [stateName]: state });
         }
         getStateNames() {
             if (typeof stateNames === 'function') {
