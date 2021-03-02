@@ -7,3 +7,6 @@ export { default as useEmit } from './hooks/useEmit';
 export { default as useEvent } from './hooks/useEvent';
 export { default as useEventState } from './hooks/useEventState';
 export { default as useFetchToState } from './hooks/useFetchToState';
+export { default as useEventrix } from './decorators/useEventrix';
+export { default as listener } from './decorators/listener';
+export { default as stateListener } from './decorators/stateListener';
