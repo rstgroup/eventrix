@@ -6,6 +6,7 @@ const externals = new Set([
 ]);
 
 const config = {
+    mode: 'production',
     entry: {
         index: './src/index.js',
         'redux-adapter/index': './src/redux/index.js',

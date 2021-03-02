@@ -1,4 +1,3 @@
-import cloneDeep from 'lodash/cloneDeep';
 import {
     useState,
     useContext,
@@ -12,7 +11,7 @@ function useEventrixState(stateName, Context = EventrixContext) {
     const [state, setState] = useState(eventrix.getState(stateName));
 
     const onSetEventrixState = useCallback(
-        value => setState(cloneDeep(value)),
+        value => setState(value),
         [setState],
     );
 
