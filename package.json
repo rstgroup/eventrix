@@ -3,6 +3,7 @@
   "version": "1.10.0",
   "description": "store based on events",
   "main": "index.js",
+  "jsnext:main": "src/index.js",
   "repository": "https://github.com/mprzodala/eventrix",
   "homepage": "https://github.com/mprzodala/eventrix",
   "scripts": {
@@ -70,10 +71,10 @@
     "verbose": true,
     "coverageThreshold": {
       "global": {
-        "branches": 50,
-        "functions": 50,
-        "lines": 50,
-        "statements": 50
+        "branches": 85,
+        "functions": 85,
+        "lines": 85,
+        "statements": 85
       }
     },
     "collectCoverage": true

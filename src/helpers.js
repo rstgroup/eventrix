@@ -3,24 +3,28 @@ export const isPromise = (value) =>  (
     typeof value.then === 'function'
 );
 
-const isNumber = (value) => {
-    if (value === '' ) {
-        return false;
-    }
-    if (value === null ) {
+export const isNumber = (value) => {
+    if (
+        value === '' ||
+        value === null ||
+        value !== value ||
+        Array.isArray(value)
+    ) {
         return false;
     }
 
-    if (value !== value ) {
-        return false;
-    }
     const numberValue = Number(value);
     return numberValue === numberValue;
 };
 
-const isObject = (value) => {
+export const isObject = (value) => {
     const type = typeof value;
-    return value !== null && (type === 'object' || type === 'function');
+
+    return (
+        value !== null &&
+        !Array.isArray(value) &&
+        (type === 'object' || type === 'function')
+    );
 };
 
 export const setValue = (state, path, value) => {
