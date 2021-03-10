@@ -7,6 +7,7 @@ class EventrixDebugger {
         this.config = config;
         this.eventsHistory = [];
         this.stateHistory = [];
+        window.EVENTRIX_DEBUGGER = this;
     }
 
     receiver = (name, data, stateManager) => {
@@ -65,6 +66,18 @@ class EventrixDebugger {
         if (this.config.live) {
             console.log('%cEventrixDebugger -> setState ' + `%c"${path}" ` + `%c(receivers:${receiversCount}, listeners:${listenersCount})`, 'color:#20b189;', 'color: black;', 'color: #2096b1;', state)
         }
+    }
+
+    getState() {
+        return this.eventrix.getState();
+    }
+
+    getStateHistory() {
+        return this.stateHistory;
+    }
+
+    getEventsHistory() {
+        return this.eventsHistory;
     }
 
     printEventsHistory() {
