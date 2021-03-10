@@ -1,6 +1,6 @@
 {
   "name": "eventrix",
-  "version": "1.11.2",
+  "version": "1.11.3",
   "description": "store based on events",
   "main": "index.js",
   "jsnext:main": "src/index.js",
