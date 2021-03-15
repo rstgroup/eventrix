@@ -1,4 +1,5 @@
 const package = require('./package.json');
+const webpack = require('webpack');
 
 const externals = new Set([
     ...Object.keys(package.dependencies || {}),
@@ -39,6 +40,11 @@ const config = {
     devServer: {
         historyApiFallback: true,
     },
+    plugins: [
+        new webpack.SourceMapDevToolPlugin({
+            filename: '[name].js.map',
+        })
+    ]
 };
 
 module.exports = config;
