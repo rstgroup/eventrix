@@ -1,5 +1,4 @@
 const package = require('./package.json');
-const webpack = require('webpack');
 
 const externals = new Set([
     ...Object.keys(package.dependencies || {}),
@@ -8,6 +7,7 @@ const externals = new Set([
 
 const config = {
     mode: 'production',
+    devtool: 'source-map',
     entry: {
         index: './src/index.js',
         'redux-adapter/index': './src/redux/index.js',
@@ -17,6 +17,8 @@ const config = {
     output: {
         path: __dirname,
         filename: '[name].js',
+        sourceMapFilename: '[name].map',
+        library: 'eventrix',
         libraryTarget: 'umd',
     },
     externals(context, request, callback) {
@@ -40,11 +42,6 @@ const config = {
     devServer: {
         historyApiFallback: true,
     },
-    plugins: [
-        new webpack.SourceMapDevToolPlugin({
-            filename: '[name].js.map',
-        })
-    ]
 };
 
 module.exports = config;

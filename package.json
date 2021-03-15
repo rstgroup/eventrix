@@ -3,7 +3,6 @@
   "version": "1.11.4",
   "description": "store based on events",
   "main": "index.js",
-  "jsnext:main": "src/index.js",
   "repository": "https://github.com/mprzodala/eventrix",
   "homepage": "https://github.com/mprzodala/eventrix",
   "scripts": {
@@ -65,6 +64,7 @@
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "3.9.0"
   },
+  "typings": "./types.ts",
   "jest": {
     "verbose": true,
     "coverageThreshold": {
