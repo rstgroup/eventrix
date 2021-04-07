@@ -20,6 +20,7 @@ const withEventrixState = (BaseComponent, stateNames, mapStateToProps, Context =
             this.getStateNames().forEach((stateName) => {
                 this.context.eventrix.listen(`setState:${stateName}`, this.listeners[stateName]);
             });
+            this.refreshState();
         }
         componentWillUnmount() {
             this.getStateNames().forEach((stateName) => {
@@ -46,6 +47,20 @@ const withEventrixState = (BaseComponent, stateNames, mapStateToProps, Context =
                 return mapStateToProps(this.state, this.props);
             }
             return this.state;
+        }
+        refreshState() {
+            let shouldRefreshState = false;
+            const stateToRefresh = {};
+            this.getStateNames().forEach((stateName) => {
+                const currentState = this.context.eventrix.getState(stateName);
+                if (this.state[stateName] !== currentState) {
+                    shouldRefreshState = true;
+                    stateToRefresh[stateName] = currentState;
+                }
+            });
+            if (shouldRefreshState) {
+                this.setState(stateToRefresh);
+            }
         }
         render() {
             return <BaseComponent {...this.props} {...this.getStateForProps()} />;
