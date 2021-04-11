@@ -16,13 +16,14 @@ class EventrixDebugger {
         }
         const receiversCount = this.getEventsReceiversCount(name);
         const listenersCount = this.getEventListenersCount(name);
-        this.eventsHistory.push({name, data, receiversCount, listenersCount});
-        this.printInlineEventInfo({name, data, receiversCount, listenersCount});
+        const timestamp = new Date().getTime();
+        this.eventsHistory.push({ name, data, receiversCount, listenersCount, timestamp });
+        this.printInlineEventInfo({ name, data, receiversCount, listenersCount, timestamp });
         if (name.indexOf('setState:') === 0) {
             const [prefix, path] = name.split(':');
             const state = {...stateManager.getState()};
-            this.stateHistory.push({path, state, receiversCount, listenersCount});
-            this.printInlineStateInfo({path, state, receiversCount, listenersCount});
+            this.stateHistory.push({ path, state, receiversCount, listenersCount, timestamp });
+            this.printInlineStateInfo({ path, state, receiversCount, listenersCount, timestamp });
         }
     };
 
@@ -50,10 +51,34 @@ class EventrixDebugger {
         return Array.isArray(receiversList) ? receiversList.length : 0;
     }
 
+    getAllEventsReceiversCount() {
+        const receivers = get(this.eventrix, 'stateManager.receivers', {});
+        const eventsNames = Object.keys(receivers);
+        return eventsNames.map(eventName => {
+            const receiversList = receivers[eventName];
+            return {
+                eventName,
+                count: Array.isArray(receiversList) ? receiversList.length : 0
+            };
+        })
+    }
+
     getEventListenersCount(eventName) {
         const listeners = get(this.eventrix, 'stateManager.eventsEmitter.listeners', {});
         const listenersList = listeners[eventName];
         return Array.isArray(listenersList) ? listenersList.length : 0;
+    }
+
+    getAllEventsListenersCount() {
+        const listeners = get(this.eventrix, 'stateManager.eventsEmitter.listeners', {});
+        const eventsNames = Object.keys(listeners);
+        return eventsNames.map((eventName) => {
+            const listenersList = listeners[eventName];
+            return {
+                eventName,
+                count: Array.isArray(listenersList) ? listenersList.length : 0
+            };
+        })
     }
 
     printInlineEventInfo({name, data, receiversCount, listenersCount}) {

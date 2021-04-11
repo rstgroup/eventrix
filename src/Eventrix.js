@@ -16,8 +16,16 @@ class Eventrix {
     getState(path) {
         return this.stateManager.getState(path);
     }
+    mapEmitArguments(name, value) {
+        if (Array.isArray(name)) {
+            const [eventName, eventData] = name;
+            return { eventName, eventData };
+        }
+        return { eventName: name, eventData: value };
+    }
     emit(name, value) {
-        return this.eventsEmitter.emit(name, value);
+        const { eventName, eventData } = this.mapEmitArguments(name, value);
+        return this.eventsEmitter.emit(eventName, eventData);
     }
     listen(name, listener) {
         this.eventsEmitter.listen(name, listener);

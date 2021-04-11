@@ -14,6 +14,8 @@
 1. [Decorators](#decorators)
 1. [Examples](#examples)
 1. [Redux adapter](https://github.com/mprzodala/eventrix/blob/master/docs/reduxAdapter.md)
+1. [Devtools](https://github.com/mprzodala/eventrix-devtools)
+1. [Debugger](#debugger)
 1. [Contribute](#contribute)
 1. [License](#license)
 
@@ -248,6 +250,27 @@ const RemoveUserButton = ({ user }) => {
     const emit = useEmit();
     return (
         <button onClick={() => emit('removeUser', user)}>
+            Remove user
+        </button>
+    );
+}
+```
+
+or use emit with event factory function
+
+```jsx
+import React from 'react';
+import { useEmit } from 'eventrix/react';
+
+const removeUserEvent = (eventData) => {
+    const removeUserEventName = 'removeUser';
+    return [removeUserEventName, eventData];
+}
+
+const RemoveUserButton = ({ user }) => {
+    const emit = useEmit();
+    return (
+        <button onClick={() => { emit(removeUserEvent(user)) }>
             Remove user
         </button>
     );
@@ -515,6 +538,35 @@ export default ClientsListCounter;
 |---|---|---|---|
 | `setState:statePath` | state changed event | `setState:users` | state: any |
 
+### Debugger
+
+You can use debugger with [eventrix-devtools](https://github.com/mprzodala/eventrix-devtools) (chrome extension) or only print data in browser console. 
+
+```js
+import { Eventrix, EventrixDebugger } from 'eventrix'
+
+const eventrix = new Eventrix({});
+
+const eDebugger = new EventrixDebugger(eventrix);
+eDebugger.start();
+
+export default eventrix;
+```
+
+Now all emitted events and state changes will be saved in debugger. You can print this info in console or use [eventrix-devtools](https://github.com/mprzodala/eventrix-devtools).
+
+##### Debugger methods:
+
+- `start()` - start listen on events and state changes
+- `stop()` - stop listen on events and state changes
+- `reset()` - reset state history and events history
+- `getEventsReceiversCount(eventName)` - get count of receivers registered on event
+- `getEventListenersCount(eventName)` - get count of listeners registered on event
+- `getState()` - get eventrix current state
+- `getStateHistory()` - get state changes history
+- `getEventsHistory()` - get emitted events history
+- `printEventsHistory()` - print events history in console table
+- `printStateHistory()` - print state history in console table
 
 ### Contribute
 

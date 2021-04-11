@@ -32,6 +32,15 @@ describe('Eventrix', () => {
         eventrix.emit(eventName, 'test');
         expect(mockListener).toHaveBeenCalledWith('test', ['testReceiverData']);
     });
+    it('should map emit arguments and emit event', () => {
+        const eventName = 'getFoo';
+        const getFooEvent = (eventData) => {
+            return [eventName, eventData];
+        };
+        eventrix.listen(eventName, mockListener);
+        eventrix.emit(getFooEvent('test'));
+        expect(mockListener).toHaveBeenCalledWith('test', ['testReceiverData']);
+    });
     it('should not call event listener after unlisten', () => {
         const eventName = 'getFoo';
         eventrix.listen(eventName, mockListener);
