@@ -1,9 +1,17 @@
 import get from 'lodash/get';
 import { isPromise, setValue, unsetValue } from "./helpers";
 import EventsReceiver from './EventsReceiver';
+import {EventsEmitterI, EventsReceiverI, StateManagerI} from "./interfaces";
 
-class StateManager {
-    constructor(eventsEmitter, initialState, eventsReceivers) {
+class StateManager implements StateManagerI {
+    eventsEmitter: EventsEmitterI;
+    state: any;
+    receivers: {
+        [key: string]: EventsReceiverI[]
+    };
+    eventsEmitter: EventsEmitterI;
+
+    constructor(eventsEmitter: EventsEmitterI, initialState: any, eventsReceivers: EventsReceiverI[]) {
         this.eventsEmitter = eventsEmitter;
         this.state = initialState || {};
         this.receivers = {};
@@ -101,7 +109,7 @@ class StateManager {
         this.state = value;
     }
 
-    emitEvents(path, isFullPath) {
+    emitEvents(path: string, isFullPath?: boolean) {
         const pathElements = path.split('.');
         const value = this.getState(path);
         this.eventsEmitter.emit(`setState:${path}`, value);
@@ -114,7 +122,7 @@ class StateManager {
         }
     }
 
-    getParentPath(path) {
+    getParentPath(path: string) {
         const pathElements = path.split('.');
         if (pathElements.length === 1) {
             return;
@@ -123,7 +131,7 @@ class StateManager {
         return pathElements.join('.');
     }
 
-    getState(path) {
+    getState(path?: string) {
         if (!path) {
             return this.state;
         }

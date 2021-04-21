@@ -1,18 +1,23 @@
-class EventsReceiver {
-    constructor(eventsNames, receiver) {
+import {EmitI, EventsReceiverI, FetchMethodI, ReceiverI, StateManagerI, FetchHandlersI} from "./interfaces";
+
+class EventsReceiver implements EventsReceiverI {
+    eventsNames: string[];
+    receiver: ReceiverI;
+
+    constructor<EventData, ReceiverResponse>(eventsNames: string | string[], receiver: ReceiverI<EventData, ReceiverResponse>) {
         this.eventsNames = Array.isArray(eventsNames) ? eventsNames : [eventsNames];
         this.receiver = receiver;
     }
-    getEventsNames() {
+    getEventsNames(): string[] {
         return this.eventsNames;
     }
-    handleEvent(name, data, store) {
-        return this.receiver(name, data, store);
+    handleEvent<EventData, ReceiverResponse>(name: string, data: EventData, stateManager: StateManagerI): ReceiverResponse {
+        return this.receiver(name, data, stateManager);
     }
 }
 
-export const fetchHandler = (fetchMethod, { success, error }) => {
-    return (eventData, state, emit) =>
+export const fetchHandler = <ResponseDataI>(fetchMethod: FetchMethodI, { success, error }: FetchHandlersI<ResponseDataI>) => {
+    return (eventData: any, state: any, emit: EmitI<ResponseDataI>) =>
         fetchMethod(eventData, state, emit)
             .then((response) => {
                 const { eventName, data, getData } = success;
@@ -27,8 +32,8 @@ export const fetchHandler = (fetchMethod, { success, error }) => {
             });
 };
 
-export const fetchToStateReceiver = (eventName, statePath, fetchMethod) => {
-    return new EventsReceiver(eventName, (name, eventData, stateManager) => {
+export const fetchToStateReceiver = (eventName: string | string[], statePath: string, fetchMethod: FetchMethodI): EventsReceiverI => {
+    return new EventsReceiver(eventName, (name, eventData, stateManager: StateManagerI) => {
         const state = stateManager.getState();
         const emit = stateManager.eventsEmitter.emit;
         return fetchMethod(eventData, state, emit).then((nextState) => {

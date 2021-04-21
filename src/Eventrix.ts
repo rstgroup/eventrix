@@ -1,8 +1,18 @@
 import StateManager from './StateManager';
 import EventsEmitter from './EventsEmitter';
+import {
+    EventrixI,
+    EventsEmitterI,
+    StateManagerI,
+    EventsListenerI,
+    EventsReceiverI
+} from "./interfaces";
 
-class Eventrix {
-    constructor(initialState, eventsReceivers) {
+class Eventrix implements EventrixI{
+    eventsEmitter: EventsEmitterI;
+    stateManager: StateManagerI;
+
+    constructor<InitialStateI>(initialState?: InitialStateI, eventsReceivers?: EventsReceiverI[]) {
         this.eventsEmitter = new EventsEmitter();
         this.stateManager = new StateManager(this.eventsEmitter, initialState, eventsReceivers);
 
@@ -13,30 +23,30 @@ class Eventrix {
         this.useReceiver = this.useReceiver.bind(this);
         this.removeReceiver = this.removeReceiver.bind(this);
     }
-    getState(path) {
+    getState(path: string) {
         return this.stateManager.getState(path);
     }
-    mapEmitArguments(name, value) {
+    mapEmitArguments<EventDataI>(name: string | [string, EventDataI], value?: EventDataI) {
         if (Array.isArray(name)) {
             const [eventName, eventData] = name;
             return { eventName, eventData };
         }
         return { eventName: name, eventData: value };
     }
-    emit(name, value) {
-        const { eventName, eventData } = this.mapEmitArguments(name, value);
-        return this.eventsEmitter.emit(eventName, eventData);
+    emit<EventDataI>(name: string | [string, EventDataI] , value?: EventDataI): Promise<any> {
+        const { eventName, eventData } = this.mapEmitArguments<EventDataI>(name, value);
+        return this.eventsEmitter.emit<EventDataI>(eventName, eventData);
     }
-    listen(name, listener) {
+    listen<EventDataI>(name: string, listener: EventsListenerI<EventDataI>) {
         this.eventsEmitter.listen(name, listener);
     }
-    unlisten(name, listener) {
+    unlisten<EventDataI>(name: string, listener: EventsListenerI<EventDataI>) {
         this.eventsEmitter.unlisten(name, listener);
     }
-    useReceiver(receiver) {
+    useReceiver(receiver: EventsReceiverI) {
         this.stateManager.useReceiver(receiver);
     }
-    removeReceiver(receiver) {
+    removeReceiver(receiver: EventsReceiverI) {
         this.stateManager.removeReceiver(receiver);
     }
 }

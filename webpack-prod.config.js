@@ -7,9 +7,9 @@ const externals = new Set([
 
 const config = {
     mode: 'production',
-    devtool: 'source-map',
+    devtool: 'inline-source-map',
     entry: {
-        index: './src/index.js',
+        index: './src/index.ts',
         'redux-adapter/index': './src/redux/index.js',
         'react/index': './src/react/index.js',
         'decorators/index': './src/decorators/index.js',
@@ -28,7 +28,7 @@ const config = {
         return callback();
     },
     resolve: {
-        extensions: ['.js', '.jsx'],
+        extensions: ['.tsx', '.ts', '.js', '.jsx'],
     },
     module: {
         rules: [
@@ -36,8 +36,13 @@ const config = {
                 test: /.jsx?$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/,
-            }
-        ]
+            },
+            {
+                test: /\.tsx?$/,
+                use: 'babel-loader',
+                exclude: /node_modules/,
+            },
+        ],
     },
     devServer: {
         historyApiFallback: true,

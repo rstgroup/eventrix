@@ -3,10 +3,10 @@ import EventsReceiver from "./EventsReceiver";
 
 describe('Eventrix', () => {
     let initialState;
-    let mockListener;
+    let mockListener = () => {};
     let mockReceiver;
     let eventsReceivers;
-    let eventrix;
+    let eventrix = new Eventrix();
     beforeEach(() => {
         initialState = {
             foo: {

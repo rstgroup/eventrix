@@ -1,18 +1,24 @@
 import get from 'lodash/get';
 import { isPromise } from './helpers';
+import {EventsEmitterI, EventsListenerI, StateManagerI} from "./interfaces";
 
-class EventsEmitter {
+class EventsEmitter implements EventsEmitterI {
+    listeners: {
+        [key: string]: EventsListenerI[];
+    };
+    stateManager: StateManagerI;
+
     constructor() {
         this.listeners = {};
         this.emit = this.emit.bind(this);
         this.emitWild = this.emitWild.bind(this);
     }
 
-    useStore(store) {
-        this.store = store;
+    useStore(stateManager: StateManagerI) {
+        this.stateManager = stateManager;
     }
 
-    listen(name, listener) {
+    listen(name: string, listener: EventsListenerI) {
         if (!this.listeners[name]) {
             this.listeners[name] = [];
         }
@@ -27,7 +33,7 @@ class EventsEmitter {
         this.listeners[name].push(listener);
     }
 
-    unlisten(name, listener) {
+    unlisten(name: string, listener: EventsListenerI) {
         if (!this.listeners[name]) {
             console.warn(`EventsEmitter->unlisten - "${name}" event not registered`);
             return;
@@ -69,8 +75,8 @@ class EventsEmitter {
         });
     }
 
-    emit(name, data) {
-        const receiversResponse = this.store.runReceivers(name, data);
+    emit<EventDataI>(name: string, data: EventDataI): Promise<any> {
+        const receiversResponse = this.stateManager.runReceivers<EventDataI>(name, data);
         if (isPromise(receiversResponse)) {
             return receiversResponse.then(receiversData => {
                 this.runListeners(name, data, receiversData);
