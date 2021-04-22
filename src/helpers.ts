@@ -1,9 +1,9 @@
-export const isPromise = (value) =>  (
+export const isPromise = (value: any): boolean =>  (
     typeof value === 'object' &&
     typeof value.then === 'function'
 );
 
-export const isNumber = (value) => {
+export const isNumber = (value: any): boolean => {
     if (
         value === '' ||
         value === null ||
@@ -17,7 +17,7 @@ export const isNumber = (value) => {
     return numberValue === numberValue;
 };
 
-export const isObject = (value) => {
+export const isObject = (value: any): boolean => {
     const type = typeof value;
 
     return (
@@ -27,7 +27,7 @@ export const isObject = (value) => {
     );
 };
 
-export const setValue = (state, path, value) => {
+export const setValue = (state: any, path: string, value: any): any => {
     const pathKeys = path.split('.');
     const [firstKey, ...restKeys] = pathKeys;
     const lastIndex = pathKeys.length - 1;
@@ -53,7 +53,7 @@ export const setValue = (state, path, value) => {
     return state;
 };
 
-export const unsetValue = (state, path) => {
+export const unsetValue = (state: any, path: string): any => {
     const pathKeys = path.split('.');
     const [firstKey, ...restKeys] = pathKeys;
     const lastIndex = pathKeys.length - 1;

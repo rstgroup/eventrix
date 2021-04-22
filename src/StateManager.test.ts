@@ -2,8 +2,17 @@ import StateManager from './StateManager';
 import EventsReceiver from "./EventsReceiver";
 
 describe('StateManager', () => {
-    let stateManager;
-    let eventsEmitter;
+    let eventsEmitter = {
+        listeners: {},
+        listen: jest.fn(),
+        unlisten: jest.fn(),
+        useStore: jest.fn(),
+        emit: jest.fn(),
+        emitWild: jest.fn(),
+        getEventData: jest.fn(),
+        runListeners: jest.fn(),
+    };
+    let stateManager = new StateManager(eventsEmitter);
     let initialState;
     let eventsReceiver;
     let eventsReceivers;
@@ -13,11 +22,14 @@ describe('StateManager', () => {
             foo: 'bar'
         };
         eventsEmitter = {
+            listeners: {},
             listen: jest.fn(),
             unlisten: jest.fn(),
             useStore: jest.fn(),
             emit: jest.fn(),
             emitWild: jest.fn(),
+            getEventData: jest.fn(),
+            runListeners: jest.fn(),
         };
         eventsReceiver = jest.fn(() => ({ testData: {} }));
         eventsReceivers = [new EventsReceiver(['testEvent', 'secondTestEvent'], eventsReceiver)];
@@ -47,7 +59,7 @@ describe('StateManager', () => {
     });
     it('should not register events receiver when dont have handleEvent function', () => {
         console.warn = jest.fn();
-        stateManager.useReceiver({ getEventsNames: () => ['testEvent', 'secondTestEvent'] });
+        stateManager.useReceiver({ getEventsNames: () => ['testEvent', 'secondTestEvent'], receiver: jest.fn(), eventsNames: [] });
         expect(console.warn).toHaveBeenCalledWith(`Store->registerReceiver - "testEvent" receiver is not a function`);
         expect(console.warn).toHaveBeenCalledWith(`Store->registerReceiver - "secondTestEvent" receiver is not a function`);
     });
@@ -61,7 +73,7 @@ describe('StateManager', () => {
     });
     it('should not unregister events receiver when event not exists', () => {
         console.warn = jest.fn();
-        stateManager.removeReceiver({ getEventsNames: () => ['testEvent2'] });
+        stateManager.removeReceiver({ getEventsNames: () => ['testEvent2'], handleEvent: jest.fn(), receiver: jest.fn(), eventsNames: [] });
         expect(console.warn).toHaveBeenCalledWith(`Store->unregisterReceiver - "testEvent2" event not registered`);
     });
     it('should not unregister events receiver when event receivers are empty array', () => {
@@ -76,7 +88,7 @@ describe('StateManager', () => {
     });
     it('should not unregister events receiver when event receiver not registered', () => {
         console.warn = jest.fn();
-        stateManager.removeReceiver({ getEventsNames: () => ['testEvent'] });
+        stateManager.removeReceiver({ getEventsNames: () => ['testEvent'], handleEvent: jest.fn(), receiver: jest.fn(), eventsNames: [] });
         expect(console.warn).toHaveBeenCalledWith(`Store->unregisterReceiver - "testEvent" receiver not exists`);
     });
     it('should emit change state event for parents and children', () => {
@@ -88,7 +100,7 @@ describe('StateManager', () => {
     });
     it('should unset state when setState value is undefined', () => {
         stateManager.setState('a.b.c', 'test');
-        stateManager.setState('a.b.c');
+        stateManager.setState('a.b.c',undefined);
         expect(eventsEmitter.emit).toHaveBeenCalledWith('setState:a.b.c', undefined);
         expect(eventsEmitter.emit).toHaveBeenCalledWith('setState:a.b', {});
         expect(eventsEmitter.emit).toHaveBeenCalledWith('setState:a', { b: {} });

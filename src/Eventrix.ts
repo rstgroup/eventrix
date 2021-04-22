@@ -5,10 +5,11 @@ import {
     EventsEmitterI,
     StateManagerI,
     EventsListenerI,
-    EventsReceiverI
+    EventsReceiverI,
+    EmitArgumentsI
 } from "./interfaces";
 
-class Eventrix implements EventrixI{
+class Eventrix implements EventrixI {
     eventsEmitter: EventsEmitterI;
     stateManager: StateManagerI;
 
@@ -23,10 +24,10 @@ class Eventrix implements EventrixI{
         this.useReceiver = this.useReceiver.bind(this);
         this.removeReceiver = this.removeReceiver.bind(this);
     }
-    getState(path: string) {
+    getState<StateI>(path: string): StateI {
         return this.stateManager.getState(path);
     }
-    mapEmitArguments<EventDataI>(name: string | [string, EventDataI], value?: EventDataI) {
+    mapEmitArguments<EventDataI>(name: string | [string, EventDataI], value?: EventDataI): EmitArgumentsI<EventDataI> {
         if (Array.isArray(name)) {
             const [eventName, eventData] = name;
             return { eventName, eventData };
@@ -37,16 +38,16 @@ class Eventrix implements EventrixI{
         const { eventName, eventData } = this.mapEmitArguments<EventDataI>(name, value);
         return this.eventsEmitter.emit<EventDataI>(eventName, eventData);
     }
-    listen<EventDataI>(name: string, listener: EventsListenerI<EventDataI>) {
+    listen<EventDataI>(name: string, listener: EventsListenerI<EventDataI>): void {
         this.eventsEmitter.listen(name, listener);
     }
-    unlisten<EventDataI>(name: string, listener: EventsListenerI<EventDataI>) {
+    unlisten<EventDataI>(name: string, listener: EventsListenerI<EventDataI>): void {
         this.eventsEmitter.unlisten(name, listener);
     }
-    useReceiver(receiver: EventsReceiverI) {
+    useReceiver(receiver: EventsReceiverI): void {
         this.stateManager.useReceiver(receiver);
     }
-    removeReceiver(receiver: EventsReceiverI) {
+    removeReceiver(receiver: EventsReceiverI): void {
         this.stateManager.removeReceiver(receiver);
     }
 }

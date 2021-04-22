@@ -5,11 +5,10 @@ describe('EventsEmitter', () => {
         const eventsEmitter = new EventsEmitter();
         const mockListener = jest.fn();
         const mockListener2 = jest.fn();
-        const fakeListener = {};
 
         it('should not register listener if is not a function', () => {
             console.warn = jest.fn();
-            eventsEmitter.listen('testEvent', fakeListener);
+            eventsEmitter.listen('testEvent', {});
             expect(eventsEmitter.listeners.testEvent.length).toBe(0);
             expect(console.warn).toBeCalledWith('EventsEmitter->listen - "testEvent" listener is not a function');
         });
@@ -72,18 +71,39 @@ describe('EventsEmitter', () => {
     });
 
     describe('emit', () => {
-        let eventsEmitter;
-        let mockListener;
+        let eventsEmitter = new EventsEmitter();
+        let mockListener = jest.fn();
+        let store = {
+            state: {},
+            receivers: {},
+            setState: jest.fn(),
+            getState: jest.fn(),
+            useReceiver: jest.fn(),
+            removeReceiver: jest.fn(),
+            getEventData: jest.fn(),
+            runListeners: jest.fn(),
+            emitWild: jest.fn(),
+            runReceivers: () => ['test'],
+        };
         beforeEach(() => {
+            store = {
+                state: {},
+                receivers: {},
+                setState: jest.fn(),
+                getState: jest.fn(),
+                useReceiver: jest.fn(),
+                removeReceiver: jest.fn(),
+                getEventData: jest.fn(),
+                runListeners: jest.fn(),
+                emitWild: jest.fn(),
+                runReceivers: () => ['test'],
+            };
             eventsEmitter = new EventsEmitter();
             mockListener = jest.fn();
             eventsEmitter.listen('testEvent', mockListener);
         });
 
         it('should ignore event when dont have registered events listeners', () => {
-            const store = {
-                runReceivers: () => ['test'],
-            };
             eventsEmitter.useStore(store);
             const data = { foo: 'bar', bar: 'foo' };
             eventsEmitter.emit('fooEvent', data);
@@ -91,9 +111,6 @@ describe('EventsEmitter', () => {
         });
 
         it('should call all events listeners with data', () => {
-            const store = {
-                runReceivers: () => ['test'],
-            };
             eventsEmitter.useStore(store);
             const data = { foo: 'bar', bar: 'foo' };
             eventsEmitter.emit('testEvent', data);
@@ -101,9 +118,6 @@ describe('EventsEmitter', () => {
         });
 
         it('should call all matched events listeners with data', () => {
-            const store = {
-                runReceivers: () => ['test'],
-            };
             eventsEmitter.useStore(store);
             const fooMockListener = jest.fn();
             const fooBarMockListener = jest.fn();
@@ -124,10 +138,19 @@ describe('EventsEmitter', () => {
         });
 
         it('should wait for events receivers handler and call all events listeners with data', () => {
-            const store = {
+            const storeWithPromiseReceivers = {
+                state: {},
+                receivers: {},
+                setState: jest.fn(),
+                getState: jest.fn(),
+                useReceiver: jest.fn(),
+                removeReceiver: jest.fn(),
+                getEventData: jest.fn(),
+                runListeners: jest.fn(),
+                emitWild: jest.fn(),
                 runReceivers: () => Promise.resolve(['testResponse']),
             };
-            eventsEmitter.useStore(store);
+            eventsEmitter.useStore(storeWithPromiseReceivers);
             const data = { foo: 'bar', bar: 'foo' };
             return eventsEmitter.emit('testEvent', data).then(() => {
                 expect(mockListener).toBeCalledWith(data, ['testResponse']);

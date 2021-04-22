@@ -11,7 +11,7 @@ class StateManager implements StateManagerI {
     };
     eventsEmitter: EventsEmitterI;
 
-    constructor(eventsEmitter: EventsEmitterI, initialState: any, eventsReceivers: EventsReceiverI[]) {
+    constructor(eventsEmitter: EventsEmitterI, initialState?: any, eventsReceivers?: EventsReceiverI[]) {
         this.eventsEmitter = eventsEmitter;
         this.state = initialState || {};
         this.receivers = {};
@@ -27,21 +27,21 @@ class StateManager implements StateManagerI {
         }));
     }
 
-    useReceiver(receiver) {
+    useReceiver(receiver: EventsReceiverI): void {
         const eventsNames = receiver.getEventsNames();
         eventsNames.forEach(
             eventName => this.registerReceiver(eventName, receiver)
         );
     }
 
-    removeReceiver(receiver) {
+    removeReceiver(receiver: EventsReceiverI): void {
         const eventsNames = receiver.getEventsNames();
         eventsNames.forEach(
             eventName => this.unregisterReceiver(eventName, receiver)
         );
     }
 
-    registerReceiver(name, receiver) {
+    registerReceiver(name: string, receiver: EventsReceiverI): void {
         if (!this.receivers[name]) {
             this.receivers[name] = [];
         }
@@ -56,7 +56,7 @@ class StateManager implements StateManagerI {
         this.receivers[name].push(receiver);
     }
 
-    unregisterReceiver(name, receiver) {
+    unregisterReceiver(name: string, receiver: EventsReceiverI): void {
         if (!this.receivers[name]) {
             console.warn(`Store->unregisterReceiver - "${name}" event not registered`);
             return;
@@ -73,7 +73,7 @@ class StateManager implements StateManagerI {
         this.receivers[name].splice(index, 1);
     }
 
-    runReceivers(name, data) {
+    runReceivers<EventDataI>(name: string, data: EventDataI): Promise<any> | any {
         const promisesList = [];
         const receiversData = [];
         if (this.receivers[name] && Array.isArray(this.receivers[name])) {
@@ -96,7 +96,7 @@ class StateManager implements StateManagerI {
         return receiversData;
     }
 
-    setState(path, value) {
+    setState<StateValue>(path: string, value: StateValue): void {
         if (path) {
             if (value === undefined) {
                 unsetValue(this.state, path);
@@ -109,7 +109,7 @@ class StateManager implements StateManagerI {
         this.state = value;
     }
 
-    emitEvents(path: string, isFullPath?: boolean) {
+    emitEvents(path: string, isFullPath?: boolean): void {
         const pathElements = path.split('.');
         const value = this.getState(path);
         this.eventsEmitter.emit(`setState:${path}`, value);
@@ -122,7 +122,7 @@ class StateManager implements StateManagerI {
         }
     }
 
-    getParentPath(path: string) {
+    getParentPath(path: string): string {
         const pathElements = path.split('.');
         if (pathElements.length === 1) {
             return;
@@ -131,7 +131,7 @@ class StateManager implements StateManagerI {
         return pathElements.join('.');
     }
 
-    getState(path?: string) {
+    getState<StateValue>(path?: string): StateValue {
         if (!path) {
             return this.state;
         }

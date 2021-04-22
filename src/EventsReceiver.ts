@@ -17,7 +17,7 @@ class EventsReceiver implements EventsReceiverI {
 }
 
 export const fetchHandler = <ResponseDataI>(fetchMethod: FetchMethodI, { success, error }: FetchHandlersI<ResponseDataI>) => {
-    return (eventData: any, state: any, emit: EmitI<ResponseDataI>) =>
+    return (eventData: any, state: any, emit: EmitI<ResponseDataI>): Promise<ResponseDataI> =>
         fetchMethod(eventData, state, emit)
             .then((response) => {
                 const { eventName, data, getData } = success;

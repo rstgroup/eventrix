@@ -6,7 +6,7 @@ class EventsEmitter implements EventsEmitterI {
     listeners: {
         [key: string]: EventsListenerI[];
     };
-    stateManager: StateManagerI;
+    stateManager?: StateManagerI;
 
     constructor() {
         this.listeners = {};
@@ -14,11 +14,11 @@ class EventsEmitter implements EventsEmitterI {
         this.emitWild = this.emitWild.bind(this);
     }
 
-    useStore(stateManager: StateManagerI) {
+    useStore(stateManager: StateManagerI): void {
         this.stateManager = stateManager;
     }
 
-    listen(name: string, listener: EventsListenerI) {
+    listen(name: string, listener: EventsListenerI): void {
         if (!this.listeners[name]) {
             this.listeners[name] = [];
         }
@@ -33,7 +33,7 @@ class EventsEmitter implements EventsEmitterI {
         this.listeners[name].push(listener);
     }
 
-    unlisten(name: string, listener: EventsListenerI) {
+    unlisten(name: string, listener: EventsListenerI): void {
         if (!this.listeners[name]) {
             console.warn(`EventsEmitter->unlisten - "${name}" event not registered`);
             return;
@@ -50,7 +50,7 @@ class EventsEmitter implements EventsEmitterI {
         this.listeners[name].splice(index, 1);
     }
 
-    getEventData(name, eventName, data) {
+    getEventData<EventDataI>(name, eventName, data): EventDataI {
         if (name === eventName) {
             return data;
         }
@@ -59,13 +59,13 @@ class EventsEmitter implements EventsEmitterI {
         return path ? get(data, hasDotAsFirstChar ? path.slice(1, path.length) : path) : data;
     }
 
-    runListeners(name, data, receiversData) {
+    runListeners<EventDataI>(name: string, data: EventDataI, receiversData: any[]): void {
         if (this.listeners[name] && Array.isArray(this.listeners[name])) {
             this.listeners[name].forEach(listener => listener(data, receiversData));
         }
     }
 
-    emitWild(name, data) {
+    emitWild<EventDataI>(name: string, data: EventDataI): void {
         const listenEvents = Object.keys(this.listeners);
         const matchedEvents = listenEvents.filter((eventName) => eventName.indexOf(name) === 0);
         return matchedEvents.forEach(eventName => {

@@ -12,12 +12,11 @@ export interface EventsReceiverI {
 }
 
 export interface StateManagerI {
-    eventsEmitter: EventsEmitterI;
     state: any;
     receivers: {
         [key: string]: EventsReceiverI[]
     };
-    eventsEmitter: EventsEmitterI;
+    eventsEmitter?: EventsEmitterI;
     setState<StateValue>(path: string | undefined | null, value: StateValue): void;
     getState<StateValue>(path?: string): StateValue;
     useReceiver(receiver: EventsReceiverI): void;
@@ -61,6 +60,11 @@ export interface EventrixI {
     getState(path: string): any;
     useReceiver(eventReceiver: EventsReceiverI): void;
     removeReceiver(eventReceiver: EventsReceiverI): void;
+}
+
+export interface EmitArgumentsI<EventDataI> {
+    eventName: string;
+    eventData?: EventDataI;
 }
 
 export interface EventFactoryI<EventDataI, EventFactoryDataI> {
@@ -140,11 +144,14 @@ export interface EventsEmitterI {
     listeners: {
         [key: string]: EventsListenerI[];
     };
-    stateManager: StateManagerI;
+    stateManager?: StateManagerI;
     emit<EventDataI>(eventName: string, eventData: EventDataI): Promise<any>;
     emitWild<EventDataI>(eventName: string, eventData: EventDataI): void;
     listen(eventName: string, listener: EventsListenerI): void;
     unlisten(eventName: string, listener: EventsListenerI): void;
+    getEventData<EventDataI>(name, eventName, data): EventDataI;
+    runListeners<EventDataI>(name: string, data: EventDataI, receiversData: any[]): void;
+    emitWild<EventDataI>(name: string, data: EventDataI): void
     useStore(stateManager: StateManagerI): void;
 }
 
