@@ -1,23 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import EventrixContext from './context';
+import { EventrixI } from "../../interfaces";
 
-const EventrixProvider = ({ eventrix, children }) => {
+export interface EventrixProviderPropsI {
+    eventrix: EventrixI;
+}
+
+const EventrixProvider: React.FC<EventrixProviderPropsI> = ({ eventrix, children }) => {
     if (!eventrix) {
         return <EventrixContext.Provider>{children}</EventrixContext.Provider>;
     }
     return <EventrixContext.Provider value={{ eventrix }}>{ children }</EventrixContext.Provider>;
 };
-
-EventrixProvider.propTypes = {
-    eventrix: PropTypes.shape({}),
-    children: PropTypes.node,
-};
-
-EventrixProvider.defaultProps = {
-    eventrix: undefined,
-    children: null,
-};
-
 
 export default EventrixProvider;

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { EventrixContext } from '../context';
 
 const withEventrixState = (BaseComponent, stateNames, mapStateToProps, Context = EventrixContext) =>
-    class extends Component {
+    class WithEventrixState extends Component {
         static contextType = Context;
 
         constructor(props, context) {

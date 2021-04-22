@@ -25,13 +25,19 @@ export interface StateManagerI {
 }
 
 export interface EmitI<EventData> {
-    (name: string, data: EventData): Promise<any>;
+    (name: string, data?: EventData): Promise<any>;
 }
 
-
+export interface SetStateI<StateI> {
+    (state: StateI): void;
+}
 
 export interface FetchMethodI {
     (eventData: any, state: any, emit: EmitI<any>): Promise<any>
+}
+
+export interface EmitFetchI<EventDataI>{
+    (data: EventDataI): Promise<any>;
 }
 
 export interface FetchToStateReceiverI {

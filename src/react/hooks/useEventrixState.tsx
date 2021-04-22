@@ -5,10 +5,11 @@ import {
     useCallback,
 } from 'react';
 import { EventrixContext } from '../context';
+import { SetStateI } from "../../interfaces";
 
-function useEventrixState(stateName, Context = EventrixContext) {
+function useEventrixState<StateI>(stateName: string, Context? = EventrixContext): [StateI, SetStateI] {
     const { eventrix } = useContext(Context);
-    const [state, setState] = useState(eventrix.getState(stateName));
+    const [state, setState] = useState<StateI>(eventrix.getState<StateI>(stateName));
 
     const onSetEventrixState = useCallback(
         value => setState(value),

@@ -11,7 +11,7 @@ const config = {
     entry: {
         index: './src/index.ts',
         'redux-adapter/index': './src/redux/index.js',
-        'react/index': './src/react/index.js',
+        'react/index': './src/react/index.ts',
         'decorators/index': './src/decorators/index.js',
     },
     output: {

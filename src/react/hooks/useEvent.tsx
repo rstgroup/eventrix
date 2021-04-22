@@ -3,8 +3,9 @@ import {
     useEffect,
 } from 'react';
 import { EventrixContext } from '../context';
+import { EventsListenerI } from "../../interfaces";
 
-function useEvent(eventName, callback, Context = EventrixContext) {
+function useEvent(eventName: string, callback: EventsListenerI, Context? = EventrixContext): void {
     const { eventrix } = useContext(Context);
     useEffect(() => {
         eventrix.listen(eventName, callback);

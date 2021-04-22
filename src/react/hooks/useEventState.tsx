@@ -5,10 +5,11 @@ import {
     useCallback,
 } from 'react';
 import { EventrixContext } from '../context';
+import {SetStateI} from "../../interfaces";
 
-function useEventState(eventName, Context = EventrixContext) {
+function useEventState<EventStateI>(eventName: string, Context? = EventrixContext): [EventStateI, SetStateI] {
     const { eventrix } = useContext(Context);
-    const [eventState, setEventState] = useState();
+    const [eventState, setEventState] = useState<EventStateI>();
 
     const listener = useCallback(
         data => setEventState(data),

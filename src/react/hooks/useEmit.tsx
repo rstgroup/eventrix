@@ -1,7 +1,8 @@
 import { useContext } from 'react';
 import { EventrixContext } from '../context';
+import { EmitI } from "../../interfaces";
 
-function useEmit(stateName, Context = EventrixContext) {
+function useEmit<EventDataI>(Context? = EventrixContext): EmitI<EventDataI> {
     const { eventrix } = useContext(Context);
     return eventrix.emit;
 }
