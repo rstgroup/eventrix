@@ -1,15 +1,42 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 import { EventrixContext } from '../context';
+import {EventrixContextI, EventsListenerI} from "../../interfaces";
 
-const withEventrixState = (BaseComponent, stateNames, mapStateToProps, Context = EventrixContext) =>
-    class WithEventrixState extends Component {
+interface StateNamesMethodI {
+    (props: any): string[];
+}
+
+interface PropsI {
+    [key: string]: any;
+}
+
+interface StateI {
+    [key: string]: any;
+}
+
+interface ListenersI {
+    [key: string]: EventsListenerI;
+}
+
+interface MapStateToPropsI {
+    (state: StateI, props: PropsI): StateI;
+}
+
+const withEventrixState = <P extends PropsI>(
+    BaseComponent: React.ComponentType<P>,
+    stateNames: StateNamesMethodI | string[] | string,
+    mapStateToProps?: MapStateToPropsI,
+    Context? = EventrixContext,
+): React.ComponentType<PropsI, StateI> =>
+    class WithEventrixState extends React.Component<P, StateI> {
         static contextType = Context;
+        context: EventrixContextI;
+        state: StateI = {};
+        stateNames: string[] = [];
+        listeners: ListenersI = {};
 
-        constructor(props, context) {
+        constructor(props: PropsI, context) {
             super(props, context);
-            this.listeners = {};
-            this.stateNames = [];
-            this.state = {};
             this.onStateUpdate = this.onStateUpdate.bind(this);
             this.getStateNames().forEach((stateName) => {
                 this.state[stateName] = context.eventrix.getState(stateName) || '';
@@ -27,10 +54,10 @@ const withEventrixState = (BaseComponent, stateNames, mapStateToProps, Context =
                 this.context.eventrix.unlisten(`setState:${stateName}`, this.listeners[stateName]);
             });
         }
-        onStateUpdate(stateName, state) {
+        onStateUpdate(stateName: string, state: any) {
             return this.setState({ [stateName]: state });
         }
-        getStateNames() {
+        getStateNames(): string[] {
             if (typeof stateNames === 'function') {
                 return stateNames(this.props);
             }
@@ -42,13 +69,13 @@ const withEventrixState = (BaseComponent, stateNames, mapStateToProps, Context =
             }
             return [];
         }
-        getStateForProps() {
+        getStateForProps(): StateI {
             if (mapStateToProps && typeof mapStateToProps === 'function') {
                 return mapStateToProps(this.state, this.props);
             }
             return this.state;
         }
-        refreshState() {
+        refreshState(): void {
             let shouldRefreshState = false;
             const stateToRefresh = {};
             this.getStateNames().forEach((stateName) => {

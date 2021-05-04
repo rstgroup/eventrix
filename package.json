@@ -26,6 +26,7 @@
   "author": "Mariusz Przodała",
   "license": "MIT",
   "dependencies": {
+    "@types/react": "^17.0.4",
     "lodash": "^4.17.4",
     "prop-types": "^15.6.0",
     "react": "^16.0.0 || ^17.0.0",

@@ -173,3 +173,7 @@ export interface FetchHandlersI<DataI, ResponseI, EventDataI> {
         getData(errorResponse: ResponseI, eventData: EventDataI): DataI;
     };
 }
+
+export interface EventrixContextI {
+    eventrix: EventrixI;
+}

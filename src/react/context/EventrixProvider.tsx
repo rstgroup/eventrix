@@ -6,7 +6,7 @@ export interface EventrixProviderPropsI {
     eventrix: EventrixI;
 }
 
-const EventrixProvider: React.FC<EventrixProviderPropsI> = ({ eventrix, children }) => {
+const EventrixProvider: React.FC<EventrixProviderPropsI> = ({ eventrix, children }): JSX.Element => {
     if (!eventrix) {
         return <EventrixContext.Provider>{children}</EventrixContext.Provider>;
     }
