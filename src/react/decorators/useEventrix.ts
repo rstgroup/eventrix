@@ -1,12 +1,26 @@
+import * as React from 'react';
 import { EventrixContext } from '../context';
+import {
+    DecoratorEventrixListenerI,
+    DecoratorEventrixStateI,
+    EventrixContextI,
+    EventrixI
+} from "../../interfaces";
 
-function useEventrix(Class) {
+interface ClassComponentWithEventrixI extends React.ComponentClass {
+    context?: EventrixContextI;
+    eventrix?: EventrixI;
+    eventrixStates?: DecoratorEventrixStateI[];
+    eventrixListeners?: DecoratorEventrixListenerI[];
+}
+
+function useEventrix(Class: React.ComponentClass): ClassComponentWithEventrixI {
     const originComponentDidMount = Class.prototype.componentDidMount;
     const originComponentWillUnmount = Class.prototype.componentWillUnmount;
 
-    Class.prototype.componentDidMount = function(...args) {
+    Class.prototype.componentDidMount = function(...args): void {
         if (Array.isArray(this.eventrixListeners)) {
-            this.eventrixListeners.forEach(({ eventName, name }) => {
+            this.eventrixListeners.forEach(({ eventName, name }: DecoratorEventrixListenerI): void => {
                 this.eventrix.listen(eventName, this[name]);
             });
         }
@@ -15,9 +29,9 @@ function useEventrix(Class) {
         }
     };
 
-    Class.prototype.componentWillUnmount = function(...args) {
+    Class.prototype.componentWillUnmount = function(...args): void {
         if (Array.isArray(this.eventrixListeners)) {
-            this.eventrixListeners.forEach(({ eventName, name }) => {
+            this.eventrixListeners.forEach(({ eventName, name }: DecoratorEventrixListenerI): void => {
                 this.eventrix.unlisten(eventName, this[name]);
             });
         }
@@ -27,19 +41,23 @@ function useEventrix(Class) {
     };
     Class.contextType = EventrixContext;
     return class extends Class {
+        context: EventrixContextI;
+        eventrix: EventrixI;
+
         constructor(props, context) {
             super(props, context);
             this.eventrix = context.eventrix;
-            if (Array.isArray(this.eventrixListeners)) {
-                this.eventrixListeners.forEach(({ name }) => {
+
+            if (Array.isArray(this!.eventrixListeners)) {
+                this!.eventrixListeners.forEach(({ name }: DecoratorEventrixListenerI): void => {
                     this[name] = this[name].bind(this);
                 });
             }
-            if (Array.isArray(this.eventrixStates)) {
+            if (Array.isArray(this!.eventrixStates)) {
                 if (!this.state) {
                     this.state = {};
                 }
-                this.eventrixStates.forEach(({ statePath, stateName }) => {
+                this!.eventrixStates.forEach(({ statePath, stateName }: DecoratorEventrixStateI): void => {
                     this.state[stateName] = this.eventrix.getState(statePath);
                 });
             }

@@ -2,6 +2,11 @@ import Eventrix from '../Eventrix';
 import EventsReceiver from "../EventsReceiver";
 import combineReducers from "./combineReducers";
 import { DISPATCH_EVENT_NAME } from "./events";
+import {EventrixI, EventsListenerI, ReducersI} from "../interfaces";
+
+interface UnsubscribeI {
+    (): void;
+}
 
 const getEventsReceivers = (reducers) => {
     if (Array.isArray(reducers)) {
@@ -28,7 +33,9 @@ const getEventsReceivers = (reducers) => {
 };
 
 class ReduxAdapter {
-    constructor(reducers, initialState) {
+    eventrix: EventrixI;
+
+    constructor(reducers: ReducersI, initialState: any) {
         this.eventrix = new Eventrix(initialState, getEventsReceivers(reducers));
 
         this.dispatch = this.dispatch.bind(this);
@@ -37,25 +44,25 @@ class ReduxAdapter {
         this.unsubscribe = this.unsubscribe.bind(this);
         this.getEventrix = this.getEventrix.bind(this);
     }
-    dispatch(action) {
+    dispatch(action: any): void {
         this.eventrix.emit(DISPATCH_EVENT_NAME, action);
     }
-    getState() {
+    getState<StateI>(): StateI {
         return this.eventrix.getState();
     }
-    subscribe(listener) {
+    subscribe(listener: EventsListenerI): UnsubscribeI {
         this.eventrix.listen('setState:*', listener);
         return () => this.unsubscribe(listener);
     }
-    unsubscribe(listener) {
+    unsubscribe(listener: EventsListenerI): void {
         this.eventrix.unlisten('setState:*', listener);
     }
-    getEventrix() {
+    getEventrix(): EventrixI {
         return this.eventrix;
     }
 }
 
-const createStore = (reducers, initialState) => {
+const createStore = (reducers: ReducersI, initialState: any) => {
     return new ReduxAdapter(reducers, initialState);
 };
 

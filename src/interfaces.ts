@@ -17,8 +17,8 @@ export interface StateManagerI {
         [key: string]: EventsReceiverI[]
     };
     eventsEmitter?: EventsEmitterI;
-    setState<StateValue>(path: string | undefined | null, value: StateValue): void;
-    getState<StateValue>(path?: string): StateValue;
+    setState<StateValueI>(path: string | undefined | null, value: StateValueI): void;
+    getState<StateValueI>(path?: string): StateValueI;
     useReceiver(receiver: EventsReceiverI): void;
     removeReceiver(receiver: EventsReceiverI): void;
     runReceivers<EventDataI>(name: string, data: EventDataI);
@@ -63,7 +63,7 @@ export interface EventrixI {
     listen(name: string, listener: <EventData, ReceiversData>(eventData: EventData, receiversData: ReceiversData) => void): void;
     unlisten(name: string, listener: <EventData, ReceiversData>(eventData: EventData, receiversData: ReceiversData) => void): void;
     emit<EventData>(name: string, data: EventData): Promise<any>;
-    getState(path: string): any;
+    getState<StateI>(path?: string): StateI;
     useReceiver(eventReceiver: EventsReceiverI): void;
     removeReceiver(eventReceiver: EventsReceiverI): void;
 }
@@ -176,4 +176,29 @@ export interface FetchHandlersI<DataI, ResponseI, EventDataI> {
 
 export interface EventrixContextI {
     eventrix: EventrixI;
+}
+
+export interface DecoratorEventrixStateI {
+    statePath: string;
+    stateName: string;
+}
+
+export interface DecoratorEventrixListenerI {
+    eventName: string;
+    name: string;
+}
+
+
+// REDUX ADAPTER
+
+export interface ReducerI {
+    (state: any, action: any): any
+}
+
+export interface ReducersI {
+    [key: string]: ReducerI;
+}
+
+export interface ActionI {
+    [key: string]: any;
 }

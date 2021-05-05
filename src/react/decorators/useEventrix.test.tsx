@@ -1,18 +1,20 @@
-import React from 'react';
+import * as React from 'react';
 import { render } from '@testing-library/react';
 import EventrixProvider from '../context/EventrixProvider';
 import Eventrix from '../../Eventrix';
 import useEventrix from './useEventrix';
-import stateListener from './stateListener';
+import {EventrixI} from "../../interfaces";
 
-describe('stateListener', () => {
+interface PropsI {
+    callback(eventrix: EventrixI): void;
+}
+
+describe('listener', () => {
     @useEventrix
-    class ItemComponent extends React.Component {
-        @stateListener('foo.bar')
-        testListen(state) {
-            this.props.callback(state);
-        }
+    class ItemComponent extends React.Component<PropsI> {
+        eventrix: EventrixI;
         render() {
+            this.props.callback(this.eventrix);
             return (
                 <div>
                     Test Item Component
@@ -20,13 +22,14 @@ describe('stateListener', () => {
             );
         }
     }
+
     const TestContainer = ({ eventrix, children }) => (
         <EventrixProvider eventrix={eventrix}>
             {children}
         </EventrixProvider>
     );
 
-    it('should invoke callback when state changed', () => {
+    it('should use eventrix context and extend component by eventrix', () => {
         const eventrixInstance = new Eventrix({});
         const callbackMock = jest.fn();
 
@@ -35,7 +38,6 @@ describe('stateListener', () => {
                 <ItemComponent callback={callbackMock} />
             </TestContainer>,
         );
-        eventrixInstance.stateManager.setState('foo.bar', 'test');
-        expect(callbackMock).toHaveBeenCalledWith('test');
+        expect(callbackMock).toHaveBeenCalledWith(eventrixInstance);
     });
 });

@@ -1,13 +1,19 @@
-import React from 'react';
+import * as React from 'react';
 import { render } from '@testing-library/react';
 import EventrixProvider from '../context/EventrixProvider';
 import Eventrix from '../../Eventrix';
 import useEventrix from './useEventrix';
 import listener from './listener';
 
+interface PropsI {
+    callback?(a?: any,b?: any): void;
+    didMountCallback?(a?: any,b?: any): void;
+    willUnmountCallback?(a?: any,b?: any): void;
+}
+
 describe('listener', () => {
     @useEventrix
-    class ItemComponent extends React.Component {
+    class ItemComponent extends React.Component<PropsI> {
         @listener('testEvent')
         testListen(...args) {
             this.props.callback(...args);
@@ -23,7 +29,7 @@ describe('listener', () => {
     }
 
     @useEventrix
-    class ItemComponentDidMount extends React.Component {
+    class ItemComponentDidMount extends React.Component<PropsI> {
         componentDidMount() {
             this.props.didMountCallback();
         }
@@ -43,7 +49,7 @@ describe('listener', () => {
     }
 
     @useEventrix
-    class ItemComponentWillUnmount extends React.Component {
+    class ItemComponentWillUnmount extends React.Component<PropsI> {
         componentWillUnmount() {
             this.props.willUnmountCallback();
         }

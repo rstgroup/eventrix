@@ -1,6 +1,21 @@
-function eventrixState(statePath, stateName) {
-    return function eventrixStateDecorator(Class) {
+import * as React from 'react';
+import { DecoratorEventrixListenerI, DecoratorEventrixStateI } from "../../interfaces";
+
+export interface ClassComponentWithEventrixStateI extends React.ComponentClass {
+    eventrixStates?: DecoratorEventrixStateI[];
+    eventrixListeners?: DecoratorEventrixListenerI[];
+}
+
+interface StateDecoratorI {
+    (ClassComponent: React.ComponentClass): ClassComponentWithEventrixStateI;
+}
+
+function eventrixState<StateI>(statePath: string, stateName: string): StateDecoratorI {
+    return function eventrixStateDecorator(Class: React.ComponentClass): ClassComponentWithEventrixStateI {
         return class extends Class {
+            eventrixStates?: DecoratorEventrixStateI[];
+            eventrixListeners?: DecoratorEventrixListenerI[];
+
             constructor(...args) {
                 super(...args);
                 if (!Array.isArray(this.eventrixStates)) {
@@ -15,7 +30,7 @@ function eventrixState(statePath, stateName) {
                     eventName: `setState:${statePath}`,
                     name: listenerName
                 });
-                this[listenerName] = (newState) => {
+                this[listenerName] = (newState: StateI) => {
                     this.setState({ [stateName]: newState });
                 }
             }
