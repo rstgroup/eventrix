@@ -9,7 +9,6 @@ class StateManager implements StateManagerI {
     receivers: {
         [key: string]: EventsReceiverI[]
     };
-    eventsEmitter: EventsEmitterI;
 
     constructor(eventsEmitter: EventsEmitterI, initialState?: any, eventsReceivers?: EventsReceiverI[]) {
         this.eventsEmitter = eventsEmitter;

@@ -1,10 +1,18 @@
-import {EmitI, EventsReceiverI, FetchMethodI, ReceiverI, StateManagerI, FetchHandlersI} from "./interfaces";
+import {
+    EmitI,
+    EventsReceiverI,
+    FetchMethodI,
+    ReceiverI,
+    StateManagerI,
+    FetchHandlersI,
+    ReceiverStatePathI
+} from "./interfaces";
 
-class EventsReceiver implements EventsReceiverI {
+class EventsReceiver<EventData = any, ReceiverResponse = any> implements EventsReceiverI {
     eventsNames: string[];
     receiver: ReceiverI;
 
-    constructor<EventData, ReceiverResponse>(eventsNames: string | string[], receiver: ReceiverI<EventData, ReceiverResponse>) {
+    constructor(eventsNames: string | string[], receiver: ReceiverI<EventData, ReceiverResponse>) {
         this.eventsNames = Array.isArray(eventsNames) ? eventsNames : [eventsNames];
         this.receiver = receiver;
     }
@@ -32,7 +40,7 @@ export const fetchHandler = <ResponseDataI>(fetchMethod: FetchMethodI, { success
             });
 };
 
-export const fetchToStateReceiver = (eventName: string | string[], statePath: string, fetchMethod: FetchMethodI): EventsReceiverI => {
+export const fetchToStateReceiver = (eventName: string | string[], statePath: string | ReceiverStatePathI, fetchMethod: FetchMethodI): EventsReceiverI => {
     return new EventsReceiver(eventName, (name, eventData, stateManager: StateManagerI) => {
         const state = stateManager.getState();
         const emit = stateManager.eventsEmitter.emit;

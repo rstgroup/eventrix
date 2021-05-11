@@ -9,11 +9,11 @@ import {
     EmitArgumentsI
 } from "./interfaces";
 
-class Eventrix implements EventrixI {
+class Eventrix<InitialStateI = any> implements EventrixI {
     eventsEmitter: EventsEmitterI;
     stateManager: StateManagerI;
 
-    constructor<InitialStateI>(initialState?: InitialStateI, eventsReceivers?: EventsReceiverI[]) {
+    constructor(initialState?: InitialStateI, eventsReceivers?: EventsReceiverI[]) {
         this.eventsEmitter = new EventsEmitter();
         this.stateManager = new StateManager(this.eventsEmitter, initialState, eventsReceivers);
 
@@ -38,10 +38,10 @@ class Eventrix implements EventrixI {
         const { eventName, eventData } = this.mapEmitArguments<EventDataI>(name, value);
         return this.eventsEmitter.emit<EventDataI>(eventName, eventData);
     }
-    listen<EventDataI>(name: string, listener: EventsListenerI<EventDataI>): void {
+    listen<EventData = any>(name: string, listener: EventsListenerI<EventData>): void {
         this.eventsEmitter.listen(name, listener);
     }
-    unlisten<EventDataI>(name: string, listener: EventsListenerI<EventDataI>): void {
+    unlisten(name: string, listener: EventsListenerI): void {
         this.eventsEmitter.unlisten(name, listener);
     }
     useReceiver(receiver: EventsReceiverI): void {

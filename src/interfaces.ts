@@ -1,12 +1,12 @@
 import { ComponentClass, ComponentType } from 'react';
 
-export interface ReceiverI<EventData, ReceiverResponse> {
+export interface ReceiverI<EventData = any, ReceiverResponse = any> {
     (eventName: string, eventData: EventData, stateManager: StateManagerI): ReceiverResponse;
 }
 
-export interface EventsReceiverI {
+export interface EventsReceiverI<EventDataI = any, ReceiverResponseI = any> {
     eventsNames: string[];
-    receiver: ReceiverI;
+    receiver: ReceiverI<EventDataI, ReceiverResponseI>;
     getEventsNames(): string[];
     handleEvent<EventData, ReceiverResponse>(name: string, data: EventData, stateManager: StateManagerI): ReceiverResponse;
 }
@@ -60,8 +60,8 @@ export interface FetchHandler {
 }
 
 export interface EventrixI {
-    listen(name: string, listener: <EventData, ReceiversData>(eventData: EventData, receiversData: ReceiversData) => void): void;
-    unlisten(name: string, listener: <EventData, ReceiversData>(eventData: EventData, receiversData: ReceiversData) => void): void;
+    listen<EventData = any>(name: string, listener: EventsListenerI<EventData>): void;
+    unlisten(name: string, listener: EventsListenerI): void;
     emit<EventData>(name: string, data: EventData): Promise<any>;
     getState<StateI>(path?: string): StateI;
     useReceiver(eventReceiver: EventsReceiverI): void;
@@ -142,26 +142,26 @@ export interface UseFetchToState {
     (eventName: string, statePath: string, fetchMethod: FetchMethodI, Context?: any): EmitFetch[];
 }
 
-export interface EventsListenerI<EventDataI> {
-    (eventData?: EventDataI | any): void;
+export interface EventsListenerI<EventDataI = any> {
+    (eventData?: EventDataI | any, receiversData?: any[]): void;
 }
 
 export interface EventsEmitterI {
     listeners: {
-        [key: string]: EventsListenerI[];
+        [key: string]: EventsListenerI<any>[];
     };
     stateManager?: StateManagerI;
     emit<EventDataI>(eventName: string, eventData: EventDataI): Promise<any>;
     emitWild<EventDataI>(eventName: string, eventData: EventDataI): void;
-    listen(eventName: string, listener: EventsListenerI): void;
-    unlisten(eventName: string, listener: EventsListenerI): void;
+    listen(eventName: string, listener: EventsListenerI<any>): void;
+    unlisten(eventName: string, listener: EventsListenerI<any>): void;
     getEventData<EventDataI>(name, eventName, data): EventDataI;
     runListeners<EventDataI>(name: string, data: EventDataI, receiversData: any[]): void;
     emitWild<EventDataI>(name: string, data: EventDataI): void
     useStore(stateManager: StateManagerI): void;
 }
 
-export interface FetchHandlersI<DataI, ResponseI, EventDataI> {
+export interface FetchHandlersI<DataI = any, ResponseI = any, EventDataI = any> {
     success?: {
         eventName: string;
         data: DataI;
@@ -186,6 +186,10 @@ export interface DecoratorEventrixStateI {
 export interface DecoratorEventrixListenerI {
     eventName: string;
     name: string;
+}
+
+export interface ReceiverStatePathI {
+    (eventData: any, nextState: any): string;
 }
 
 
