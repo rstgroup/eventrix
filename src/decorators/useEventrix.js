@@ -2,8 +2,8 @@ import EventsReceiver, { fetchToStateReceiver } from "../EventsReceiver";
 
 function useEventrix(Class) {
     return class extends Class {
-        constructor(services) {
-            super(services);
+        constructor(services, ...rest) {
+            super(services, ...rest);
             this.eventrix = services.eventrix;
             if (Array.isArray(this.eventrixReceivers)) {
                 this.eventrixReceivers.forEach(({ eventsNames, name }) => {
