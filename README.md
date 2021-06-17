@@ -1,4 +1,4 @@
-![Eventrix](assets/logo-md.png)
+![Eventrix](assets/logo_br.svg)
 
 [![Build Status](https://travis-ci.org/mprzodala/eventrix.svg?branch=master)](https://travis-ci.org/mprzodala/eventrix)
 [![Coverage Status](https://coveralls.io/repos/github/mprzodala/eventrix/badge.svg?branch=master)](https://coveralls.io/github/mprzodala/eventrix?branch=master)
@@ -578,3 +578,7 @@ Now all emitted events and state changes will be saved in debugger. You can prin
 ### License
 
 eventrix package are [MIT licensed](https://github.com/mprzodala/eventrix/blob/master/LICENSE)
+
+### Powered by
+
+[RST Software Masters](https://rst.software) look on RST [Github](https://github.com/rstgroup)

@@ -39,7 +39,7 @@ export interface FetchHandler {
     (fetchMethod: FetchMethod, { success, error }: FetchHandlerOptions): FetchMethod;
 }
 
-export interface Eventrix {
+export interface EventrixInstanceType {
     listen(name: string, listener: <EventData, ReceiversData>(eventData: EventData, receiversData: ReceiversData) => void): void;
     unlisten(name: string, listener: <EventData, ReceiversData>(eventData: EventData, receiversData: ReceiversData) => void): void;
     emit<EventData>(name: string, data: EventData): Promise<any>;
@@ -48,8 +48,12 @@ export interface Eventrix {
     removeReceiver(eventReceiver: EventsReceiver): void;
 }
 
+export interface Eventrix {
+    new(): EventrixInstanceType;
+}
+
 export interface EventrixProviderProps {
-    eventrix?: Eventrix;
+    eventrix?: EventrixInstanceType;
     children: any;
 }
 
