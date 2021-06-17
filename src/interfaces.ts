@@ -192,6 +192,12 @@ export interface ReceiverStatePathI {
     (eventData: any, nextState: any): string;
 }
 
+// DECORATORS
+
+export interface DescriptorI {
+    (): any | void;
+}
+
 
 // REDUX ADAPTER
 
@@ -205,4 +211,24 @@ export interface ReducersI {
 
 export interface ActionI {
     [key: string]: any;
+}
+
+export interface DispatchI {
+    (action: ActionI): void;
+}
+
+export interface mapStateToPropsType <StateI = any, ReducedStateI = any>{
+    (state: StateI): ReducedStateI;
+}
+
+export interface DispatchActionI {
+    (data: any): void;
+}
+
+export interface mapDispatchToPropsResponseType {
+    [key: string]: DispatchActionI;
+}
+
+export interface mapDispatchToPropsType <StateI = any, ReducedStateI = any>{
+    (dispatch: DispatchI): mapDispatchToPropsResponseType;
 }

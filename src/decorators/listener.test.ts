@@ -1,16 +1,22 @@
 import useEventrix from './useEventrix';
 import listener from './listener';
 import Eventrix from "../Eventrix";
+import {EventrixI} from "../interfaces";
 
 describe('listener', () => {
     const GET_LIST_EVENT_NAME = 'Test:loadList';
     const EXTEND_LIST_EVENT_NAME = 'Test:extendList';
     it('should invoke listener when get list event is emitted', () => {
         const callback = jest.fn();
-        const data = ['test'];
+        const data: string[] = ['test'];
 
         @useEventrix
         class FetchToStateTestClass {
+            eventrix: EventrixI;
+
+            constructor(props) {
+                this.eventrix = props.eventrix;
+            }
 
             @listener(GET_LIST_EVENT_NAME)
             getListListener(eventDate) {
@@ -20,17 +26,22 @@ describe('listener', () => {
         }
         const eventrix = new Eventrix({});
         const testClassInstance = new FetchToStateTestClass({ eventrix });
-        return eventrix.emit(GET_LIST_EVENT_NAME, data);
+        eventrix.emit(GET_LIST_EVENT_NAME, data);
         expect(callback).toHaveBeenCalledWith(data);
     });
 
     it('should invoke listener when extend list event is emitted', () => {
         const callback = jest.fn();
         const extendCallback = jest.fn();
-        const extendEventData = ['test', 'test2'];
+        const extendEventData: string[] = ['test', 'test2'];
 
         @useEventrix
         class FetchToStateTestClass {
+            eventrix: EventrixI;
+
+            constructor(props) {
+                this.eventrix = props.eventrix;
+            }
 
             @listener(GET_LIST_EVENT_NAME)
             getListListener(eventDate) {
@@ -45,8 +56,8 @@ describe('listener', () => {
         }
         const eventrix = new Eventrix({});
         const testClassInstance = new FetchToStateTestClass({ eventrix });
-        return eventrix.emit(EXTEND_LIST_EVENT_NAME, extendEventData);
-        expect(callback).not.toHaveBeenCalled();
+        eventrix.emit(EXTEND_LIST_EVENT_NAME, extendEventData);
         expect(extendCallback).toHaveBeenCalledWith(extendEventData);
+        expect(callback).not.toHaveBeenCalled();
     });
 });

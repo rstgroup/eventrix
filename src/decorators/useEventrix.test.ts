@@ -1,10 +1,14 @@
 import useEventrix from "./useEventrix";
 import Eventrix from "../Eventrix";
+import {EventrixI} from "../interfaces";
 
 describe('useEventrix', () => {
     it('should add eventrix to class instance', () => {
         @useEventrix
         class FetchToStateTestClass {
+            ajax: any;
+            eventrix: EventrixI;
+
             constructor(servcices) {
                 this.ajax = servcices.ajax;
             }

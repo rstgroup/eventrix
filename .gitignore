@@ -2,6 +2,7 @@
 node_modules/
 coverage/
 /index.js
+/index.map
 /dist
 /redux-adapter
 /react

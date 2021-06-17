@@ -1,16 +1,23 @@
 import useEventrix from './useEventrix';
 import fetchToState from './fetchToState';
 import Eventrix from "../Eventrix";
+import {EventrixI} from "../interfaces";
 
 describe('fetchToState', () => {
-    const GET_LIST_EVENT_NAME = 'Test:loadList';
-    const EXTEND_LIST_EVENT_NAME = 'Test:extendList';
-    const STATE_PATH = 'list';
+    const GET_LIST_EVENT_NAME: string = 'Test:loadList';
+    const EXTEND_LIST_EVENT_NAME: string = 'Test:extendList';
+    const STATE_PATH: string = 'list';
     it('should fetch data and set new state', () => {
-        const listResponse = ['test', 'test2'];
+        const listResponse: string[] = ['test', 'test2'];
 
         @useEventrix
         class FetchToStateTestClass {
+            eventrix: EventrixI;
+
+            constructor(props) {
+                this.eventrix = props.eventrix;
+            }
+
 
             @fetchToState(GET_LIST_EVENT_NAME, STATE_PATH)
             getList(eventData, state, emit) {
@@ -28,15 +35,15 @@ describe('fetchToState', () => {
     });
 
     it('should fetch data and extend state', () => {
-        const initialState = ['test', 'test2'];
-        const expectedState = ['test', 'test2', 'test3'];
+        const initialState: string[] = ['test', 'test2'];
+        const expectedState: string[] = ['test', 'test2', 'test3'];
 
         @useEventrix
         class FetchToStateTestClass2 {
+            eventrix: EventrixI;
 
-            @fetchToState(GET_LIST_EVENT_NAME, STATE_PATH)
-            getList(eventData, state, emit) {
-                return Promise.resolve(listResponse);
+            constructor(props) {
+                this.eventrix = props.eventrix;
             }
 
             @fetchToState(EXTEND_LIST_EVENT_NAME, STATE_PATH)

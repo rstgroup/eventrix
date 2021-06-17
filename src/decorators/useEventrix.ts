@@ -1,6 +1,23 @@
 import EventsReceiver, { fetchToStateReceiver } from "../EventsReceiver";
+import {EventrixI} from "../interfaces";
+import {ReceiverDeclarationI} from "./receiver";
+import {FetchToStateReceiverDeclarationI} from "./fetchToState";
+import {ListenerDeclarationI} from "./listener";
 
-function useEventrix(Class) {
+interface ServicesI {
+    eventrix: EventrixI;
+    [key: string]: any;
+}
+
+interface classType {
+    new(services: ServicesI, ...rest): classType;
+    eventrix: EventrixI;
+    eventrixReceivers?: ReceiverDeclarationI[];
+    eventrixFetchToStateReceivers?: FetchToStateReceiverDeclarationI[];
+    eventrixListeners?: ListenerDeclarationI[];
+}
+
+function useEventrix(Class: classType): classType {
     return class extends Class {
         constructor(services) {
             super(services);
@@ -8,19 +25,19 @@ function useEventrix(Class) {
             if (Array.isArray(this.eventrixReceivers)) {
                 this.eventrixReceivers.forEach(({ eventsNames, name }) => {
                     this[name] = this[name].bind(this);
-                    this.eventrix.useReceiver(new EventsReceiver(eventsNames, this[name]));
+                    this.eventrix!.useReceiver(new EventsReceiver(eventsNames, this[name]));
                 });
             }
             if (Array.isArray(this.eventrixFetchToStateReceivers)) {
                 this.eventrixFetchToStateReceivers.forEach(({ eventName, statePath, name }) => {
                     this[name] = this[name].bind(this);
-                    this.eventrix.useReceiver(fetchToStateReceiver(eventName, statePath, this[name]))
+                    this.eventrix!.useReceiver(fetchToStateReceiver(eventName, statePath, this[name]))
                 });
             }
             if (Array.isArray(this.eventrixListeners)) {
                 this.eventrixListeners.forEach(({ eventName, name }) => {
                     this[name] = this[name].bind(this);
-                    this.eventrix.listen(eventName, this[name]);
+                    this.eventrix!.listen(eventName, this[name]);
                 });
             }
         }

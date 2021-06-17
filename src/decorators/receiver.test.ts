@@ -1,6 +1,7 @@
 import useEventrix from './useEventrix';
 import receiver from './receiver';
 import Eventrix from "../Eventrix";
+import { EventrixI } from "../interfaces";
 
 describe('receiver', () => {
     const GET_LIST_EVENT_NAME = 'Test:loadList';
@@ -11,6 +12,11 @@ describe('receiver', () => {
 
         @useEventrix
         class FetchToStateTestClass {
+            eventrix: EventrixI;
+
+            constructor({ eventrix }: any){
+                this.eventrix = eventrix;
+            }
 
             @receiver(GET_LIST_EVENT_NAME)
             getList(eventName, eventDate, stateManager) {
@@ -33,10 +39,10 @@ describe('receiver', () => {
 
         @useEventrix
         class FetchToStateTestClass2 {
+            eventrix: EventrixI;
 
-            @receiver(GET_LIST_EVENT_NAME)
-            getList(eventName, eventDate, stateManager) {
-                stateManager.setState(STATE_PATH, listResponse);
+            constructor({ eventrix }: any){
+                this.eventrix = eventrix;
             }
 
             @receiver(EXTEND_LIST_EVENT_NAME)

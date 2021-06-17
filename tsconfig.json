@@ -3,9 +3,16 @@
     "outDir": "./",
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "es6",
+    "module": "es2015",
+    "lib": ["es2017", "dom"],
     "target": "es5",
     "jsx": "react",
-    "allowJs": true
-  }
+    "allowJs": true,
+    "declaration": true,
+    "declarationDir": "./",
+    "removeComments": false,
+    "experimentalDecorators": true,
+    "strict": true
+  },
+  "include": ["./src/**/*"]
 }

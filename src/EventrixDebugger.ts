@@ -1,8 +1,19 @@
 import get from 'lodash/get';
 import EventsReceiver from './EventsReceiver';
+import {EventrixI, EventsReceiverI} from "./interfaces";
+
+interface DebuggerConfigI {
+    live?: boolean;
+}
 
 class EventrixDebugger {
-    constructor(eventrix, config = {}) {
+    config: DebuggerConfigI;
+    eventrix: EventrixI;
+    eventsHistory: any[];
+    stateHistory: any[];
+    eventsReceiver: EventsReceiverI;
+
+    constructor(eventrix: EventrixI, config: DebuggerConfigI = {}) {
         this.eventrix = eventrix;
         this.config = config;
         this.eventsHistory = [];
@@ -17,13 +28,13 @@ class EventrixDebugger {
         const receiversCount = this.getEventsReceiversCount(name);
         const listenersCount = this.getEventListenersCount(name);
         const timestamp = new Date().getTime();
-        this.eventsHistory.push({ name, data, receiversCount, listenersCount, timestamp });
-        this.printInlineEventInfo({ name, data, receiversCount, listenersCount, timestamp });
+        this.eventsHistory.push({name, data, receiversCount, listenersCount, timestamp});
+        this.printInlineEventInfo({name, data, receiversCount, listenersCount, timestamp});
         if (name.indexOf('setState:') === 0) {
             const [prefix, path] = name.split(':');
             const state = {...stateManager.getState()};
-            this.stateHistory.push({ path, state, receiversCount, listenersCount, timestamp });
-            this.printInlineStateInfo({ path, state, receiversCount, listenersCount, timestamp });
+            this.stateHistory.push({path, state, receiversCount, listenersCount, timestamp});
+            this.printInlineStateInfo({path, state, receiversCount, listenersCount, timestamp});
         }
     };
 

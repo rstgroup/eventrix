@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 import { EventrixContext } from '../react';
 import { DISPATCH_EVENT_NAME } from './events';
+import {mapStateToPropsType, mapDispatchToPropsType, mapDispatchToPropsResponseType, ActionI} from "../interfaces";
 
-const connect = (mapStateToProps, mapDispatchToProps, Context = EventrixContext) =>
-    BaseComponent =>
-        class extends Component {
+interface StateI {
+    store: any;
+}
+
+function connect<P>(mapStateToProps: mapStateToPropsType, mapDispatchToProps: mapDispatchToPropsType, Context: React.ContextType = EventrixContext) {
+    return BaseComponent =>
+        class extends Component <P, StateI> {
             static contextType = Context;
 
-            constructor(props, context) {
+            constructor(props: P, context) {
                 super(props, context);
                 this.dispatch = this.dispatch.bind(this);
                 this.updateState = this.updateState.bind(this);
@@ -16,29 +21,29 @@ const connect = (mapStateToProps, mapDispatchToProps, Context = EventrixContext)
                 };
             }
 
-            componentDidMount() {
+            componentDidMount(): void {
                 this.context.eventrix.listen('setState:*', this.updateState);
             }
 
-            componentWillUnmount() {
+            componentWillUnmount(): void {
                 this.context.eventrix.unlisten('setState:*', this.updateState);
             }
 
-            getStateToProps() {
+            getStateToProps<ReducedStateI = any>(): ReducedStateI {
                 const state = this.context.eventrix.getState();
                 return mapStateToProps(state);
             }
 
-            getDispatchToProps() {
+            getDispatchToProps(): mapDispatchToPropsResponseType {
                 return mapDispatchToProps(this.dispatch);
             }
 
-            dispatch(action) {
+            dispatch(action: ActionI): void {
                 this.context.eventrix.emit(DISPATCH_EVENT_NAME, action);
             }
 
-            updateState() {
-                this.setState({ store: this.context.eventrix.getState() });
+            updateState(): void {
+                this.setState({store: this.context.eventrix.getState()});
             }
 
             render() {
@@ -51,5 +56,5 @@ const connect = (mapStateToProps, mapDispatchToProps, Context = EventrixContext)
                 );
             }
         };
-
+}
 export default connect;
