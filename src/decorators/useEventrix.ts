@@ -19,8 +19,8 @@ interface classType {
 
 function useEventrix(Class: classType): classType {
     return class extends Class {
-        constructor(services) {
-            super(services);
+        constructor(services, ...rest) {
+            super(services, ...rest);
             this.eventrix = services.eventrix;
             if (Array.isArray(this.eventrixReceivers)) {
                 this.eventrixReceivers.forEach(({ eventsNames, name }) => {
