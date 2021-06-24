@@ -2,13 +2,13 @@ import Eventrix from '../Eventrix';
 import EventsReceiver from "../EventsReceiver";
 import combineReducers from "./combineReducers";
 import { DISPATCH_EVENT_NAME } from "./events";
-import {EventrixI, EventsListenerI, ReducersI} from "../interfaces";
+import {EventrixI, EventsListenerI, ReducerI, ReducersI} from "../interfaces";
 
 interface UnsubscribeI {
     (): void;
 }
 
-const getEventsReceivers = (reducers) => {
+const getEventsReceivers = (reducers: ReducersI | ReducerI) => {
     if (Array.isArray(reducers)) {
         if (reducers[0] instanceof EventsReceiver) {
             return reducers;

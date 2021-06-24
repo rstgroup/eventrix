@@ -1,5 +1,5 @@
 import EventsReceiver, { fetchToStateReceiver } from "../EventsReceiver";
-import {EventrixI} from "../interfaces";
+import {EventrixI, EventsListenerI, FetchMethodI, ReceiverI} from "../interfaces";
 import {ReceiverDeclarationI} from "./receiver";
 import {FetchToStateReceiverDeclarationI} from "./fetchToState";
 import {ListenerDeclarationI} from "./listener";
@@ -10,7 +10,8 @@ interface ServicesI {
 }
 
 interface classType {
-    new(services: ServicesI, ...rest): classType;
+    new(services: ServicesI, ...rest: any[]): classType;
+    [key: string]: FetchMethodI | ReceiverI | EventsListenerI | any;
     eventrix: EventrixI;
     eventrixReceivers?: ReceiverDeclarationI[];
     eventrixFetchToStateReceivers?: FetchToStateReceiverDeclarationI[];
@@ -19,7 +20,7 @@ interface classType {
 
 function useEventrix(Class: classType): classType {
     return class extends Class {
-        constructor(services, ...rest) {
+        constructor(services: ServicesI, ...rest: any[]) {
             super(services, ...rest);
             this.eventrix = services.eventrix;
             if (Array.isArray(this.eventrixReceivers)) {

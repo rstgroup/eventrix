@@ -16,15 +16,15 @@ export interface StateManagerI {
     receivers: {
         [key: string]: EventsReceiverI[]
     };
-    eventsEmitter?: EventsEmitterI;
+    eventsEmitter: EventsEmitterI;
     setState<StateValueI>(path: string | undefined | null, value: StateValueI): void;
     getState<StateValueI>(path?: string): StateValueI;
     useReceiver(receiver: EventsReceiverI): void;
     removeReceiver(receiver: EventsReceiverI): void;
-    runReceivers<EventDataI>(name: string, data: EventDataI);
+    runReceivers<EventDataI>(name: string, data: EventDataI): any;
 }
 
-export interface EmitI<EventData> {
+export interface EmitI<EventData = any> {
     (name: string, data?: EventData): Promise<any>;
 }
 
@@ -151,26 +151,26 @@ export interface EventsEmitterI {
         [key: string]: EventsListenerI<any>[];
     };
     stateManager?: StateManagerI;
-    emit<EventDataI>(eventName: string, eventData: EventDataI): Promise<any>;
-    emitWild<EventDataI>(eventName: string, eventData: EventDataI): void;
+    emit<EventDataI = any>(eventName: string, eventData?: EventDataI): Promise<any>;
+    emitWild<EventDataI = any>(eventName: string, eventData: EventDataI): void;
     listen(eventName: string, listener: EventsListenerI<any>): void;
     unlisten(eventName: string, listener: EventsListenerI<any>): void;
-    getEventData<EventDataI>(name, eventName, data): EventDataI;
+    getEventData<EventDataI>(name: string, eventName: string, data: any): EventDataI;
     runListeners<EventDataI>(name: string, data: EventDataI, receiversData: any[]): void;
     emitWild<EventDataI>(name: string, data: EventDataI): void
     useStore(stateManager: StateManagerI): void;
 }
 
 export interface FetchHandlersI<DataI = any, ResponseI = any, EventDataI = any> {
-    success?: {
+    success: {
         eventName: string;
         data: DataI;
-        getData(response: ResponseI, eventData: EventDataI): DataI;
+        getData?(response: ResponseI, eventData: EventDataI): DataI;
     };
-    error?: {
+    error: {
         eventName: string;
         data: DataI;
-        getData(errorResponse: ResponseI, eventData: EventDataI): DataI;
+        getData?(errorResponse: ResponseI, eventData: EventDataI): DataI;
     };
 }
 

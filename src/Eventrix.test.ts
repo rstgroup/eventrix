@@ -1,11 +1,12 @@
 import Eventrix from './Eventrix';
 import EventsReceiver from "./EventsReceiver";
+import {EventsReceiverI} from "./interfaces";
 
 describe('Eventrix', () => {
-    let initialState;
+    let initialState: any;
     let mockListener = () => {};
     let mockReceiver;
-    let eventsReceivers;
+    let eventsReceivers: EventsReceiverI[];
     let eventrix = new Eventrix();
     beforeEach(() => {
         initialState = {
@@ -34,11 +35,11 @@ describe('Eventrix', () => {
     });
     it('should map emit arguments and emit event', () => {
         const eventName = 'getFoo';
-        const getFooEvent = (eventData) => {
+        const getFooEvent = <EventDataI>(eventData: EventDataI): [string, EventDataI] => {
             return [eventName, eventData];
         };
         eventrix.listen(eventName, mockListener);
-        eventrix.emit(getFooEvent('test'));
+        eventrix.emit(getFooEvent<string>('test'));
         expect(mockListener).toHaveBeenCalledWith('test', ['testReceiverData']);
     });
     it('should not call event listener after unlisten', () => {

@@ -34,7 +34,7 @@ class Eventrix<InitialStateI = any> implements EventrixI {
         }
         return { eventName: name, eventData: value };
     }
-    emit<EventDataI>(name: string | [string, EventDataI] , value?: EventDataI): Promise<any> {
+    emit<EventDataI = any>(name: string | [string, EventDataI] , value?: EventDataI): Promise<any> {
         const { eventName, eventData } = this.mapEmitArguments<EventDataI>(name, value);
         return this.eventsEmitter.emit<EventDataI>(eventName, eventData);
     }

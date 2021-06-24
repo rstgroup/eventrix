@@ -1,6 +1,6 @@
 import get from 'lodash/get';
 import EventsReceiver from './EventsReceiver';
-import {EventrixI, EventsReceiverI} from "./interfaces";
+import {EventrixI, EventsReceiverI, StateManagerI} from "./interfaces";
 
 interface DebuggerConfigI {
     live?: boolean;
@@ -18,10 +18,11 @@ class EventrixDebugger {
         this.config = config;
         this.eventsHistory = [];
         this.stateHistory = [];
+        /*@ts-ignore*/
         window.EVENTRIX_DEBUGGER = this;
     }
 
-    receiver = (name, data, stateManager) => {
+    receiver = (name: string, data: any, stateManager: StateManagerI) => {
         if (name === 'setState:*') {
             return;
         }
@@ -29,12 +30,12 @@ class EventrixDebugger {
         const listenersCount = this.getEventListenersCount(name);
         const timestamp = new Date().getTime();
         this.eventsHistory.push({name, data, receiversCount, listenersCount, timestamp});
-        this.printInlineEventInfo({name, data, receiversCount, listenersCount, timestamp});
+        this.printInlineEventInfo({name, data, receiversCount, listenersCount});
         if (name.indexOf('setState:') === 0) {
-            const [prefix, path] = name.split(':');
-            const state = {...stateManager.getState()};
+            const path = name.split(':')[1];
+            const state = {...stateManager.getState<object>()};
             this.stateHistory.push({path, state, receiversCount, listenersCount, timestamp});
-            this.printInlineStateInfo({path, state, receiversCount, listenersCount, timestamp});
+            this.printInlineStateInfo({path, state, receiversCount, listenersCount});
         }
     };
 
@@ -42,7 +43,7 @@ class EventrixDebugger {
         this.eventsReceiver = new EventsReceiver('*', this.receiver);
         this.stateHistory.push({
             path: 'init',
-            state: {...this.eventrix.getState()}
+            state: {...this.eventrix.getState<object>()}
         });
         this.eventrix.useReceiver(this.eventsReceiver);
     }
@@ -56,7 +57,7 @@ class EventrixDebugger {
         this.stateHistory = [];
     }
 
-    getEventsReceiversCount(eventName) {
+    getEventsReceiversCount(eventName: string) {
         const receivers = get(this.eventrix, 'stateManager.receivers', {});
         const receiversList = receivers[eventName];
         return Array.isArray(receiversList) ? receiversList.length : 0;
@@ -74,7 +75,7 @@ class EventrixDebugger {
         })
     }
 
-    getEventListenersCount(eventName) {
+    getEventListenersCount(eventName: string) {
         const listeners = get(this.eventrix, 'stateManager.eventsEmitter.listeners', {});
         const listenersList = listeners[eventName];
         return Array.isArray(listenersList) ? listenersList.length : 0;
@@ -92,13 +93,13 @@ class EventrixDebugger {
         })
     }
 
-    printInlineEventInfo({name, data, receiversCount, listenersCount}) {
+    printInlineEventInfo({name, data, receiversCount, listenersCount}: {name: string, data: any, receiversCount: number, listenersCount: number}) {
         if (this.config.live) {
             console.log('%cEventrixDebugger -> emit ' + `%c"${name}" ` + `%c(receivers:${receiversCount}, listeners:${listenersCount})`, 'color:#20b189;', 'color: black;', 'color: #2096b1;', data)
         }
     }
 
-    printInlineStateInfo({path, state, receiversCount, listenersCount}) {
+    printInlineStateInfo({path, state, receiversCount, listenersCount}: {path: string, state: any, receiversCount: number, listenersCount: number}) {
         if (this.config.live) {
             console.log('%cEventrixDebugger -> setState ' + `%c"${path}" ` + `%c(receivers:${receiversCount}, listeners:${listenersCount})`, 'color:#20b189;', 'color: black;', 'color: #2096b1;', state)
         }

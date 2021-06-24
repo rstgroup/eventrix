@@ -8,7 +8,7 @@ import {
     ReceiverStatePathI
 } from "./interfaces";
 
-class EventsReceiver<EventData = any, ReceiverResponse = any> implements EventsReceiverI {
+class EventsReceiver<EventData = any, ReceiverResponse = any | Promise<any>> implements EventsReceiverI {
     eventsNames: string[];
     receiver: ReceiverI;
 

@@ -73,11 +73,11 @@ class StateManager implements StateManagerI {
     }
 
     runReceivers<EventDataI>(name: string, data: EventDataI): Promise<any> | any {
-        const promisesList = [];
-        const receiversData = [];
+        const promisesList: Promise<any>[] = [];
+        const receiversData: any[] = [];
         if (this.receivers[name] && Array.isArray(this.receivers[name])) {
             this.receivers[name].forEach(receiver => {
-                const receiverData = receiver.handleEvent(name, data, this);
+                const receiverData = receiver.handleEvent<any, any | Promise<any>>(name, data, this);
                 if (isPromise(receiverData)) {
                     return promisesList.push(receiverData);
                 }
@@ -124,7 +124,7 @@ class StateManager implements StateManagerI {
     getParentPath(path: string): string {
         const pathElements = path.split('.');
         if (pathElements.length === 1) {
-            return;
+            return '';
         }
         pathElements.pop();
         return pathElements.join('.');

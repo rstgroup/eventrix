@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "removeComments": true,
     "preserveConstEnums": true,
@@ -12,19 +12,17 @@
     "noUnusedLocals": true,
     "skipLibCheck": true,
     "lib": [
-      "es2015.promise",
-      "es5",
       "es6",
       "dom",
-      "es2017.object",
-      "es2016",
-      "es2019"
+      "es2016"
     ],
     "experimentalDecorators": true,
     "suppressImplicitAnyIndexErrors": false,
     "baseUrl": ".",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "compileOnSave": false,
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*"],
+  "exclude": ["./src/**/*.test.ts", "./src/**/*.test.tsx"]
 }

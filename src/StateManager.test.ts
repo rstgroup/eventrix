@@ -110,7 +110,7 @@ describe('StateManager', () => {
         expect(stateManager.getParentPath('a.b.c')).toEqual('a.b');
     });
     it('should return undefined when path has one element', () => {
-        expect(stateManager.getParentPath('a')).toEqual(undefined);
+        expect(stateManager.getParentPath('a')).toEqual('');
     });
     it('should handle promise from events receivers', () => {
         const receiver = jest.fn(() => Promise.resolve({ asyncData: {} }));

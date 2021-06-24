@@ -50,7 +50,7 @@ class EventsEmitter implements EventsEmitterI {
         this.listeners[name].splice(index, 1);
     }
 
-    getEventData<EventDataI>(name, eventName, data): EventDataI {
+    getEventData<EventDataI>(name: string, eventName: string, data: EventDataI): EventDataI {
         if (name === eventName) {
             return data;
         }
@@ -75,10 +75,10 @@ class EventsEmitter implements EventsEmitterI {
         });
     }
 
-    emit<EventDataI>(name: string, data: EventDataI): Promise<any> {
-        const receiversResponse = this.stateManager.runReceivers<EventDataI>(name, data);
+    emit<EventDataI = any>(name: string, data: EventDataI): Promise<any> {
+        const receiversResponse = this.stateManager?.runReceivers<EventDataI>(name, data);
         if (isPromise(receiversResponse)) {
-            return receiversResponse.then(receiversData => {
+            return receiversResponse.then((receiversData: any) => {
                 this.runListeners(name, data, receiversData);
             })
         }

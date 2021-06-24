@@ -1,3 +1,6 @@
+const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
 const package = require('./package.json');
 
 const externals = new Set([
@@ -6,6 +9,7 @@ const externals = new Set([
 ]);
 
 const config = {
+    target: 'web',
     mode: 'production',
     devtool: 'inline-source-map',
     entry: {
@@ -20,6 +24,7 @@ const config = {
         sourceMapFilename: '[name].map',
         library: 'eventrix',
         libraryTarget: 'umd',
+        globalObject: 'window',
         umdNamedDefine: true
     },
     externals(context, request, callback) {
@@ -29,25 +34,30 @@ const config = {
         return callback();
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js', '.jsx'],
+        extensions: ['.tsx', '.ts', '.js'],
     },
     module: {
         rules: [
             {
-                test: /.jsx?$/,
-                loader: 'babel-loader',
+                test: /\.ts(x?)$/,
                 exclude: /node_modules/,
-            },
-            {
-                test: /\.tsx?$/,
-                use: 'babel-loader',
-                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'babel-loader',
+                    },
+                    {
+                        loader: 'ts-loader',
+                    },
+                ],
             },
         ],
     },
-    devServer: {
-        historyApiFallback: true,
-    },
+    plugins: [
+        new CleanWebpackPlugin({
+            cleanStaleWebpackAssets: false,
+            cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, './dist')],
+        }),
+    ],
 };
 
 module.exports = config;

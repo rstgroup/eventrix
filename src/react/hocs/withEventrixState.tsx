@@ -26,8 +26,8 @@ const withEventrixState = <P extends PropsI>(
     BaseComponent: React.ComponentType<P>,
     stateNames: StateNamesMethodI | string[] | string,
     mapStateToProps?: MapStateToPropsI,
-    Context? = EventrixContext,
-): React.ComponentType<PropsI, StateI> =>
+    Context = EventrixContext,
+): React.ComponentType<PropsI> =>
     class WithEventrixState extends React.Component<P, StateI> {
         static contextType = Context;
         context: EventrixContextI;
@@ -35,7 +35,7 @@ const withEventrixState = <P extends PropsI>(
         stateNames: string[] = [];
         listeners: ListenersI = {};
 
-        constructor(props: PropsI, context) {
+        constructor(props: P, context: EventrixContextI) {
             super(props, context);
             this.onStateUpdate = this.onStateUpdate.bind(this);
             this.getStateNames().forEach((stateName) => {
@@ -77,7 +77,7 @@ const withEventrixState = <P extends PropsI>(
         }
         refreshState(): void {
             let shouldRefreshState = false;
-            const stateToRefresh = {};
+            const stateToRefresh: StateI = {};
             this.getStateNames().forEach((stateName) => {
                 const currentState = this.context.eventrix.getState(stateName);
                 if (this.state[stateName] !== currentState) {

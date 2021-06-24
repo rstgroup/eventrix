@@ -7,12 +7,12 @@ interface StateI {
     store: any;
 }
 
-function connect<P>(mapStateToProps: mapStateToPropsType, mapDispatchToProps: mapDispatchToPropsType, Context: React.ContextType = EventrixContext) {
-    return BaseComponent =>
+function connect<P>(mapStateToProps: mapStateToPropsType, mapDispatchToProps: mapDispatchToPropsType, Context = EventrixContext) {
+    return (BaseComponent: any) =>
         class extends Component <P, StateI> {
             static contextType = Context;
 
-            constructor(props: P, context) {
+            constructor(props: P, context: any) {
                 super(props, context);
                 this.dispatch = this.dispatch.bind(this);
                 this.updateState = this.updateState.bind(this);

@@ -7,7 +7,7 @@ import {
 import { EventrixContext } from '../context';
 import { SetStateI } from "../../interfaces";
 
-function useEventrixState<StateI>(stateName: string, Context? = EventrixContext): [StateI, SetStateI] {
+function useEventrixState<StateI>(stateName: string, Context = EventrixContext): [StateI, SetStateI<StateI>] {
     const { eventrix } = useContext(Context);
     const [state, setState] = useState<StateI>(eventrix.getState<StateI>(stateName));
 

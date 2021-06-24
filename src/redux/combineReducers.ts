@@ -1,6 +1,6 @@
 import EventsReceiver from "../EventsReceiver";
 import { DISPATCH_EVENT_NAME } from "./events";
-import { ActionI, ReducersI, StateManagerI } from "../interfaces";
+import {ActionI, ReducersI, StateManagerI} from "../interfaces";
 
 
 const combineReducers = (reducers: ReducersI) => {
