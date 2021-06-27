@@ -43,18 +43,24 @@ function useEventrix(Class: React.ComponentClass): ClassComponentWithEventrixI {
     return class extends Class {
         constructor(props: any, context: EventrixContextI) {
             super(props, context);
+            /*@ts-ignore*/
             this.eventrix = context.eventrix;
-
+            /*@ts-ignore*/
             if (Array.isArray(this.eventrixListeners)) {
+                /*@ts-ignore*/
                 this.eventrixListeners.forEach(({ name }: DecoratorEventrixListenerI): void => {
+                    /*@ts-ignore*/
                     this[name] = this[name].bind(this);
                 });
             }
+            /*@ts-ignore*/
             if (Array.isArray(this.eventrixStates)) {
                 if (!this.state) {
                     this.state = {};
                 }
+                /*@ts-ignore*/
                 this.eventrixStates.forEach(({ statePath, stateName }: DecoratorEventrixStateI): void => {
+                    /*@ts-ignore*/
                     this.state[stateName] = this.eventrix.getState(statePath);
                 });
             }

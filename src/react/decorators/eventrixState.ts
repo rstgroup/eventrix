@@ -15,9 +15,10 @@ function eventrixState<StateI>(statePath: string, stateName: string): StateDecor
         return class extends Class {
             eventrixStates?: DecoratorEventrixStateI[];
             eventrixListeners?: DecoratorEventrixListenerI[];
+            [key: string]: any;
 
-            constructor(...args) {
-                super(...args);
+            constructor(props: any, context: any) {
+                super(props, context);
                 if (!Array.isArray(this.eventrixStates)) {
                     this.eventrixStates = [];
                 }

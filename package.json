@@ -71,7 +71,7 @@
     "webpack": "^5.31.2",
     "webpack-cli": "^4.6.0"
   },
-  "typings": "./types.ts",
+  "typings": "./types",
   "jest": {
     "moduleFileExtensions": [
       "ts",

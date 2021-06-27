@@ -23,7 +23,7 @@ describe('listener', () => {
         }
     }
 
-    const TestContainer = ({ eventrix, children }) => (
+    const TestContainer = ({ eventrix, children }: { eventrix: EventrixI, children: any }) => (
         <EventrixProvider eventrix={eventrix}>
             {children}
         </EventrixProvider>
