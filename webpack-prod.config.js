@@ -14,6 +14,7 @@ const config = {
     devtool: 'inline-source-map',
     entry: {
         index: './src/index.ts',
+        'redux-adapter': './src/redux/index.ts',
     },
     output: {
         path: __dirname+'/dist',
