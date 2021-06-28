@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { render } from '@testing-library/react';
-import EventrixProvider from '../context/EventrixProvider';
+import { EventrixProvider } from '../context';
 import Eventrix from '../../Eventrix';
 import useEmit from './useEmit';
 

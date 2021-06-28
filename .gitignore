@@ -8,5 +8,6 @@ coverage/
 /react
 /decorators
 /types
+/dist
 package-lock.json
 yarn.lock

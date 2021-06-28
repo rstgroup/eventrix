@@ -14,12 +14,9 @@ const config = {
     devtool: 'inline-source-map',
     entry: {
         index: './src/index.ts',
-        'redux-adapter/index': './src/redux/index.ts',
-        'react/index': './src/react/index.ts',
-        'decorators/index': './src/decorators/index.ts',
     },
     output: {
-        path: __dirname,
+        path: __dirname+'/dist',
         filename: '[name].js',
         sourceMapFilename: '[name].map',
         library: 'eventrix',

@@ -2,7 +2,7 @@
   "name": "eventrix",
   "version": "1.12.3-rc.2",
   "description": "store based on events",
-  "main": "index.js",
+  "main": "dist/index.js",
   "repository": "https://github.com/mprzodala/eventrix",
   "homepage": "https://github.com/mprzodala/eventrix",
   "scripts": {
@@ -24,9 +24,7 @@
   "author": "Mariusz Przodała",
   "license": "MIT",
   "dependencies": {
-    "@types/react": "^17.0.4",
     "lodash": "^4.17.4",
-    "prop-types": "^15.6.0",
     "react": "^16.0.0 || ^17.0.0",
     "react-dom": "^16.0.0 || ^17.0.0"
   },
@@ -53,6 +51,7 @@
     "@testing-library/react": "^11.2.5",
     "@types/jest": "^26.0.23",
     "@types/lodash": "^4.14.170",
+    "@types/react": "^17.0.11",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
@@ -72,7 +71,7 @@
     "webpack": "^5.31.2",
     "webpack-cli": "^4.6.0"
   },
-  "typings": "./types",
+  "types": "./types/index.d.ts",
   "jest": {
     "moduleFileExtensions": [
       "ts",

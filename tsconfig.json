@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es5",
     "module": "commonjs",
     "removeComments": true,
     "preserveConstEnums": true,
@@ -20,7 +20,7 @@
     ],
     "experimentalDecorators": true,
     "suppressImplicitAnyIndexErrors": false,
-    "baseUrl": ".",
+    "baseUrl": "./",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
   },

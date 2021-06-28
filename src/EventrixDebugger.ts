@@ -11,7 +11,7 @@ class EventrixDebugger {
     eventrix: EventrixI;
     eventsHistory: any[];
     stateHistory: any[];
-    eventsReceiver: EventsReceiverI;
+    eventsReceiver?: EventsReceiverI;
 
     constructor(eventrix: EventrixI, config: DebuggerConfigI = {}) {
         this.eventrix = eventrix;
@@ -49,7 +49,9 @@ class EventrixDebugger {
     }
 
     stop() {
-        this.eventrix.removeReceiver(this.eventsReceiver)
+        if(this.eventsReceiver) {
+            this.eventrix.removeReceiver(this.eventsReceiver)
+        }
     }
 
     reset() {
