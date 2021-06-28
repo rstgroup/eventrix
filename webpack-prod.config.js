@@ -51,13 +51,7 @@ const config = {
                 ],
             },
         ],
-    },
-    plugins: [
-        new CleanWebpackPlugin({
-            cleanStaleWebpackAssets: false,
-            cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, './dist')],
-        }),
-    ],
+    }
 };
 
 module.exports = config;
