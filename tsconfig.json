@@ -6,6 +6,8 @@
     "preserveConstEnums": true,
     "sourceMap": true,
     "noImplicitAny": true,
+    "declaration": true,
+    "declarationDir": "./types",
     "jsx": "react",
     "strictNullChecks": true,
     "noImplicitThis": true,
