@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import EventrixProvider from '../context/EventrixProvider';
 import Eventrix from '../../Eventrix';
-import useEventrix from './useEventrix';
+import eventrixComponent from './eventrixComponent';
 import {EventrixI} from "../../interfaces";
 
 interface PropsI {
@@ -10,7 +10,7 @@ interface PropsI {
 }
 
 describe('listener', () => {
-    @useEventrix
+    @eventrixComponent
     class ItemComponent extends React.Component<PropsI> {
         eventrix: EventrixI;
         render() {

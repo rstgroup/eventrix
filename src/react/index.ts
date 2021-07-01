@@ -13,7 +13,7 @@ export { default as useEvent } from './hooks/useEvent';
 export { default as useEventState } from './hooks/useEventState';
 export { default as useFetchToState } from './hooks/useFetchToState';
 // decorators
-export { default as eventrixComponent } from './decorators/useEventrix';
+export { default as eventrixComponent } from './decorators/eventrixComponent';
 export { default as eventListener } from './decorators/listener';
 export { default as stateListener } from './decorators/stateListener';
 export { default as eventrixState } from './decorators/eventrixState';

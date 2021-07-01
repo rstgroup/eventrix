@@ -2,15 +2,15 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import EventrixProvider from '../context/EventrixProvider';
 import Eventrix from '../../Eventrix';
-import useEventrix from './useEventrix';
+import eventrixComponent from './eventrixComponent';
 import eventrixState from './eventrixState';
 
 describe('eventrixState', () => {
-    @useEventrix
+    @eventrixComponent
     @eventrixState('foo.bar', 'fooBar')
-    class ItemComponent extends React.Component {
+    class ItemComponent extends React.Component<any> {
         render() {
-            const { fooBar } = this.state;
+            const { fooBar }: any = this.state;
             return (
                 <div data-testid="stateData">
                     {fooBar}
@@ -19,10 +19,10 @@ describe('eventrixState', () => {
         }
     }
 
-    @useEventrix
+    @eventrixComponent
     @eventrixState('foo.bar', 'fooBar')
-    class ItemComponentWithState extends React.Component {
-        constructor(props, context) {
+    class ItemComponentWithState extends React.Component<any> {
+        constructor(props: any, context: any) {
             super(props, context);
             this.state = {
                 componentState: 'test',
@@ -30,7 +30,7 @@ describe('eventrixState', () => {
         }
 
         render() {
-            const { fooBar, componentState } = this.state;
+            const { fooBar, componentState }: any = this.state;
             return (
                 <div data-testid="stateData">
                     {fooBar} {componentState}
@@ -39,7 +39,7 @@ describe('eventrixState', () => {
         }
     }
 
-    const TestContainer = ({ eventrix, children }) => (
+    const TestContainer = ({ eventrix, children }: any) => (
         <EventrixProvider eventrix={eventrix}>
             {children}
         </EventrixProvider>

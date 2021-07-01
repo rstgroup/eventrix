@@ -4,17 +4,9 @@ import {
     DecoratorEventrixListenerI,
     DecoratorEventrixStateI,
     EventrixContextI,
-    EventrixI,
 } from "../../interfaces";
 
-interface ClassComponentWithEventrixI extends React.ComponentClass {
-    context?: EventrixContextI;
-    eventrix?: EventrixI;
-    eventrixStates?: DecoratorEventrixStateI[];
-    eventrixListeners?: DecoratorEventrixListenerI[];
-}
-
-function useEventrix(Class: React.ComponentClass): ClassComponentWithEventrixI {
+function eventrixComponent(Class: React.ComponentClass): any {
     const originComponentDidMount = Class.prototype.componentDidMount;
     const originComponentWillUnmount = Class.prototype.componentWillUnmount;
 
@@ -68,4 +60,4 @@ function useEventrix(Class: React.ComponentClass): ClassComponentWithEventrixI {
     }
 }
 
-export default useEventrix;
+export default eventrixComponent;

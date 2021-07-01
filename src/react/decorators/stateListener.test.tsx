@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import EventrixProvider from '../context/EventrixProvider';
 import Eventrix from '../../Eventrix';
-import useEventrix from './useEventrix';
+import eventrixComponent from './eventrixComponent';
 import stateListener from './stateListener';
 
 interface PropsI {
@@ -10,10 +10,10 @@ interface PropsI {
 }
 
 describe('stateListener', () => {
-    @useEventrix
+    @eventrixComponent
     class ItemComponent extends React.Component<PropsI> {
         @stateListener('foo.bar')
-        testListen(state) {
+        testListen(state: any) {
             this.props.callback(state);
         }
         render() {
@@ -24,7 +24,7 @@ describe('stateListener', () => {
             );
         }
     }
-    const TestContainer = ({ eventrix, children }) => (
+    const TestContainer = ({ eventrix, children }: any) => (
         <EventrixProvider eventrix={eventrix}>
             {children}
         </EventrixProvider>

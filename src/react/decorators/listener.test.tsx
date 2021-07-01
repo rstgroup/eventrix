@@ -2,21 +2,23 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import EventrixProvider from '../context/EventrixProvider';
 import Eventrix from '../../Eventrix';
-import useEventrix from './useEventrix';
+import eventrixComponent from './eventrixComponent';
 import listener from './listener';
 
 interface PropsI {
-    callback?(a?: any,b?: any): void;
+    callback?(...rest: any[]): void;
     didMountCallback?(a?: any,b?: any): void;
     willUnmountCallback?(a?: any,b?: any): void;
 }
 
 describe('listener', () => {
-    @useEventrix
+    @eventrixComponent
     class ItemComponent extends React.Component<PropsI> {
         @listener('testEvent')
-        testListen(...args) {
-            this.props.callback(...args);
+        testListen(...args: any[]) {
+            if (this.props.callback) {
+                this.props.callback(...args);
+            }
         }
 
         render() {
@@ -28,15 +30,19 @@ describe('listener', () => {
         }
     }
 
-    @useEventrix
+    @eventrixComponent
     class ItemComponentDidMount extends React.Component<PropsI> {
         componentDidMount() {
-            this.props.didMountCallback();
+            if (this.props.didMountCallback) {
+                this.props.didMountCallback();
+            }
         }
 
         @listener('testEvent')
-        testListen(...args) {
-            this.props.callback(...args);
+        testListen(...args: any[]) {
+            if (this.props.callback) {
+                this.props.callback(...args);
+            }
         }
 
         render() {
@@ -48,15 +54,19 @@ describe('listener', () => {
         }
     }
 
-    @useEventrix
+    @eventrixComponent
     class ItemComponentWillUnmount extends React.Component<PropsI> {
         componentWillUnmount() {
-            this.props.willUnmountCallback();
+            if(this.props.willUnmountCallback) {
+                this.props.willUnmountCallback();
+            }
         }
 
         @listener('testEvent')
-        testListen(...args) {
-            this.props.callback(...args);
+        testListen(...args: any[]) {
+            if(this.props.callback) {
+                this.props.callback(...args);
+            }
         }
 
         render() {
@@ -68,7 +78,7 @@ describe('listener', () => {
         }
     }
 
-    const TestContainer = ({ eventrix, children }) => (
+    const TestContainer = ({ eventrix, children }: any) => (
         <EventrixProvider eventrix={eventrix}>
             {children}
         </EventrixProvider>

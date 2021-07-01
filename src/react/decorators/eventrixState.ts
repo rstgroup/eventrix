@@ -1,17 +1,12 @@
 import * as React from 'react';
 import { DecoratorEventrixListenerI, DecoratorEventrixStateI } from "../../interfaces";
 
-export interface ClassComponentWithEventrixStateI extends React.ComponentClass {
-    eventrixStates?: DecoratorEventrixStateI[];
-    eventrixListeners?: DecoratorEventrixListenerI[];
-}
-
 interface StateDecoratorI {
-    (ClassComponent: React.ComponentClass): ClassComponentWithEventrixStateI;
+    (ClassComponent: React.ComponentClass): any;
 }
 
 function eventrixState<StateI>(statePath: string, stateName: string): StateDecoratorI {
-    return function eventrixStateDecorator(Class: React.ComponentClass): ClassComponentWithEventrixStateI {
+    return function eventrixStateDecorator(Class: React.ComponentClass): any {
         return class extends Class {
             eventrixStates?: DecoratorEventrixStateI[];
             eventrixListeners?: DecoratorEventrixListenerI[];

@@ -1,5 +1,3 @@
-import { DescriptorI } from "../interfaces";
-
 export interface FetchToStateReceiverDeclarationI {
     eventName: string[] | string;
     statePath: string;
@@ -7,16 +5,15 @@ export interface FetchToStateReceiverDeclarationI {
 }
 
 interface classType {
-    new(): any;
     eventrixFetchToStateReceivers?: FetchToStateReceiverDeclarationI[];
 }
 
 interface FetchToStateDecoratorI {
-    (target: classType, name: string, descriptor: DescriptorI): DescriptorI;
+    (target: classType, name: string, descriptor: any): any;
 }
 
 function fetchToState(eventName: string[] | string, statePath: string): FetchToStateDecoratorI {
-    return function registerFetchToStateReceiverDecorator(target: classType, name: string, descriptor: DescriptorI): DescriptorI {
+    return function registerFetchToStateReceiverDecorator(target: classType, name: string, descriptor: any): any {
         if (!Array.isArray(target.eventrixFetchToStateReceivers)) {
             target.eventrixFetchToStateReceivers = [];
         }

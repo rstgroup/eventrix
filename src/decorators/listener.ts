@@ -1,21 +1,18 @@
-import { DescriptorI } from "../interfaces";
-
 export interface ListenerDeclarationI {
     eventName: string;
     name: string;
 }
 
 interface classType {
-    new(): any;
     eventrixListeners?: ListenerDeclarationI[];
 }
 
 interface ListenerDecoratorI {
-    (target: classType, name: string, descriptor: DescriptorI): DescriptorI;
+    (target: classType, name: string, descriptor: any): any;
 }
 
 function listener(eventName: string): ListenerDecoratorI {
-    return function registerListenerDecorator(target: classType, name: string, descriptor: DescriptorI): DescriptorI {
+    return function registerListenerDecorator(target: classType, name: string, descriptor: any): any {
         if (!Array.isArray(target.eventrixListeners)) {
             target.eventrixListeners = [];
         }
