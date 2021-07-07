@@ -7,7 +7,7 @@ import useEventrixState from './useEventrixState';
 
 describe('useEventrixState', () => {
     const OtherStateComponent = () => {
-        const [test, setTest] = useEventrixState('test');
+        const [test, setTest] = useEventrixState<string>('test');
         useEvent('changeTest', newState => setTest(newState));
         return (
             <div>
@@ -17,7 +17,7 @@ describe('useEventrixState', () => {
     };
 
     const FooInFooComponent = () => {
-        const [foo = {}] = useEventrixState('foo');
+        const [foo = {}] = useEventrixState<any>('foo');
         return (
             <div>
                 <div data-testid="fooDescription">{foo.description}</div>
@@ -26,7 +26,7 @@ describe('useEventrixState', () => {
     };
 
     const FooBarComponent = () => {
-        const [fooBar] = useEventrixState('foo.bar');
+        const [fooBar] = useEventrixState<string>('foo.bar');
         return (
             <div data-testid="fooBarData">
                 {fooBar}
@@ -35,7 +35,7 @@ describe('useEventrixState', () => {
     };
 
     const FooComponent = () => {
-        const [foo = {}, setFoo] = useEventrixState('foo');
+        const [foo = {}, setFoo] = useEventrixState<any>('foo');
         useEvent('changeFoo', newState => setFoo(newState));
         return (
             <div>
@@ -47,7 +47,7 @@ describe('useEventrixState', () => {
         );
     };
 
-    const TestContainer = ({ eventrix, children }) => (
+    const TestContainer = ({ eventrix, children }: any) => (
         <EventrixProvider eventrix={eventrix}>
             {children}
         </EventrixProvider>

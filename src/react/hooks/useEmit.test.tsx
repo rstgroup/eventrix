@@ -16,7 +16,7 @@ describe('useEmit', () => {
             </div>
         );
     };
-    const TestContainer = ({ eventrix, children }) => (
+    const TestContainer = ({ eventrix, children }: any) => (
         <EventrixProvider eventrix={eventrix}>
             {children}
         </EventrixProvider>

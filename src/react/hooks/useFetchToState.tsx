@@ -7,8 +7,8 @@ import { EventrixContext } from '../context';
 import { fetchToStateReceiver } from '../../EventsReceiver';
 import { FetchMethodI, EmitFetchI } from "../../interfaces";
 
-function useFetchToState<EventDataI>(eventName: string, statePath: string, fetchMethod: FetchMethodI, Context = EventrixContext): [EmitFetchI<EventDataI>] {
-    const { eventrix } = useContext(Context);
+function useFetchToState<EventDataI>(eventName: string, statePath: string, fetchMethod: FetchMethodI): [EmitFetchI<EventDataI>] {
+    const { eventrix } = useContext(EventrixContext);
     const emitFetch = useCallback(
         data => eventrix.emit(eventName, data),
         [eventrix.emit, eventName],

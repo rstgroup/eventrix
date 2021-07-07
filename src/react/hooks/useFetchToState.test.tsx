@@ -21,7 +21,7 @@ describe('useFetchToState', () => {
                 emit('fetchData.success');
             });
         });
-        const [foo] = useEventrixState('foo');
+        const [foo] = useEventrixState<string>('foo');
         return (
             <div>
                 <button data-testid="fetchDataButton" onClick={() => { emitFetch('testData'); }}>
@@ -36,7 +36,7 @@ describe('useFetchToState', () => {
             </div>
         );
     };
-    const TestContainer = ({ eventrix, children }) => (
+    const TestContainer = ({ eventrix, children }: any) => (
         <EventrixProvider eventrix={eventrix}>
             {children}
         </EventrixProvider>

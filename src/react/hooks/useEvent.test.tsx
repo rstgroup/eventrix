@@ -5,7 +5,7 @@ import Eventrix from '../../Eventrix';
 import useEvent from './useEvent';
 
 describe('useEvent', () => {
-    const ItemComponent = ({ callback }) => {
+    const ItemComponent = ({ callback }: any) => {
         useEvent('testEvent', callback);
         return (
             <div>
@@ -13,7 +13,7 @@ describe('useEvent', () => {
             </div>
         );
     };
-    const TestContainer = ({ eventrix, children }) => (
+    const TestContainer = ({ eventrix, children }: any) => (
         <EventrixProvider eventrix={eventrix}>
             {children}
         </EventrixProvider>

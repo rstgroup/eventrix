@@ -6,14 +6,14 @@ import useEventState from './useEventState';
 
 describe('useEventState', () => {
     const ItemComponent = () => {
-        const [eventData] = useEventState('testEvent');
+        const [eventData] = useEventState<string>('testEvent');
         return (
             <div data-testid="eventData">
                 {eventData}
             </div>
         );
     };
-    const TestContainer = ({ eventrix, children }) => (
+    const TestContainer = ({ eventrix, children }: any) => (
         <EventrixProvider eventrix={eventrix}>
             {children}
         </EventrixProvider>
