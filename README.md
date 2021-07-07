@@ -5,6 +5,8 @@
 [![npm](https://img.shields.io/npm/l/eventrix.svg)](https://npmjs.org/package/eventrix)
 [![npm](https://img.shields.io/npm/v/eventrix.svg)](https://npmjs.org/package/eventrix)
 
+Go to [API DOCUMENTATION](https://eventrix.gitbook.io/eventrix/) for more details.
+
 1. [Features](#features)
 1. [Installation](#installation)
 1. [Getting started](https://mprzodala.github.io/eventrix/getting-started)
