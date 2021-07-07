@@ -9,7 +9,7 @@ Go to [API DOCUMENTATION](https://eventrix.gitbook.io/eventrix/) for more detail
 
 1. [Features](#features)
 1. [Installation](#installation)
-1. [Getting started](https://mprzodala.github.io/eventrix/getting-started)
+1. [Getting started](https://app.gitbook.com/@eventrix/s/eventrix/getting-started)
 1. [Eventrix](#eventrix)
 1. [React HOCs](#react-hocs)
 1. [React HOOKS](#react-hooks)
