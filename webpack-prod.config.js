@@ -1,3 +1,6 @@
+const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
 const package = require('./package.json');
 
 const externals = new Set([
@@ -6,20 +9,21 @@ const externals = new Set([
 ]);
 
 const config = {
+    target: 'web',
     mode: 'production',
-    devtool: 'source-map',
+    devtool: 'inline-source-map',
     entry: {
-        index: './src/index.js',
-        'redux-adapter/index': './src/redux/index.js',
-        'react/index': './src/react/index.js',
-        'decorators/index': './src/decorators/index.js',
+        index: './src/index.ts',
+        'redux-adapter': './src/redux/index.ts',
     },
     output: {
-        path: __dirname,
+        path: __dirname+'/dist',
         filename: '[name].js',
         sourceMapFilename: '[name].map',
         library: 'eventrix',
         libraryTarget: 'umd',
+        globalObject: 'window',
+        umdNamedDefine: true
     },
     externals(context, request, callback) {
         if (externals.has(request)) {
@@ -28,20 +32,24 @@ const config = {
         return callback();
     },
     resolve: {
-        extensions: ['.js', '.jsx'],
+        extensions: ['.tsx', '.ts', '.js'],
     },
     module: {
         rules: [
             {
-                test: /.jsx?$/,
-                loader: 'babel-loader',
+                test: /\.ts(x?)$/,
                 exclude: /node_modules/,
-            }
-        ]
-    },
-    devServer: {
-        historyApiFallback: true,
-    },
+                use: [
+                    {
+                        loader: 'babel-loader',
+                    },
+                    {
+                        loader: 'ts-loader',
+                    },
+                ],
+            },
+        ],
+    }
 };
 
 module.exports = config;

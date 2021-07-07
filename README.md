@@ -5,9 +5,11 @@
 [![npm](https://img.shields.io/npm/l/eventrix.svg)](https://npmjs.org/package/eventrix)
 [![npm](https://img.shields.io/npm/v/eventrix.svg)](https://npmjs.org/package/eventrix)
 
+Go to [API DOCUMENTATION](https://eventrix.gitbook.io/eventrix/) for more details.
+
 1. [Features](#features)
 1. [Installation](#installation)
-1. [Getting started](https://mprzodala.github.io/eventrix/getting-started)
+1. [Getting started](https://app.gitbook.com/@eventrix/s/eventrix/getting-started)
 1. [Eventrix](#eventrix)
 1. [React HOCs](#react-hocs)
 1. [React HOOKS](#react-hooks)
@@ -182,7 +184,7 @@ pass eventrix instance from context to props
     
 ```jsx
 import React from 'react';
-import { withEventrix } from 'eventrix/react';
+import { withEventrix } from 'eventrix';
 
 class UsersList extends React.Component {
     render() {
@@ -204,7 +206,7 @@ rerender component on eventrix state change
 
 ```jsx
 import React from 'react';
-import { withEventrixState } from 'eventrix/react';
+import { withEventrixState } from 'eventrix';
 
 class UsersList extends React.Component {
     render() {
@@ -227,7 +229,7 @@ return eventrix state and setState method
 
 ```jsx
 import React from 'react';
-import { useEventrixState } from 'eventrix/react';
+import { useEventrixState } from 'eventrix';
 
 const UsersList = () => {
     const [users, setUsers] = useEventrixState('users');
@@ -244,7 +246,7 @@ return eventrix emit method
 
 ```jsx
 import React from 'react';
-import { useEmit } from 'eventrix/react';
+import { useEmit } from 'eventrix';
 
 const RemoveUserButton = ({ user }) => {
     const emit = useEmit();
@@ -260,7 +262,7 @@ or use emit with event factory function
 
 ```jsx
 import React from 'react';
-import { useEmit } from 'eventrix/react';
+import { useEmit } from 'eventrix';
 
 const removeUserEvent = (eventData) => {
     const removeUserEventName = 'removeUser';
@@ -282,7 +284,7 @@ save emitted event data in state and return state;
 
 ```jsx
 import React, { useState } from 'react';
-import { useEvent, useEmit } from 'eventrix/react';
+import { useEvent, useEmit } from 'eventrix';
 
 const UndoDeleteUserButton = () => {
     const [removedUser, setRemovedUser] = useState();
@@ -308,7 +310,7 @@ save emitted event data in state and return state;
 
 ```jsx
 import React from 'react';
-import { useEventState, useEmit } from 'eventrix/react';
+import { useEventState, useEmit } from 'eventrix';
 
 const UndoDeleteUserButton = () => {
     const [eventState, setEventState] = useEventState('removeUser');
@@ -327,7 +329,7 @@ fetch data and put it to state
 ```jsx
 import React from 'react';
 import axios from 'axios';
-import { useFetchToState } from 'eventrix/react';
+import { useFetchToState } from 'eventrix';
 
 const removeUserFetch = (userData, state, emit) => {
     return axios.delete(`http://somedomain.com/users/${userData.id}`).then(() => {
@@ -352,7 +354,7 @@ class method fetch data and put it to state
 
 ```jsx
 import React from 'react';
-import { useEventrix, receiver } from 'eventrix/decorators';
+import { useEventrix, receiver } from 'eventrix';
 
 @useEventrix
 class ClientsService {
@@ -377,7 +379,7 @@ class method fetch data and put it to state
 
 ```jsx
 import React from 'react';
-import { useEventrix, fetchToState } from 'eventrix/decorators';
+import { useEventrix, fetchToState } from 'eventrix';
 
 @useEventrix
 class ClientsService {
@@ -402,7 +404,7 @@ invoke class method when event is emitted
 
 ```jsx
 import React from 'react';
-import { useEventrix, listener } from 'eventrix/decorators';
+import { useEventrix, listener } from 'eventrix';
 
 @useEventrix
 class ClientsService {
@@ -422,14 +424,14 @@ export default ClientsService;
 
 ### React Class Component Decorators
 
-##### @useEventrix
+##### @eventrixComponent
 use eventrix context and extend component by eventrix
 
 ```jsx
 import React from 'react';
-import { useEventrix } from 'eventrix/react';
+import { eventrixComponent } from 'eventrix';
 
-@useEventrix
+@eventrixComponent
 class Counter extends React.Component {
     componentDidMount() {
         this.eventrix.emit('componentMounted');
@@ -445,14 +447,14 @@ class Counter extends React.Component {
 export default Counter;
 ```
 
-##### @listener
+##### @eventListener
 invoke component class method when event is emitted
 
 ```jsx
 import React from 'react';
-import { useEventrix, listener } from 'eventrix/react';
+import { eventrixComponent, eventListener } from 'eventrix';
 
-@useEventrix
+@eventrixComponent
 class Counter extends React.Component {
     constructor(...args) {
         super(...args)
@@ -461,7 +463,7 @@ class Counter extends React.Component {
         };
     }
 
-    @listener('Clients:create.success')
+    @eventListener('Clients:create.success')
     createCounter(eventData) {
         this.setState({ counter: this.state.counter + 1 });
     };
@@ -480,9 +482,9 @@ invoke component class method when eventrix state changed
 
 ```jsx
 import React from 'react';
-import { useEventrix, stateListener } from 'eventrix/react';
+import { eventrixComponent, stateListener } from 'eventrix';
 
-@useEventrix
+@eventrixComponent
 class ClientsListCounter extends React.Component {
     constructor(...args) {
         super(...args)
@@ -511,10 +513,10 @@ extend component by eventrix state and rerender on eventrix state change
 
 ```jsx
 import React from 'react';
-import { useEventrix, eventrixState } from 'eventrix/react';
+import { eventrixComponent, eventrixState } from 'eventrix';
 
-@useEventrix
-@eventrixState('clients.list', clientsList)
+@eventrixComponent
+@eventrixState('clients.list', 'clientsList')
 class ClientsListCounter extends React.Component { 
     render() {
         return (
