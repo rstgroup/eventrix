@@ -1,4 +1,4 @@
-import useEventrix from "./useEventrix";
+import useEventrix, {ServicesI} from "./useEventrix";
 import Eventrix from "../Eventrix";
 import {EventrixI} from "../interfaces";
 
@@ -9,7 +9,7 @@ describe('useEventrix', () => {
             ajax: any;
             eventrix: EventrixI;
 
-            constructor(servcices) {
+            constructor(servcices: ServicesI) {
                 this.ajax = servcices.ajax;
             }
         }
