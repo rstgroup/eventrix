@@ -9,7 +9,7 @@ Go to [API DOCUMENTATION](https://eventrix.gitbook.io/eventrix/) for more detail
 
 1. [Features](#features)
 1. [Installation](#installation)
-1. [Getting started](https://app.gitbook.com/@eventrix/s/eventrix/getting-started)
+1. [Getting started](https://eventrix.gitbook.io/eventrix/getting-started)
 1. [Eventrix](#eventrix)
 1. [React HOCs](#react-hocs)
 1. [React HOOKS](#react-hooks)
@@ -41,7 +41,7 @@ $ npm install eventrix --save
 ### Getting started
 
 
-[How to use eventrix step by step](https://app.gitbook.com/@eventrix/s/eventrix/getting-started)
+[How to use eventrix step by step](https://eventrix.gitbook.io/eventrix/getting-started)
 
 ### Eventrix
 
@@ -542,7 +542,7 @@ export default ClientsListCounter;
 
 ### Debugger
 
-You can use debugger with [eventrix-devtools](hhttps://github.com/rstgroup/eventrix-devtools) (chrome extension) or only print data in browser console.
+You can use debugger with [eventrix-devtools](https://github.com/rstgroup/eventrix-devtools) (chrome extension) or only print data in browser console.
 
 ```js
 import { Eventrix, EventrixDebugger } from 'eventrix'
