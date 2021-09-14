@@ -15,8 +15,8 @@ Go to [API DOCUMENTATION](https://eventrix.gitbook.io/eventrix/) for more detail
 1. [React HOOKS](#react-hooks)
 1. [Decorators](#decorators)
 1. [Examples](#examples)
-1. [Redux adapter](https://github.com/mprzodala/eventrix/blob/master/docs/reduxAdapter.md)
-1. [Devtools](https://github.com/mprzodala/eventrix-devtools)
+1. [Redux adapter](https://github.com/rstgroup/eventrix/blob/master/docs/reduxAdapter.md)
+1. [Devtools](https://github.com/rstgroup/eventrix-devtools)
 1. [Debugger](#debugger)
 1. [Contribute](#contribute)
 1. [License](#license)
@@ -41,7 +41,7 @@ $ npm install eventrix --save
 ### Getting started
 
 
-[How to use eventrix step by step](https://mprzodala.github.io/eventrix/getting-started)
+[How to use eventrix step by step](https://app.gitbook.com/@eventrix/s/eventrix/getting-started)
 
 ### Eventrix
 
@@ -115,7 +115,7 @@ export default receiver;
 | callbackEvents.error | `{ eventName: string, data: any, getData: function(error, eventData): any }` | This event name with data will be emitted when fetch has errors |
 
 
-example with `data` attribute 
+example with `data` attribute
 
 ```js
 import { fetchToStateReceiver, fetchHandler } from 'eventrix';
@@ -146,7 +146,7 @@ const receiver = fetchToStateReceiver('users:remove', 'users', removeUserWithHan
 export default receiver;
 ```
 
-example with `getData` attribute 
+example with `getData` attribute
 
 ```js
 import { fetchToStateReceiver, fetchHandler } from 'eventrix';
@@ -181,7 +181,7 @@ export default receiver;
 
 ##### withEventrix
 pass eventrix instance from context to props
-    
+
 ```jsx
 import React from 'react';
 import { withEventrix } from 'eventrix';
@@ -221,7 +221,7 @@ class UsersList extends React.Component {
 
 export default withEventrixState(UsersList, ['users']);
 ```
-    
+
 ### React HOOKS
 
 ##### useEventrixState
@@ -293,7 +293,7 @@ const UndoDeleteUserButton = () => {
         const user = eventData;
         setRemovedUser(user);
     });
-    
+
     if (!removedUser) {
         return null;
     }
@@ -437,7 +437,7 @@ class Counter extends React.Component {
         this.eventrix.emit('componentMounted');
     }
     render() {
-        
+
         return (
             <div>Component with eventrix</div>
         );
@@ -497,7 +497,7 @@ class ClientsListCounter extends React.Component {
     createCounter(clientsList) {
         this.setState({ clientsNumber: clientsList.length });
     };
-    
+
     render() {
         return (
             <div>Clients number: {this.state.clientsNumber}</div>
@@ -517,7 +517,7 @@ import { eventrixComponent, eventrixState } from 'eventrix';
 
 @eventrixComponent
 @eventrixState('clients.list', 'clientsList')
-class ClientsListCounter extends React.Component { 
+class ClientsListCounter extends React.Component {
     render() {
         return (
             <div>Clients number: {this.state.clientsList.length}</div>
@@ -530,7 +530,7 @@ export default ClientsListCounter;
 
 ### Examples
 
-[Todo List](https://codesandbox.io/s/eventrix-todo-example-r5qeb) 
+[Todo List](https://codesandbox.io/s/eventrix-todo-example-r5qeb)
 
 [Users List](https://codesandbox.io/s/eventrix-users-example-wepzu)
 
@@ -542,7 +542,7 @@ export default ClientsListCounter;
 
 ### Debugger
 
-You can use debugger with [eventrix-devtools](https://github.com/mprzodala/eventrix-devtools) (chrome extension) or only print data in browser console. 
+You can use debugger with [eventrix-devtools](hhttps://github.com/rstgroup/eventrix-devtools) (chrome extension) or only print data in browser console.
 
 ```js
 import { Eventrix, EventrixDebugger } from 'eventrix'
@@ -555,7 +555,7 @@ eDebugger.start();
 export default eventrix;
 ```
 
-Now all emitted events and state changes will be saved in debugger. You can print this info in console or use [eventrix-devtools](https://github.com/mprzodala/eventrix-devtools).
+Now all emitted events and state changes will be saved in debugger. You can print this info in console or use [eventrix-devtools](https://github.com/rstgroup/eventrix-devtools).
 
 ##### Debugger methods:
 
@@ -575,11 +575,11 @@ Now all emitted events and state changes will be saved in debugger. You can prin
 - use eslint rules
 - write clean code
 - unit tests (min 85% of your code should be tested)
-- [code of conduct](https://github.com/mprzodala/eventrix/blob/master/docs/code_of_conduct.md)
+- [code of conduct](https://github.com/rstgroup/eventrix/blob/master/docs/code_of_conduct.md)
 
 ### License
 
-eventrix package are [MIT licensed](https://github.com/mprzodala/eventrix/blob/master/LICENSE)
+eventrix package are [MIT licensed](https://github.com/rstgroup/eventrix/blob/master/LICENSE)
 
 ### Powered by
 
