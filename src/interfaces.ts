@@ -150,6 +150,9 @@ export interface EventsEmitterI {
     listeners: {
         [key: string]: EventsListenerI<any>[];
     };
+    matchedListenersCache: {
+        [key: string]: string[],
+    };
     stateManager?: StateManagerI;
     emit<EventDataI = any>(eventName: string, eventData?: EventDataI): Promise<any>;
     emitWild<EventDataI = any>(eventName: string, eventData: EventDataI): void;

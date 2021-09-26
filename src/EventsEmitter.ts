@@ -7,9 +7,13 @@ class EventsEmitter implements EventsEmitterI {
         [key: string]: EventsListenerI[];
     };
     stateManager?: StateManagerI;
+    matchedListenersCache: {
+        [key: string]: string[],
+    };
 
     constructor() {
         this.listeners = {};
+        this.matchedListenersCache = {};
         this.emit = this.emit.bind(this);
         this.emitWild = this.emitWild.bind(this);
     }
@@ -20,6 +24,7 @@ class EventsEmitter implements EventsEmitterI {
 
     listen(name: string, listener: EventsListenerI): void {
         if (!this.listeners[name]) {
+            this.clearMatchedListenersCache();
             this.listeners[name] = [];
         }
         if (typeof listener !== 'function') {
@@ -48,6 +53,10 @@ class EventsEmitter implements EventsEmitterI {
             return;
         }
         this.listeners[name].splice(index, 1);
+        if (this.listeners[name].length === 0) {
+            delete this.listeners[name];
+            this.clearMatchedListenersCache();
+        }
     }
 
     getEventData<EventDataI>(name: string, eventName: string, data: EventDataI): EventDataI {
@@ -65,13 +74,29 @@ class EventsEmitter implements EventsEmitterI {
         }
     }
 
-    emitWild<EventDataI>(name: string, data: EventDataI): void {
+    setMatchedListenersCache(eventName: string, matchedEventNames: string[]) {
+        this.matchedListenersCache[eventName] = matchedEventNames;
+    }
+
+
+    clearMatchedListenersCache() {
+        this.matchedListenersCache = {};
+    }
+
+    getMatchedListeners(name: string): string[] {
+        if(this.matchedListenersCache[name]) {
+            return this.matchedListenersCache[name];
+        }
         const listenEvents = Object.keys(this.listeners);
         const matchedEvents = listenEvents.filter((eventName) => eventName.indexOf(name) === 0);
+        this.setMatchedListenersCache(name, matchedEvents);
+        return matchedEvents;
+    }
+
+    emitWild<EventDataI>(name: string, data: EventDataI): void {
+        const matchedEvents = this.getMatchedListeners(name);
         return matchedEvents.forEach(eventName => {
-            if(this.listeners[eventName] && Array.isArray(this.listeners[eventName])) {
-                this.listeners[eventName].forEach(listener => listener(this.getEventData(name, eventName, data), []));
-            }
+            this.runListeners(eventName, this.getEventData(name, eventName, data), []);
         });
     }
 
