@@ -1,4 +1,5 @@
-import { isNumber, isObject, isPromise, setValue, unsetValue } from './helpers';
+import { isNumber, isObject, isPromise, registerListeners, setValue, unsetValue } from './helpers';
+import Eventrix from './Eventrix';
 
 describe('helpers', () => {
     describe('isPromise', () => {
@@ -235,6 +236,28 @@ describe('helpers', () => {
             };
             unsetValue(state, 'a.0.b.c.0.d');
             expect(state.a[0].b.c[0]).toEqual({});
+        });
+    });
+
+    describe('registerListeners', () => {
+        it('should register listeners all wild listeners', () => {
+            const eventrix = new Eventrix();
+            const mockListener = jest.fn();
+            registerListeners(eventrix, 'a.b.c.d', mockListener);
+            expect(eventrix.eventsEmitter.listeners['setState:a.*'].length).toEqual(1);
+            expect(eventrix.eventsEmitter.listeners['setState:a.b.*'].length).toEqual(1);
+            expect(eventrix.eventsEmitter.listeners['setState:a.b.c.*'].length).toEqual(1);
+            expect(eventrix.eventsEmitter.listeners['setState:a.b.c.d'].length).toEqual(1);
+        });
+        it('should unregister all register listeners', () => {
+            const eventrix = new Eventrix();
+            const mockListener = jest.fn();
+            const unregisterListeners = registerListeners(eventrix, 'a.b.c.d', mockListener);
+            unregisterListeners();
+            expect(eventrix.eventsEmitter.listeners['setState:a.*']).toEqual(undefined);
+            expect(eventrix.eventsEmitter.listeners['setState:a.b.*']).toEqual(undefined);
+            expect(eventrix.eventsEmitter.listeners['setState:a.b.c.*']).toEqual(undefined);
+            expect(eventrix.eventsEmitter.listeners['setState:a.b.c.d']).toEqual(undefined);
         });
     });
 });

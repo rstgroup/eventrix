@@ -69,12 +69,13 @@ export const registerListeners = (eventrix: EventrixI, stateName: string, listen
     const eventsList = [stateEventName];
     const statePath = stateName.split('.');
     let tempStateName = '';
-    statePath.forEach((name: string) => {
+    for (let i = 0; i < statePath.length - 1; i++) {
+        const name = statePath[i];
         tempStateName = `${tempStateName}${name}.`;
         const wildEventName = `setState:${tempStateName}*`;
         eventsList.push(wildEventName);
         eventrix.listen(wildEventName, listener);
-    });
+    }
     eventrix.listen(stateEventName, listener);
     return () => {
         eventsList.forEach((name: string) => {
