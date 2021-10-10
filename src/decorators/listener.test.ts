@@ -1,7 +1,7 @@
 import useEventrix from './useEventrix';
 import listener from './listener';
-import Eventrix from "../Eventrix";
-import {EventrixI} from "../interfaces";
+import Eventrix from '../Eventrix';
+import { EventrixI } from '../interfaces';
 
 describe('listener', () => {
     const GET_LIST_EVENT_NAME = 'Test:loadList';
@@ -22,10 +22,9 @@ describe('listener', () => {
             getListListener(eventDate) {
                 callback(eventDate);
             }
-
         }
         const eventrix = new Eventrix({});
-        const testClassInstance = new FetchToStateTestClass({ eventrix });
+        new FetchToStateTestClass({ eventrix });
         eventrix.emit(GET_LIST_EVENT_NAME, data);
         expect(callback).toHaveBeenCalledWith(data);
     });
@@ -52,10 +51,9 @@ describe('listener', () => {
             extendListListener(eventDate) {
                 extendCallback(eventDate);
             }
-
         }
         const eventrix = new Eventrix({});
-        const testClassInstance = new FetchToStateTestClass({ eventrix });
+        new FetchToStateTestClass({ eventrix });
         eventrix.emit(EXTEND_LIST_EVENT_NAME, extendEventData);
         expect(extendCallback).toHaveBeenCalledWith(extendEventData);
         expect(callback).not.toHaveBeenCalled();

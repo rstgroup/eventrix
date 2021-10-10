@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { EventrixContext } from '../context';
-import {EventrixContextI, EventsListenerI} from "../../interfaces";
+import { EventrixContextI, EventsListenerI, UnregisterListenerMethod } from '../../interfaces';
+import { registerListeners } from '../../helpers';
 
 interface StateNamesMethodI {
     (props: any): string[];
@@ -34,24 +35,28 @@ const withEventrixState = <P extends PropsI>(
         state: StateI = {};
         stateNames: string[] = [];
         listeners: ListenersI = {};
+        unregisterListeners: {
+            [key: string]: UnregisterListenerMethod;
+        };
 
         constructor(props: P, context: EventrixContextI) {
             super(props, context);
             this.onStateUpdate = this.onStateUpdate.bind(this);
             this.getStateNames().forEach((stateName) => {
                 this.state[stateName] = context.eventrix.getState(stateName) || '';
-                this.listeners[stateName] = state => this.onStateUpdate(stateName, state);
+                this.listeners[stateName] = (state) => this.onStateUpdate(stateName, state);
             });
         }
         componentDidMount() {
             this.getStateNames().forEach((stateName) => {
-                this.context.eventrix.listen(`setState:${stateName}`, this.listeners[stateName]);
+                this.unregisterListeners[stateName] = registerListeners(this.context.eventrix, stateName, this.listeners[stateName]);
             });
             this.refreshState();
         }
         componentWillUnmount() {
             this.getStateNames().forEach((stateName) => {
-                this.context.eventrix.unlisten(`setState:${stateName}`, this.listeners[stateName]);
+                const unregisterMethod = this.unregisterListeners[stateName];
+                unregisterMethod();
             });
         }
         onStateUpdate(stateName: string, state: any) {

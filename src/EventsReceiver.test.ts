@@ -25,7 +25,7 @@ describe('fetchToStateReceiver', () => {
             getState: jest.fn(() => ({})),
             eventsEmitter: {
                 emit: jest.fn(),
-            }
+            },
         };
     });
     it('should handle event and set state by stateManager when promise resolved', () => {
@@ -78,49 +78,43 @@ describe('fetchHandler', () => {
         const successEventData = 'test success';
         const errorEventName = 'fetch.error';
         const errorEventData = 'test error';
-        const fetchMethodWithHandler = fetchHandler(
-            fetchMethod,
-            {
-                success: {
-                    eventName: successEventName,
-                    data: successEventData
-                },
-                error: {
-                    eventName: errorEventName,
-                    data: errorEventData
-                }
-            }
-        );
+        const fetchMethodWithHandler = fetchHandler(fetchMethod, {
+            success: {
+                eventName: successEventName,
+                data: successEventData,
+            },
+            error: {
+                eventName: errorEventName,
+                data: errorEventData,
+            },
+        });
         return fetchMethodWithHandler({}, '', emit).then((response) => {
             expect(response).toEqual(fetchResponse);
             expect(emit).toHaveBeenCalledWith(successEventName, successEventData);
             expect(emit).not.toHaveBeenCalledWith(errorEventName, errorEventData);
-        })
+        });
     });
     it('should fetch data and emit success event with response in event data', () => {
         const fetchResponse = { test: 'test' };
         const fetchMethod = () => Promise.resolve(fetchResponse);
         const successEventName = 'fetch.success';
-        const successGetEventData = (response) => ({ response , message: 'test success' });
+        const successGetEventData = (response) => ({ response, message: 'test success' });
         const errorEventName = 'fetch.error';
         const errorGetEventData = (errorResponse) => ({ errorResponse, message: 'test error' });
-        const fetchMethodWithHandler = fetchHandler(
-            fetchMethod,
-            {
-                success: {
-                    eventName: successEventName,
-                    getData: successGetEventData
-                },
-                error: {
-                    eventName: errorEventName,
-                    getData: errorGetEventData
-                }
-            }
-        );
+        const fetchMethodWithHandler = fetchHandler(fetchMethod, {
+            success: {
+                eventName: successEventName,
+                getData: successGetEventData,
+            },
+            error: {
+                eventName: errorEventName,
+                getData: errorGetEventData,
+            },
+        });
         return fetchMethodWithHandler({}, '', emit).then((response) => {
             expect(response).toEqual(fetchResponse);
-            expect(emit).toHaveBeenCalledWith(successEventName, { response , message: 'test success' });
-        })
+            expect(emit).toHaveBeenCalledWith(successEventName, { response, message: 'test success' });
+        });
     });
     it('should fetch data and emit error event when promise rejected', () => {
         const fetchResponse = { test: 'test' };
@@ -129,48 +123,42 @@ describe('fetchHandler', () => {
         const successEventData = 'test success';
         const errorEventName = 'fetch.error';
         const errorEventData = 'test error';
-        const fetchMethodWithHandler = fetchHandler(
-            fetchMethod,
-            {
-                success: {
-                    eventName: successEventName,
-                    data: successEventData
-                },
-                error: {
-                    eventName: errorEventName,
-                    data: errorEventData
-                }
-            }
-        );
+        const fetchMethodWithHandler = fetchHandler(fetchMethod, {
+            success: {
+                eventName: successEventName,
+                data: successEventData,
+            },
+            error: {
+                eventName: errorEventName,
+                data: errorEventData,
+            },
+        });
         return fetchMethodWithHandler({}, '', emit).then((response) => {
             expect(response).toEqual(undefined);
             expect(emit).not.toHaveBeenCalledWith(successEventName, successEventData);
             expect(emit).toHaveBeenCalledWith(errorEventName, errorEventData);
-        })
+        });
     });
     it('should fetch data and emit error event with error response in event data', () => {
         const errorResponse = { test: 'test' };
         const fetchMethod = () => Promise.reject(errorResponse);
         const successEventName = 'fetch.success';
-        const successGetEventData = (response) => ({ response , message: 'test success' });
+        const successGetEventData = (response) => ({ response, message: 'test success' });
         const errorEventName = 'fetch.error';
         const errorGetEventData = (response) => ({ response, message: 'test error' });
-        const fetchMethodWithHandler = fetchHandler(
-            fetchMethod,
-            {
-                success: {
-                    eventName: successEventName,
-                    getData: successGetEventData
-                },
-                error: {
-                    eventName: errorEventName,
-                    getData: errorGetEventData
-                }
-            }
-        );
+        const fetchMethodWithHandler = fetchHandler(fetchMethod, {
+            success: {
+                eventName: successEventName,
+                getData: successGetEventData,
+            },
+            error: {
+                eventName: errorEventName,
+                getData: errorGetEventData,
+            },
+        });
         return fetchMethodWithHandler({}, '', emit).then((response) => {
             expect(response).toEqual(undefined);
             expect(emit).toHaveBeenCalledWith(errorEventName, { response: errorResponse, message: 'test error' });
-        })
+        });
     });
 });

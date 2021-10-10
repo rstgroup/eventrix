@@ -1,12 +1,7 @@
 /*** CORE ***/
 export { default as Eventrix } from './Eventrix';
-export {
-    default as EventsReceiver,
-    fetchToStateReceiver,
-    fetchHandler,
-} from './EventsReceiver';
-export { default as EventrixDebugger} from './EventrixDebugger';
-
+export { default as EventsReceiver, fetchToStateReceiver, fetchHandler } from './EventsReceiver';
+export { default as EventrixDebugger } from './EventrixDebugger';
 
 /*** REACT ***/
 export {
@@ -25,13 +20,7 @@ export {
     eventrixState,
 } from './react';
 
-
 /*** CLASS ***/
-export {
-    useEventrix,
-    receiver,
-    fetchToState,
-    listener,
-} from './decorators';
+export { useEventrix, receiver, fetchToState, listener } from './decorators';
 
 export { default } from './Eventrix';

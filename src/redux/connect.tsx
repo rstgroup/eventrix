@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { EventrixContext } from '../react';
 import { DISPATCH_EVENT_NAME } from './events';
-import {mapStateToPropsType, mapDispatchToPropsType, mapDispatchToPropsResponseType, ActionI} from "../interfaces";
+import { mapStateToPropsType, mapDispatchToPropsType, mapDispatchToPropsResponseType, ActionI } from '../interfaces';
 
 interface StateI {
     store: any;
@@ -9,7 +9,8 @@ interface StateI {
 
 function connect<P>(mapStateToProps: mapStateToPropsType, mapDispatchToProps: mapDispatchToPropsType, Context = EventrixContext) {
     return (BaseComponent: any) =>
-        class extends Component <P, StateI> {
+        // eslint-disable-next-line react/display-name
+        class extends Component<P, StateI> {
             static contextType = Context;
 
             constructor(props: P, context: any) {
@@ -43,17 +44,11 @@ function connect<P>(mapStateToProps: mapStateToPropsType, mapDispatchToProps: ma
             }
 
             updateState(): void {
-                this.setState({store: this.context.eventrix.getState()});
+                this.setState({ store: this.context.eventrix.getState() });
             }
 
             render() {
-                return (
-                    <BaseComponent
-                        {...this.props}
-                        {...this.getStateToProps()}
-                        {...this.getDispatchToProps()}
-                    />
-                );
+                return <BaseComponent {...this.props} {...this.getStateToProps()} {...this.getDispatchToProps()} />;
             }
         };
 }

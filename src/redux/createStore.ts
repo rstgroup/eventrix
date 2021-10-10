@@ -1,8 +1,8 @@
 import Eventrix from '../Eventrix';
-import EventsReceiver from "../EventsReceiver";
-import combineReducers from "./combineReducers";
-import { DISPATCH_EVENT_NAME } from "./events";
-import {EventrixI, EventsListenerI, ReducerI, ReducersI} from "../interfaces";
+import EventsReceiver from '../EventsReceiver';
+import combineReducers from './combineReducers';
+import { DISPATCH_EVENT_NAME } from './events';
+import { EventrixI, EventsListenerI, ReducerI, ReducersI } from '../interfaces';
 
 interface UnsubscribeI {
     (): void;
@@ -23,8 +23,8 @@ const getEventsReceivers = (reducers: ReducersI | ReducerI) => {
                 if (state !== stateFromReducer) {
                     stateManager.setState('', stateFromReducer);
                 }
-            })
-        ]
+            }),
+        ];
     }
     if (typeof reducers === 'object') {
         return combineReducers(reducers);

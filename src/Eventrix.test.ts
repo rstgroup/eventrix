@@ -1,6 +1,6 @@
 import Eventrix from './Eventrix';
-import EventsReceiver from "./EventsReceiver";
-import {EventsReceiverI} from "./interfaces";
+import EventsReceiver from './EventsReceiver';
+import { EventsReceiverI } from './interfaces';
 
 describe('Eventrix', () => {
     let initialState: any;
@@ -18,9 +18,7 @@ describe('Eventrix', () => {
             },
         };
         mockReceiver = jest.fn(() => 'testReceiverData');
-        eventsReceivers = [
-            new EventsReceiver('getFoo', mockReceiver)
-        ];
+        eventsReceivers = [new EventsReceiver('getFoo', mockReceiver)];
         mockListener = jest.fn();
         eventrix = new Eventrix(initialState, eventsReceivers);
     });

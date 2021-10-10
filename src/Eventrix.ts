@@ -1,13 +1,6 @@
 import StateManager from './StateManager';
 import EventsEmitter from './EventsEmitter';
-import {
-    EventrixI,
-    EventsEmitterI,
-    StateManagerI,
-    EventsListenerI,
-    EventsReceiverI,
-    EmitArgumentsI
-} from "./interfaces";
+import { EventrixI, EventsEmitterI, StateManagerI, EventsListenerI, EventsReceiverI, EmitArgumentsI } from './interfaces';
 
 class Eventrix<InitialStateI = any> implements EventrixI {
     eventsEmitter: EventsEmitterI;
@@ -34,7 +27,7 @@ class Eventrix<InitialStateI = any> implements EventrixI {
         }
         return { eventName: name, eventData: value };
     }
-    emit<EventDataI = any>(name: string | [string, EventDataI] , value?: EventDataI): Promise<any> {
+    emit<EventDataI = any>(name: string | [string, EventDataI], value?: EventDataI): Promise<any> {
         const { eventName, eventData } = this.mapEmitArguments<EventDataI>(name, value);
         return this.eventsEmitter.emit<EventDataI>(eventName, eventData);
     }

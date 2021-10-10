@@ -14,7 +14,7 @@ export interface EventsReceiverI<EventDataI = any, ReceiverResponseI = any> {
 export interface StateManagerI {
     state: any;
     receivers: {
-        [key: string]: EventsReceiverI[]
+        [key: string]: EventsReceiverI[];
     };
     eventsEmitter: EventsEmitterI;
     setState<StateValueI>(path: string | undefined | null, value: StateValueI): void;
@@ -33,10 +33,10 @@ export interface SetStateI<StateI> {
 }
 
 export interface FetchMethodI {
-    (eventData: any, state: any, emit: EmitI<any>): Promise<any>
+    (eventData: any, state: any, emit: EmitI<any>): Promise<any>;
 }
 
-export interface EmitFetchI<EventDataI>{
+export interface EmitFetchI<EventDataI> {
     (data: EventDataI): Promise<any>;
 }
 
@@ -103,15 +103,12 @@ export interface WithEventrixState<Props, State> {
         BaseComponent: ComponentClass | ComponentType,
         stateNames: string | string[] | StateNamesFunction<Props>,
         mapStateToProps?: MapStateToPropsFunction<Props, State>,
-        Context?: any
-    ): ComponentClass
+        Context?: any,
+    ): ComponentClass;
 }
 
 export interface WithEventrix {
-    (
-        BaseComponent: ComponentClass | ComponentType,
-        Context?: any
-    ): ComponentClass
+    (BaseComponent: ComponentClass | ComponentType, Context?: any): ComponentClass;
 }
 
 export interface UseEventrixState {
@@ -151,7 +148,7 @@ export interface EventsEmitterI {
         [key: string]: EventsListenerI<any>[];
     };
     matchedListenersCache: {
-        [key: string]: string[],
+        [key: string]: string[];
     };
     stateManager?: StateManagerI;
     emit<EventDataI = any>(eventName: string, eventData?: EventDataI): Promise<any>;
@@ -160,7 +157,7 @@ export interface EventsEmitterI {
     unlisten(eventName: string, listener: EventsListenerI<any>): void;
     getEventData<EventDataI>(name: string, eventName: string, data: any): EventDataI;
     runListeners<EventDataI>(name: string, data: EventDataI, receiversData: any[]): void;
-    emitWild<EventDataI>(name: string, data: EventDataI): void
+    emitWild<EventDataI>(name: string, data: EventDataI): void;
     useStore(stateManager: StateManagerI): void;
 }
 
@@ -201,11 +198,10 @@ export interface DescriptorI {
     (): any | void;
 }
 
-
 // REDUX ADAPTER
 
 export interface ReducerI {
-    (state: any, action: any): any
+    (state: any, action: any): any;
 }
 
 export interface ReducersI {
@@ -220,7 +216,7 @@ export interface DispatchI {
     (action: ActionI): void;
 }
 
-export interface mapStateToPropsType <StateI = any, ReducedStateI = any>{
+export interface mapStateToPropsType<StateI = any, ReducedStateI = any> {
     (state: StateI): ReducedStateI;
 }
 
@@ -232,6 +228,10 @@ export interface mapDispatchToPropsResponseType {
     [key: string]: DispatchActionI;
 }
 
-export interface mapDispatchToPropsType <StateI = any, ReducedStateI = any>{
+export interface mapDispatchToPropsType {
     (dispatch: DispatchI): mapDispatchToPropsResponseType;
+}
+
+export interface UnregisterListenerMethod {
+    (): void;
 }

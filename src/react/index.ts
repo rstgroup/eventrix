@@ -1,8 +1,5 @@
 // context
-export {
-    EventrixContext,
-    EventrixProvider,
-} from './context';
+export { EventrixContext, EventrixProvider } from './context';
 // hocs
 export { default as withEventrixState } from './hocs/withEventrixState';
 export { default as withEventrix } from './hocs/withEventrix';

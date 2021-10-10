@@ -1,4 +1,4 @@
-import {isNumber, isObject, isPromise, setValue, unsetValue} from './helpers';
+import { isNumber, isObject, isPromise, setValue, unsetValue } from './helpers';
 
 describe('helpers', () => {
     describe('isPromise', () => {
@@ -6,7 +6,7 @@ describe('helpers', () => {
             const promiseResolve = Promise.resolve({});
             const promiseReject = Promise.reject().catch(() => {});
             const newPromise = new Promise((resolve) => {
-                resolve();
+                resolve(undefined);
             });
             expect(isPromise(promiseResolve)).toEqual(true);
             expect(isPromise(promiseReject)).toEqual(true);
@@ -83,10 +83,10 @@ describe('helpers', () => {
                 a: {
                     b: {
                         c: {
-                            d: 'dValue'
-                        }
-                    }
-                }
+                            d: 'dValue',
+                        },
+                    },
+                },
             };
             const newValue = 'test';
             setValue(state, 'a.b.c.d', newValue);
@@ -96,9 +96,8 @@ describe('helpers', () => {
         it('should fill object when object dont have property', () => {
             const state = {
                 a: {
-                    b: {
-                    }
-                }
+                    b: {},
+                },
             };
             const newValue = 'test';
             setValue(state, 'a.b.c.d', newValue);
@@ -107,9 +106,8 @@ describe('helpers', () => {
         it('should fill object when object dont have property and end of path is array', () => {
             const state = {
                 a: {
-                    b: {
-                    }
-                }
+                    b: {},
+                },
             };
             const newValue = 'test';
             setValue(state, 'a.b.c.d.0', newValue);
@@ -120,13 +118,13 @@ describe('helpers', () => {
                 a: {
                     b: {
                         c: {
-                            d: 'dValue'
-                        }
+                            d: 'dValue',
+                        },
                     },
                     e: {
-                        f: 'fValue'
-                    }
-                }
+                        f: 'fValue',
+                    },
+                },
             };
             const oldStateA = state.a;
             const oldStateB = state.a.b;
@@ -139,19 +137,19 @@ describe('helpers', () => {
             expect(state.a.b.c).not.toBe(oldStateC);
             expect(state.a.e).toBe(oldStateE);
         });
-        it('should create new reference for all element on path', () => {
+        it('should create new reference for all element on path including arrays', () => {
             const state = {
                 a: [
                     {
                         b: {
                             c: [
                                 {
-                                    d: 'dValue'
-                                }
-                            ]
-                        }
-                    }
-                ]
+                                    d: 'dValue',
+                                },
+                            ],
+                        },
+                    },
+                ],
             };
             const newValue = 'test';
             setValue(state, 'a.0.b.c.0.d', newValue);
@@ -178,10 +176,10 @@ describe('helpers', () => {
                 a: {
                     b: {
                         c: {
-                            d: 'dValue'
-                        }
-                    }
-                }
+                            d: 'dValue',
+                        },
+                    },
+                },
             };
             unsetValue(state, 'a.b.c.d');
             expect(state.a.b.c).toEqual({});
@@ -190,9 +188,8 @@ describe('helpers', () => {
         it('should ignore unset when object dont have property', () => {
             const state = {
                 a: {
-                    b: {
-                    }
-                }
+                    b: {},
+                },
             };
             const oldValueB = state.a.b;
             unsetValue(state, 'a.b.c.d');
@@ -203,13 +200,13 @@ describe('helpers', () => {
                 a: {
                     b: {
                         c: {
-                            d: 'dValue'
-                        }
+                            d: 'dValue',
+                        },
                     },
                     e: {
-                        f: 'fValue'
-                    }
-                }
+                        f: 'fValue',
+                    },
+                },
             };
             const oldStateA = state.a;
             const oldStateB = state.a.b;
@@ -222,22 +219,22 @@ describe('helpers', () => {
             expect(state.a.b.c).toEqual({});
             expect(state.a.e).toBe(oldStateE);
         });
-        it('should create new reference for all element on path', () => {
+        it('should create new reference for all element on path including arrays', () => {
             const state = {
                 a: [
                     {
                         b: {
                             c: [
                                 {
-                                    d: 'dValue'
-                                }
-                            ]
-                        }
-                    }
-                ]
+                                    d: 'dValue',
+                                },
+                            ],
+                        },
+                    },
+                ],
             };
             unsetValue(state, 'a.0.b.c.0.d');
             expect(state.a[0].b.c[0]).toEqual({});
         });
-    })
+    });
 });

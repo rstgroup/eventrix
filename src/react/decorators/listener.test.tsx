@@ -7,8 +7,8 @@ import listener from './listener';
 
 interface PropsI {
     callback?(...rest: any[]): void;
-    didMountCallback?(a?: any,b?: any): void;
-    willUnmountCallback?(a?: any,b?: any): void;
+    didMountCallback?(a?: any, b?: any): void;
+    willUnmountCallback?(a?: any, b?: any): void;
 }
 
 describe('listener', () => {
@@ -22,11 +22,7 @@ describe('listener', () => {
         }
 
         render() {
-            return (
-                <div>
-                    Test Item Component
-                </div>
-            );
+            return <div>Test Item Component</div>;
         }
     }
 
@@ -46,43 +42,31 @@ describe('listener', () => {
         }
 
         render() {
-            return (
-                <div>
-                    Test Item Component
-                </div>
-            );
+            return <div>Test Item Component</div>;
         }
     }
 
     @eventrixComponent
     class ItemComponentWillUnmount extends React.Component<PropsI> {
         componentWillUnmount() {
-            if(this.props.willUnmountCallback) {
+            if (this.props.willUnmountCallback) {
                 this.props.willUnmountCallback();
             }
         }
 
         @listener('testEvent')
         testListen(...args: any[]) {
-            if(this.props.callback) {
+            if (this.props.callback) {
                 this.props.callback(...args);
             }
         }
 
         render() {
-            return (
-                <div>
-                    Test Item Component
-                </div>
-            );
+            return <div>Test Item Component</div>;
         }
     }
 
-    const TestContainer = ({ eventrix, children }: any) => (
-        <EventrixProvider eventrix={eventrix}>
-            {children}
-        </EventrixProvider>
-    );
+    const TestContainer = ({ eventrix, children }: any) => <EventrixProvider eventrix={eventrix}>{children}</EventrixProvider>;
 
     it('should invoke callback when event emitted', () => {
         const eventrixInstance = new Eventrix({});
@@ -104,10 +88,7 @@ describe('listener', () => {
 
         render(
             <TestContainer eventrix={eventrixInstance}>
-                <ItemComponentDidMount
-                    callback={callbackMock}
-                    didMountCallback={didMountCallbackMock}
-                />
+                <ItemComponentDidMount callback={callbackMock} didMountCallback={didMountCallbackMock} />
             </TestContainer>,
         );
         eventrixInstance.emit('testEvent', 'test');
@@ -115,17 +96,14 @@ describe('listener', () => {
         expect(callbackMock).toHaveBeenCalledWith('test', []);
     });
 
-    it('should invoke callback when event emitted and extend componentDidMount method', () => {
+    it('should invoke callback when event emitted and extend componentWillUnmount method', () => {
         const eventrixInstance = new Eventrix({});
         const callbackMock = jest.fn();
         const willUnmountCallbackMock = jest.fn();
 
         const { unmount } = render(
             <TestContainer eventrix={eventrixInstance}>
-                <ItemComponentWillUnmount
-                    callback={callbackMock}
-                    willUnmountCallback={willUnmountCallbackMock}
-                />
+                <ItemComponentWillUnmount callback={callbackMock} willUnmountCallback={willUnmountCallbackMock} />
             </TestContainer>,
         );
         eventrixInstance.emit('testEvent', 'test');

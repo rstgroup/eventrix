@@ -1,6 +1,6 @@
-import useEventrix, {ServicesI} from "./useEventrix";
-import Eventrix from "../Eventrix";
-import {EventrixI} from "../interfaces";
+import useEventrix, { ServicesI } from './useEventrix';
+import Eventrix from '../Eventrix';
+import { EventrixI } from '../interfaces';
 
 describe('useEventrix', () => {
     it('should add eventrix to class instance', () => {

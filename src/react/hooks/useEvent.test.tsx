@@ -7,17 +7,9 @@ import useEvent from './useEvent';
 describe('useEvent', () => {
     const ItemComponent = ({ callback }: any) => {
         useEvent('testEvent', callback);
-        return (
-            <div>
-                Test Item Component
-            </div>
-        );
+        return <div>Test Item Component</div>;
     };
-    const TestContainer = ({ eventrix, children }: any) => (
-        <EventrixProvider eventrix={eventrix}>
-            {children}
-        </EventrixProvider>
-    );
+    const TestContainer = ({ eventrix, children }: any) => <EventrixProvider eventrix={eventrix}>{children}</EventrixProvider>;
 
     it('should invoke callback when event emitted', () => {
         const eventrixInstance = new Eventrix({});

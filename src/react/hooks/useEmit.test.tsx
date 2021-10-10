@@ -10,17 +10,9 @@ describe('useEmit', () => {
         useEffect(() => {
             emit('testEvent', 'test');
         }, []);
-        return (
-            <div>
-                Test Item Component
-            </div>
-        );
+        return <div>Test Item Component</div>;
     };
-    const TestContainer = ({ eventrix, children }: any) => (
-        <EventrixProvider eventrix={eventrix}>
-            {children}
-        </EventrixProvider>
-    );
+    const TestContainer = ({ eventrix, children }: any) => <EventrixProvider eventrix={eventrix}>{children}</EventrixProvider>;
 
     it('should emit event when component did mount', () => {
         const eventrixInstance = new Eventrix({});

@@ -1,6 +1,6 @@
 import get from 'lodash/get';
 import { isPromise } from './helpers';
-import {EventsEmitterI, EventsListenerI, StateManagerI} from "./interfaces";
+import { EventsEmitterI, EventsListenerI, StateManagerI } from './interfaces';
 
 class EventsEmitter implements EventsEmitterI {
     listeners: {
@@ -8,7 +8,7 @@ class EventsEmitter implements EventsEmitterI {
     };
     stateManager?: StateManagerI;
     matchedListenersCache: {
-        [key: string]: string[],
+        [key: string]: string[];
     };
 
     constructor() {
@@ -70,7 +70,7 @@ class EventsEmitter implements EventsEmitterI {
 
     runListeners<EventDataI>(name: string, data: EventDataI, receiversData: any[]): void {
         if (this.listeners[name] && Array.isArray(this.listeners[name])) {
-            this.listeners[name].forEach(listener => listener(data, receiversData));
+            this.listeners[name].forEach((listener) => listener(data, receiversData));
         }
     }
 
@@ -78,13 +78,12 @@ class EventsEmitter implements EventsEmitterI {
         this.matchedListenersCache[eventName] = matchedEventNames;
     }
 
-
     clearMatchedListenersCache() {
         this.matchedListenersCache = {};
     }
 
     getMatchedListeners(name: string): string[] {
-        if(this.matchedListenersCache[name]) {
+        if (this.matchedListenersCache[name]) {
             return this.matchedListenersCache[name];
         }
         const listenEvents = Object.keys(this.listeners);
@@ -95,7 +94,7 @@ class EventsEmitter implements EventsEmitterI {
 
     emitWild<EventDataI>(name: string, data: EventDataI): void {
         const matchedEvents = this.getMatchedListeners(name);
-        return matchedEvents.forEach(eventName => {
+        return matchedEvents.forEach((eventName) => {
             this.runListeners(eventName, this.getEventData(name, eventName, data), []);
         });
     }
@@ -105,7 +104,7 @@ class EventsEmitter implements EventsEmitterI {
         if (isPromise(receiversResponse)) {
             return receiversResponse.then((receiversData: any) => {
                 this.runListeners(name, data, receiversData);
-            })
+            });
         }
         this.runListeners(name, data, receiversResponse);
         return Promise.resolve(receiversResponse);

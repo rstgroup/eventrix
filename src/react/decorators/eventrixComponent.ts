@@ -1,16 +1,12 @@
 import * as React from 'react';
 import { EventrixContext } from '../context';
-import {
-    DecoratorEventrixListenerI,
-    DecoratorEventrixStateI,
-    EventrixContextI,
-} from "../../interfaces";
+import { DecoratorEventrixListenerI, DecoratorEventrixStateI, EventrixContextI } from '../../interfaces';
 
 function eventrixComponent(Class: React.ComponentClass): any {
     const originComponentDidMount = Class.prototype.componentDidMount;
     const originComponentWillUnmount = Class.prototype.componentWillUnmount;
 
-    Class.prototype.componentDidMount = function(...args: any[]): void {
+    Class.prototype.componentDidMount = function (...args: any[]): void {
         if (Array.isArray(this.eventrixListeners)) {
             this.eventrixListeners.forEach(({ eventName, name }: DecoratorEventrixListenerI): void => {
                 this.eventrix.listen(eventName, this[name]);
@@ -21,7 +17,7 @@ function eventrixComponent(Class: React.ComponentClass): any {
         }
     };
 
-    Class.prototype.componentWillUnmount = function(...args: any[]): void {
+    Class.prototype.componentWillUnmount = function (...args: any[]): void {
         if (Array.isArray(this.eventrixListeners)) {
             this.eventrixListeners.forEach(({ eventName, name }: DecoratorEventrixListenerI): void => {
                 this.eventrix.unlisten(eventName, this[name]);
@@ -57,7 +53,7 @@ function eventrixComponent(Class: React.ComponentClass): any {
                 });
             }
         }
-    }
+    };
 }
 
 export default eventrixComponent;
