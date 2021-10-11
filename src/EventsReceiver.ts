@@ -1,12 +1,4 @@
-import {
-    EmitI,
-    EventsReceiverI,
-    FetchMethodI,
-    ReceiverI,
-    StateManagerI,
-    FetchHandlersI,
-    ReceiverStatePathI
-} from "./interfaces";
+import { EmitI, EventsReceiverI, FetchMethodI, ReceiverI, StateManagerI, FetchHandlersI, ReceiverStatePathI } from './interfaces';
 
 class EventsReceiver<EventData = any, ReceiverResponse = any | Promise<any>> implements EventsReceiverI {
     eventsNames: string[];
@@ -29,27 +21,28 @@ export const fetchHandler = <ResponseDataI>(fetchMethod: FetchMethodI, { success
         fetchMethod(eventData, state, emit)
             .then((response) => {
                 const { eventName, data, getData } = success;
-                const successEventData = (getData && typeof getData === 'function') ? getData(response, eventData) : data;
+                const successEventData = getData && typeof getData === 'function' ? getData(response, eventData) : data;
                 emit(eventName, successEventData);
                 return response;
             })
             .catch((errorResponse) => {
                 const { eventName, data, getData } = error;
-                const errorEventData = (getData && typeof getData === 'function') ? getData(errorResponse, eventData) : data;
+                const errorEventData = getData && typeof getData === 'function' ? getData(errorResponse, eventData) : data;
                 emit(eventName, errorEventData);
             });
 };
 
-export const fetchToStateReceiver = (eventName: string | string[], statePath: string | ReceiverStatePathI, fetchMethod: FetchMethodI): EventsReceiverI => {
+export const fetchToStateReceiver = (
+    eventName: string | string[],
+    statePath: string | ReceiverStatePathI,
+    fetchMethod: FetchMethodI,
+): EventsReceiverI => {
     return new EventsReceiver(eventName, (name, eventData, stateManager: StateManagerI) => {
         const state = stateManager.getState();
         const emit = stateManager.eventsEmitter.emit;
         return fetchMethod(eventData, state, emit).then((nextState) => {
             if (nextState !== undefined) {
-                const path =
-                    typeof statePath === "function"
-                        ? statePath(eventData, nextState)
-                        : statePath;
+                const path = typeof statePath === 'function' ? statePath(eventData, nextState) : statePath;
                 stateManager.setState(path, nextState);
                 return nextState;
             }

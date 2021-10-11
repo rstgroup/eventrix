@@ -11,11 +11,7 @@ describe('eventrixState', () => {
     class ItemComponent extends React.Component<any> {
         render() {
             const { fooBar }: any = this.state;
-            return (
-                <div data-testid="stateData">
-                    {fooBar}
-                </div>
-            );
+            return <div data-testid="stateData">{fooBar}</div>;
         }
     }
 
@@ -39,11 +35,7 @@ describe('eventrixState', () => {
         }
     }
 
-    const TestContainer = ({ eventrix, children }: any) => (
-        <EventrixProvider eventrix={eventrix}>
-            {children}
-        </EventrixProvider>
-    );
+    const TestContainer = ({ eventrix, children }: any) => <EventrixProvider eventrix={eventrix}>{children}</EventrixProvider>;
 
     it('should change component state when eventrix state changed', () => {
         const eventrixInstance = new Eventrix({

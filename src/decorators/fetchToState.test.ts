@@ -1,7 +1,7 @@
 import useEventrix from './useEventrix';
 import fetchToState from './fetchToState';
-import Eventrix from "../Eventrix";
-import {EventrixI} from "../interfaces";
+import Eventrix from '../Eventrix';
+import { EventrixI } from '../interfaces';
 
 describe('fetchToState', () => {
     const GET_LIST_EVENT_NAME: string = 'Test:loadList';
@@ -18,20 +18,18 @@ describe('fetchToState', () => {
                 this.eventrix = props.eventrix;
             }
 
-
             @fetchToState(GET_LIST_EVENT_NAME, STATE_PATH)
-            getList(eventData, state, emit) {
+            getList() {
                 return Promise.resolve(listResponse);
             }
-
         }
         const eventrix = new Eventrix({
-            [STATE_PATH]: []
+            [STATE_PATH]: [],
         });
-        const testClassInstance = new FetchToStateTestClass({ eventrix });
+        new FetchToStateTestClass({ eventrix });
         return eventrix.emit(GET_LIST_EVENT_NAME).then(() => {
             expect(eventrix.getState(STATE_PATH)).toEqual(listResponse);
-        })
+        });
     });
 
     it('should fetch data and extend state', () => {
@@ -47,17 +45,16 @@ describe('fetchToState', () => {
             }
 
             @fetchToState(EXTEND_LIST_EVENT_NAME, STATE_PATH)
-            extendList(eventData, state, emit) {
+            extendList(eventData, state) {
                 return Promise.resolve([...state[STATE_PATH], 'test3']);
             }
-
         }
         const eventrix = new Eventrix({
-            [STATE_PATH]: initialState
+            [STATE_PATH]: initialState,
         });
-        const testClassInstance = new FetchToStateTestClass2({ eventrix });
+        new FetchToStateTestClass2({ eventrix });
         return eventrix.emit(EXTEND_LIST_EVENT_NAME).then(() => {
             expect(eventrix.getState(STATE_PATH)).toEqual(expectedState);
-        })
+        });
     });
 });

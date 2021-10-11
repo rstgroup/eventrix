@@ -1,15 +1,19 @@
 import get from 'lodash/get';
 import { isPromise } from './helpers';
-import {EventsEmitterI, EventsListenerI, StateManagerI} from "./interfaces";
+import { EventsEmitterI, EventsListenerI, StateManagerI } from './interfaces';
 
 class EventsEmitter implements EventsEmitterI {
     listeners: {
         [key: string]: EventsListenerI[];
     };
     stateManager?: StateManagerI;
+    matchedListenersCache: {
+        [key: string]: string[];
+    };
 
     constructor() {
         this.listeners = {};
+        this.matchedListenersCache = {};
         this.emit = this.emit.bind(this);
         this.emitWild = this.emitWild.bind(this);
     }
@@ -20,6 +24,7 @@ class EventsEmitter implements EventsEmitterI {
 
     listen(name: string, listener: EventsListenerI): void {
         if (!this.listeners[name]) {
+            this.clearMatchedListenersCache();
             this.listeners[name] = [];
         }
         if (typeof listener !== 'function') {
@@ -48,6 +53,10 @@ class EventsEmitter implements EventsEmitterI {
             return;
         }
         this.listeners[name].splice(index, 1);
+        if (this.listeners[name].length === 0) {
+            delete this.listeners[name];
+            this.clearMatchedListenersCache();
+        }
     }
 
     getEventData<EventDataI>(name: string, eventName: string, data: EventDataI): EventDataI {
@@ -61,17 +70,32 @@ class EventsEmitter implements EventsEmitterI {
 
     runListeners<EventDataI>(name: string, data: EventDataI, receiversData: any[]): void {
         if (this.listeners[name] && Array.isArray(this.listeners[name])) {
-            this.listeners[name].forEach(listener => listener(data, receiversData));
+            this.listeners[name].forEach((listener) => listener(data, receiversData));
         }
     }
 
-    emitWild<EventDataI>(name: string, data: EventDataI): void {
+    setMatchedListenersCache(eventName: string, matchedEventNames: string[]) {
+        this.matchedListenersCache[eventName] = matchedEventNames;
+    }
+
+    clearMatchedListenersCache() {
+        this.matchedListenersCache = {};
+    }
+
+    getMatchedListeners(name: string): string[] {
+        if (this.matchedListenersCache[name]) {
+            return this.matchedListenersCache[name];
+        }
         const listenEvents = Object.keys(this.listeners);
         const matchedEvents = listenEvents.filter((eventName) => eventName.indexOf(name) === 0);
-        return matchedEvents.forEach(eventName => {
-            if(this.listeners[eventName] && Array.isArray(this.listeners[eventName])) {
-                this.listeners[eventName].forEach(listener => listener(this.getEventData(name, eventName, data), []));
-            }
+        this.setMatchedListenersCache(name, matchedEvents);
+        return matchedEvents;
+    }
+
+    emitWild<EventDataI>(name: string, data: EventDataI): void {
+        const matchedEvents = this.getMatchedListeners(name);
+        return matchedEvents.forEach((eventName) => {
+            this.runListeners(eventName, this.getEventData(name, eventName, data), []);
         });
     }
 
@@ -80,7 +104,7 @@ class EventsEmitter implements EventsEmitterI {
         if (isPromise(receiversResponse)) {
             return receiversResponse.then((receiversData: any) => {
                 this.runListeners(name, data, receiversData);
-            })
+            });
         }
         this.runListeners(name, data, receiversResponse);
         return Promise.resolve(receiversResponse);

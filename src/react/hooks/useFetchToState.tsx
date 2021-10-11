@@ -1,18 +1,11 @@
-import {
-    useContext,
-    useEffect,
-    useCallback,
-} from 'react';
+import { useContext, useEffect, useCallback } from 'react';
 import { EventrixContext } from '../context';
 import { fetchToStateReceiver } from '../../EventsReceiver';
-import { FetchMethodI, EmitFetchI } from "../../interfaces";
+import { FetchMethodI, EmitFetchI } from '../../interfaces';
 
 function useFetchToState<EventDataI>(eventName: string, statePath: string, fetchMethod: FetchMethodI): [EmitFetchI<EventDataI>] {
     const { eventrix } = useContext(EventrixContext);
-    const emitFetch = useCallback(
-        data => eventrix.emit(eventName, data),
-        [eventrix.emit, eventName],
-    );
+    const emitFetch = useCallback((data) => eventrix.emit(eventName, data), [eventrix.emit, eventName]);
 
     useEffect(() => {
         const fetchReceiver = fetchToStateReceiver(eventName, statePath, fetchMethod);

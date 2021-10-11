@@ -17,18 +17,10 @@ describe('stateListener', () => {
             this.props.callback(state);
         }
         render() {
-            return (
-                <div>
-                    Test Item Component
-                </div>
-            );
+            return <div>Test Item Component</div>;
         }
     }
-    const TestContainer = ({ eventrix, children }: any) => (
-        <EventrixProvider eventrix={eventrix}>
-            {children}
-        </EventrixProvider>
-    );
+    const TestContainer = ({ eventrix, children }: any) => <EventrixProvider eventrix={eventrix}>{children}</EventrixProvider>;
 
     it('should invoke callback when state changed', () => {
         const eventrixInstance = new Eventrix({});
