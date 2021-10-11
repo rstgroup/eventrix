@@ -44,7 +44,7 @@ const withEventrixState = <P extends PropsI>(
             this.onStateUpdate = this.onStateUpdate.bind(this);
             this.getStateNames().forEach((stateName) => {
                 this.state[stateName] = context.eventrix.getState(stateName) || '';
-                this.listeners[stateName] = (state) => this.onStateUpdate(stateName, state);
+                this.listeners[stateName] = () => this.onStateUpdate(stateName);
             });
         }
         componentDidMount() {
@@ -59,8 +59,9 @@ const withEventrixState = <P extends PropsI>(
                 unregisterMethod();
             });
         }
-        onStateUpdate(stateName: string, state: any) {
-            return this.setState({ [stateName]: state });
+        onStateUpdate(stateName: string) {
+            const newState = this.context.eventrix.getState(stateName);
+            return this.setState({ [stateName]: newState });
         }
         getStateNames(): string[] {
             if (typeof stateNames === 'function') {

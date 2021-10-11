@@ -1,10 +1,10 @@
 {
   "name": "eventrix",
-  "version": "2.1.0-rc.2",
-  "description": "store based on events",
+  "version": "2.2.0",
+  "description": "A system for managing the state of the application based on the events broadcast in the application",
   "main": "dist/index.js",
-  "repository": "https://github.com/mprzodala/eventrix",
-  "homepage": "https://github.com/mprzodala/eventrix",
+  "repository": "https://github.com/rstgroup/eventrix",
+  "homepage": "https://eventrix.js.org",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",

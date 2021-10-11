@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { EventrixContext } from '../context';
 import { DecoratorEventrixListenerI, DecoratorEventrixStateI, EventrixContextI } from '../../interfaces';
+import { registerListeners } from '../../helpers';
 
 function eventrixComponent(Class: React.ComponentClass): any {
     const originComponentDidMount = Class.prototype.componentDidMount;
@@ -8,8 +9,16 @@ function eventrixComponent(Class: React.ComponentClass): any {
 
     Class.prototype.componentDidMount = function (...args: any[]): void {
         if (Array.isArray(this.eventrixListeners)) {
-            this.eventrixListeners.forEach(({ eventName, name }: DecoratorEventrixListenerI): void => {
-                this.eventrix.listen(eventName, this[name]);
+            this.eventrixListeners.forEach(({ eventName, statePath, name }: DecoratorEventrixListenerI): void => {
+                if (statePath) {
+                    const updateState = () => this[name](this.eventrix.getState(statePath));
+                    if (!this.unregisterListeners) {
+                        this.unregisterListeners = {};
+                    }
+                    this.unregisterListeners[name] = registerListeners(this.eventrix, statePath, updateState);
+                } else {
+                    this.eventrix.listen(eventName, this[name]);
+                }
             });
         }
         if (originComponentDidMount) {
@@ -20,7 +29,11 @@ function eventrixComponent(Class: React.ComponentClass): any {
     Class.prototype.componentWillUnmount = function (...args: any[]): void {
         if (Array.isArray(this.eventrixListeners)) {
             this.eventrixListeners.forEach(({ eventName, name }: DecoratorEventrixListenerI): void => {
-                this.eventrix.unlisten(eventName, this[name]);
+                if (this.unregisterListeners && this.unregisterListeners[name]) {
+                    this.unregisterListeners[name]();
+                } else {
+                    this.eventrix.unlisten(eventName, this[name]);
+                }
             });
         }
         if (originComponentWillUnmount) {

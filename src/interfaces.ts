@@ -185,6 +185,7 @@ export interface DecoratorEventrixStateI {
 
 export interface DecoratorEventrixListenerI {
     eventName: string;
+    statePath?: string;
     name: string;
 }
 

@@ -25,6 +25,7 @@ function eventrixState<StateI>(statePath: string, stateName: string): StateDecor
                 const listenerName = `${stateName}_stateListener`;
                 this.eventrixListeners.push({
                     eventName: `setState:${statePath}`,
+                    statePath: statePath,
                     name: listenerName,
                 });
                 this[listenerName] = (newState: StateI) => {
