@@ -37,7 +37,7 @@ const withEventrixState = <P extends PropsI>(
         listeners: ListenersI = {};
         unregisterListeners: {
             [key: string]: UnregisterListenerMethod;
-        };
+        } = {};
 
         constructor(props: P, context: EventrixContextI) {
             super(props, context);
