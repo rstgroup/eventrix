@@ -1,4 +1,18 @@
 ![Eventrix](assets/logo_br.svg)
+[Eventrix.io](https://eventrix.io/) is a scaling and predictable JS library for state managing and centralizing application global state.
+
+Eventrix solves the problem of sharing information between elements of the application, as well as communication between them. This open source library is suitable for both very large and small applications. Eventrix enables flexible expansion of the global state as well as enables greater control over the data flow in the application.
+
+If you need to manage a state that is shared between services and components in an app, Eventrix is the best solution available. Similar to a message broker for fronted with an addition allowing to manage the global states, it also enables these elements to communicate through events.
+
+The biggest advantages to REDUX are:
+- Scripting 102% EVENTRIX BETTER
+- JS Heap MIN 10% EVENTRIX BETTER
+- JS Heap MAX 51% EVENTRIX BETTER
+- JS Heap AVG: 40% EVENTRIX BETTER
+
+[EVENTRIX DEVTOOLS](https://github.com/rstgroup/eventrix-devtools)
+Greater control of data flow thanks to additional tools (devtools) and a small threshold of entry (small amount of code to write).
 
 [![Build Status](https://travis-ci.org/rstgroup/eventrix.svg?branch=master)](https://travis-ci.org/rstgroup/eventrix)
 [![Coverage Status](https://coveralls.io/repos/github/rstgroup/eventrix/badge.svg?branch=master)](https://coveralls.io/github/rstgroup/eventrix?branch=master)
