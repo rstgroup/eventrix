@@ -1,11 +1,12 @@
 ![Eventrix](assets/logo_br.svg)
+
 [Eventrix.io](https://eventrix.io/) is a scaling and predictable JS library for state managing and centralizing application global state.
 
 Eventrix solves the problem of sharing information between elements of the application, as well as communication between them. This open source library is suitable for both very large and small applications. Eventrix enables flexible expansion of the global state as well as enables greater control over the data flow in the application.
 
 If you need to manage a state that is shared between services and components in an app, Eventrix is the best solution available. Similar to a message broker for fronted with an addition allowing to manage the global states, it also enables these elements to communicate through events.
 
-The biggest advantages to REDUX are:
+The biggest advantages to REDUX TOOLKIT are:
 - Scripting 102% EVENTRIX BETTER
 - JS Heap MIN 10% EVENTRIX BETTER
 - JS Heap MAX 51% EVENTRIX BETTER
