@@ -11,7 +11,7 @@ The biggest advantages to REDUX TOOLKIT are:
 - JS Heap 10% - 51% EVENTRIX BETTER
 - JS Heap AVG 40% EVENTRIX BETTER
 
-[EVENTRIX DEVTOOLS](https://github.com/rstgroup/eventrix-devtools)
+[Eventrix DevTools](https://github.com/rstgroup/eventrix-devtools)
 Greater control of data flow thanks to additional tools (devtools) and a small threshold of entry (small amount of code to write).
 
 [![Build Status](https://travis-ci.org/rstgroup/eventrix.svg?branch=master)](https://travis-ci.org/rstgroup/eventrix)
