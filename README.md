@@ -8,8 +8,7 @@ If you need to manage a state that is shared between services and components in 
 
 The biggest advantages to REDUX TOOLKIT are:
 - Scripting 102% EVENTRIX BETTER
-- JS Heap MIN 10% EVENTRIX BETTER
-- JS Heap MAX 51% EVENTRIX BETTER
+- JS Heap 10% - 51% EVENTRIX BETTER
 - JS Heap AVG: 40% EVENTRIX BETTER
 
 [EVENTRIX DEVTOOLS](https://github.com/rstgroup/eventrix-devtools)
