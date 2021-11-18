@@ -13,14 +13,14 @@ The biggest advantages to REDUX TOOLKIT are:
 - Action in time x5 EVENTRIX BETTER THAN REDUX TOOLKIT
 
 Check it yourself using those tools:
-[Eventrix Performance Test App](http://eventrix-test.proserwit.pl/?q=100&s=20)
-[Redux Performance Test App](http://redux-test.proserwit.pl/?q=100&s=20)
-[Redux Performance Test App](http://redux-toolkit-test.proserwit.pl/?q=100&s=20)
+- [Eventrix Performance Test App](http://eventrix-test.proserwit.pl/?q=100&s=20)
+- [Redux Performance Test App](http://redux-test.proserwit.pl/?q=100&s=20)
+- [Redux Performance Test App](http://redux-toolkit-test.proserwit.pl/?q=100&s=20)
 
 Video of how it works and a performance comparison:
 [React REDUX vs Eventrix performance test](https://www.youtube.com/watch?v=Vq-CS6hoK7I)
 
-Greater control of data flow thanks to additional tools (devtools) and a small threshold of entry (small amount of code to write).
+Greater control of data flow thanks to additional tools (devtools) and a small threshold of entry (small amount of code to write):
 [Eventrix DevTools](https://github.com/rstgroup/eventrix-devtools)
 
 
