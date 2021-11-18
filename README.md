@@ -7,12 +7,22 @@ Eventrix solves the problem of sharing information between elements of the appli
 If you need to manage a state that is shared between services and components in an app, Eventrix is the best solution available. Similar to a message broker for fronted with an addition allowing to manage the global states, it also enables these elements to communicate through events.
 
 The biggest advantages to REDUX TOOLKIT are:
-- Scripting 102% EVENTRIX BETTER
-- JS Heap 10% - 51% EVENTRIX BETTER
-- JS Heap AVG 40% EVENTRIX BETTER
+- CPU 50% EVENTRIX REDUCE CPU USAGE
+- FPS 100% EVENTRIX BETTER THAN REDUX TOOLKIT
+- JS Heap size 51% EVENTRIX BETTER THAN REDUX TOOLKIT
+- Action in time x5 EVENTRIX BETTER THAN REDUX TOOLKIT
 
-[Eventrix DevTools](https://github.com/rstgroup/eventrix-devtools)
+Check it yourself using those tools:
+[Eventrix Performance Test App](http://eventrix-test.proserwit.pl/?q=100&s=20)
+[Redux Performance Test App](http://redux-test.proserwit.pl/?q=100&s=20)
+[Redux Performance Test App](http://redux-toolkit-test.proserwit.pl/?q=100&s=20)
+
+Video of how it works and a performance comparison:
+[React REDUX vs Eventrix performance test](https://www.youtube.com/watch?v=Vq-CS6hoK7I)
+
 Greater control of data flow thanks to additional tools (devtools) and a small threshold of entry (small amount of code to write).
+[Eventrix DevTools](https://github.com/rstgroup/eventrix-devtools)
+
 
 [![Build Status](https://travis-ci.org/rstgroup/eventrix.svg?branch=master)](https://travis-ci.org/rstgroup/eventrix)
 [![Coverage Status](https://coveralls.io/repos/github/rstgroup/eventrix/badge.svg?branch=master)](https://coveralls.io/github/rstgroup/eventrix?branch=master)
