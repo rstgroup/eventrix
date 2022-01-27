@@ -12,7 +12,11 @@ describe('withEventrixState', () => {
             </div>
         );
     };
-    const ComponentTestFooWS = withEventrixState(ComponentTestFoo, ['foo']);
+
+    interface FooStateI {
+        foo: string;
+    }
+    const ComponentTestFooWS = withEventrixState<FooStateI>(ComponentTestFoo, ['foo']);
 
     const ComponentTestBarFoo = ({ barFoo = '' }: { barFoo: string }) => {
         return (
@@ -21,7 +25,13 @@ describe('withEventrixState', () => {
             </div>
         );
     };
-    const ComponentTestBarFooWS = withEventrixState(ComponentTestBarFoo, ['bar.foo'], (state) => ({ barFoo: state['bar.foo'] }));
+
+    interface BarFooStateI {
+        barFoo: string;
+    }
+    const ComponentTestBarFooWS = withEventrixState<BarFooStateI>(ComponentTestBarFoo, ['bar.foo'], (state) => ({
+        barFoo: state['bar.foo'],
+    }));
 
     const ComponentTestBarBarFoo = ({ barBarFoo = '' }: { barBarFoo: string }) => {
         return (
@@ -30,7 +40,10 @@ describe('withEventrixState', () => {
             </div>
         );
     };
-    const ComponentTestBarBarFooWS = withEventrixState(ComponentTestBarBarFoo, ['bar.bar.foo'], (state) => ({
+    interface BarBarFooStateI {
+        barBarFoo: string;
+    }
+    const ComponentTestBarBarFooWS = withEventrixState<BarBarFooStateI>(ComponentTestBarBarFoo, ['bar.bar.foo'], (state) => ({
         barBarFoo: state['bar.bar.foo'],
     }));
 
