@@ -1,4 +1,14 @@
-import { EmitI, EventsReceiverI, FetchMethodI, ReceiverI, StateManagerI, FetchHandlersI, ReceiverStatePathI } from './interfaces';
+import {
+    EmitI,
+    EventsReceiverI,
+    FetchMethodI,
+    ReceiverI,
+    StateManagerI,
+    FetchHandlersI,
+    ReceiverStatePathI,
+    FetchStateStatus,
+    FetchStateMethodI,
+} from './interfaces';
 
 class EventsReceiver<EventData = any, ReceiverResponse = any | Promise<any>> implements EventsReceiverI {
     eventsNames: string[];
@@ -47,6 +57,49 @@ export const fetchToStateReceiver = (
                 return nextState;
             }
         });
+    });
+};
+
+export const fetchStateReceiver = <FetchParamsI = any, FetchResponseI = any>(
+    stateName: string,
+    fetchMethod: FetchStateMethodI<FetchParamsI, FetchResponseI>,
+): EventsReceiverI => {
+    return new EventsReceiver(`fetchState:${stateName}`, (name, eventData, stateManager: StateManagerI) => {
+        const data = stateManager.getState<FetchResponseI>(`${stateName}.data`);
+        stateManager.setState(stateName, {
+            data,
+            isLoading: true,
+            isSuccess: false,
+            isError: false,
+            status: FetchStateStatus.Loading,
+        });
+        return fetchMethod(eventData)
+            .then((nextState) => {
+                if (nextState !== undefined) {
+                    stateManager.setState(stateName, {
+                        data: nextState,
+                        isLoading: false,
+                        isSuccess: true,
+                        isError: false,
+                        status: FetchStateStatus.Success,
+                    });
+                    return nextState;
+                }
+            })
+            .catch((error) => {
+                if (error) {
+                    stateManager.setState(stateName, {
+                        data,
+                        isLoading: false,
+                        isSuccess: false,
+                        isError: true,
+                        error: {
+                            message: error.message,
+                        },
+                        status: FetchStateStatus.Error,
+                    });
+                }
+            });
     });
 };
 

@@ -36,6 +36,10 @@ export interface FetchMethodI {
     (eventData: any, state: any, emit: EmitI<any>): Promise<any>;
 }
 
+export interface FetchStateMethodI<FetchParamsI = any, FetchResponseI = any> {
+    (eventData: FetchParamsI): Promise<FetchResponseI>;
+}
+
 export interface EmitFetchI<EventDataI> {
     (data: EventDataI): Promise<any>;
 }
@@ -235,4 +239,11 @@ export interface mapDispatchToPropsType {
 
 export interface UnregisterListenerMethod {
     (): void;
+}
+
+export enum FetchStateStatus {
+    Initial = 'loading',
+    Loading = 'loading',
+    Error = 'error',
+    Success = 'success',
 }
