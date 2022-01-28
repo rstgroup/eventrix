@@ -1,5 +1,18 @@
 import { ComponentClass, ComponentType } from 'react';
 
+export interface StateManagerI {
+    state: any;
+    receivers: {
+        [key: string]: EventsReceiverI[];
+    };
+    eventsEmitter: EventsEmitterI;
+    setState<StateValueI = any>(path: string | undefined | null, value: StateValueI): void;
+    getState<StateValueI = any>(path?: string): StateValueI;
+    useReceiver(receiver: EventsReceiverI): void;
+    removeReceiver(receiver: EventsReceiverI): void;
+    runReceivers<EventDataI>(name: string, data: EventDataI): any;
+}
+
 export interface ReceiverI<EventData = any, ReceiverResponse = any> {
     (eventName: string, eventData: EventData, stateManager: StateManagerI): ReceiverResponse;
 }
@@ -8,20 +21,7 @@ export interface EventsReceiverI<EventDataI = any, ReceiverResponseI = any> {
     eventsNames: string[];
     receiver: ReceiverI<EventDataI, ReceiverResponseI>;
     getEventsNames(): string[];
-    handleEvent<EventData, ReceiverResponse>(name: string, data: EventData, stateManager: StateManagerI): ReceiverResponse;
-}
-
-export interface StateManagerI {
-    state: any;
-    receivers: {
-        [key: string]: EventsReceiverI[];
-    };
-    eventsEmitter: EventsEmitterI;
-    setState<StateValueI>(path: string | undefined | null, value: StateValueI): void;
-    getState<StateValueI>(path?: string): StateValueI;
-    useReceiver(receiver: EventsReceiverI): void;
-    removeReceiver(receiver: EventsReceiverI): void;
-    runReceivers<EventDataI>(name: string, data: EventDataI): any;
+    handleEvent(name: string, data: EventDataI, stateManager: StateManagerI): ReceiverResponseI;
 }
 
 export interface EmitI<EventData = any> {
@@ -168,12 +168,12 @@ export interface EventsEmitterI {
 export interface FetchHandlersI<DataI = any, ResponseI = any, EventDataI = any> {
     success: {
         eventName: string;
-        data: DataI;
+        data?: DataI;
         getData?(response: ResponseI, eventData: EventDataI): DataI;
     };
     error: {
         eventName: string;
-        data: DataI;
+        data?: DataI;
         getData?(errorResponse: ResponseI, eventData: EventDataI): DataI;
     };
 }

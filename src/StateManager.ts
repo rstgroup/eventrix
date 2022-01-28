@@ -75,7 +75,7 @@ class StateManager implements StateManagerI {
         const receiversData: any[] = [];
         if (this.receivers[name] && Array.isArray(this.receivers[name])) {
             this.receivers[name].forEach((receiver) => {
-                const receiverData = receiver.handleEvent<any, any | Promise<any>>(name, data, this);
+                const receiverData = receiver.handleEvent(name, data, this);
                 if (isPromise(receiverData)) {
                     return promisesList.push(receiverData);
                 }

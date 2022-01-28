@@ -1,4 +1,5 @@
-import EventsReceiver, { fetchHandler, fetchToStateReceiver } from './EventsReceiver';
+import EventsReceiver, { fetchHandler, fetchToStateReceiver, fetchStateReceiver } from './EventsReceiver';
+import { EmitI, FetchStateStatus } from './interfaces';
 
 describe('EventsReceiver', () => {
     it('should get receiver events names when events names are string', () => {
@@ -11,14 +12,15 @@ describe('EventsReceiver', () => {
     });
     it('should handle event by receiver', () => {
         const receiver = jest.fn();
+        const stateManager: any = {};
         const eventsReceiver = new EventsReceiver('testEvent', receiver);
-        eventsReceiver.handleEvent('testEvent', {}, {});
+        eventsReceiver.handleEvent('testEvent', {}, stateManager);
         expect(receiver).toHaveBeenCalledWith('testEvent', {}, {});
     });
 });
 
 describe('fetchToStateReceiver', () => {
-    let stateManager = {};
+    let stateManager: any = {};
     beforeEach(() => {
         stateManager = {
             setState: jest.fn(),
@@ -66,8 +68,64 @@ describe('fetchToStateReceiver', () => {
     });
 });
 
+describe('fetchStateReceiver', () => {
+    let stateManager: any = {};
+    beforeEach(() => {
+        stateManager = {
+            setState: jest.fn(),
+            getState: jest.fn(() => ({})),
+            eventsEmitter: {
+                emit: jest.fn(),
+            },
+        };
+    });
+    it('should handle event and set state by stateManager when promise resolved', () => {
+        interface ResponseI {
+            test: string;
+        }
+        const receiverResponse = { test: 'test' };
+        const receiver = () => Promise.resolve(receiverResponse);
+
+        const eventsReceiver = fetchStateReceiver<string, ResponseI>('users', receiver);
+        return eventsReceiver.handleEvent('fetchState:users', 'test', stateManager).then(() => {
+            expect(stateManager.setState).toHaveBeenCalledWith('users', {
+                data: {},
+                isLoading: true,
+                isSuccess: false,
+                isError: false,
+                status: FetchStateStatus.Loading,
+            });
+            expect(stateManager.setState).toHaveBeenCalledWith('users', {
+                data: receiverResponse,
+                isLoading: false,
+                isSuccess: true,
+                isError: false,
+                status: FetchStateStatus.Success,
+            });
+        });
+    });
+
+    it('should handle event and set state with error when promise rejected', () => {
+        const receiver = () => Promise.reject({ message: 'error' });
+
+        const eventsReceiver = fetchStateReceiver('users', receiver);
+        return eventsReceiver.handleEvent('fetchState:users', {}, stateManager).then(() => {
+            expect(stateManager.setState).toHaveBeenCalledWith('users', {
+                data: {},
+                isLoading: false,
+                isSuccess: false,
+                isError: true,
+                error: {
+                    message: 'error',
+                },
+                status: FetchStateStatus.Error,
+            });
+        });
+    });
+});
+
 describe('fetchHandler', () => {
-    let emit;
+    let emit: EmitI;
     beforeEach(() => {
         emit = jest.fn();
     });
@@ -98,9 +156,9 @@ describe('fetchHandler', () => {
         const fetchResponse = { test: 'test' };
         const fetchMethod = () => Promise.resolve(fetchResponse);
         const successEventName = 'fetch.success';
-        const successGetEventData = (response) => ({ response, message: 'test success' });
+        const successGetEventData = (response: any) => ({ response, message: 'test success' });
         const errorEventName = 'fetch.error';
-        const errorGetEventData = (errorResponse) => ({ errorResponse, message: 'test error' });
+        const errorGetEventData = (response: any) => ({ response, message: 'test error' });
         const fetchMethodWithHandler = fetchHandler(fetchMethod, {
             success: {
                 eventName: successEventName,
@@ -143,9 +201,9 @@ describe('fetchHandler', () => {
         const errorResponse = { test: 'test' };
         const fetchMethod = () => Promise.reject(errorResponse);
         const successEventName = 'fetch.success';
-        const successGetEventData = (response) => ({ response, message: 'test success' });
+        const successGetEventData = (response: any) => ({ response, message: 'test success' });
         const errorEventName = 'fetch.error';
-        const errorGetEventData = (response) => ({ response, message: 'test error' });
+        const errorGetEventData = (response: any) => ({ response, message: 'test error' });
         const fetchMethodWithHandler = fetchHandler(fetchMethod, {
             success: {
                 eventName: successEventName,
