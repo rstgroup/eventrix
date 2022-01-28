@@ -75,30 +75,26 @@ export const fetchStateReceiver = <FetchParamsI = any, FetchResponseI = any>(
         });
         return fetchMethod(eventData)
             .then((nextState) => {
-                if (nextState !== undefined) {
-                    stateManager.setState(stateName, {
-                        data: nextState,
-                        isLoading: false,
-                        isSuccess: true,
-                        isError: false,
-                        status: FetchStateStatus.Success,
-                    });
-                    return nextState;
-                }
+                stateManager.setState(stateName, {
+                    data: nextState,
+                    isLoading: false,
+                    isSuccess: true,
+                    isError: false,
+                    status: FetchStateStatus.Success,
+                });
+                return nextState;
             })
             .catch((error) => {
-                if (error) {
-                    stateManager.setState(stateName, {
-                        data,
-                        isLoading: false,
-                        isSuccess: false,
-                        isError: true,
-                        error: {
-                            message: error.message,
-                        },
-                        status: FetchStateStatus.Error,
-                    });
-                }
+                stateManager.setState(stateName, {
+                    data,
+                    isLoading: false,
+                    isSuccess: false,
+                    isError: true,
+                    error: {
+                        message: error && error.message ? error.message : error,
+                    },
+                    status: FetchStateStatus.Error,
+                });
             });
     });
 };

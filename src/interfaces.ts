@@ -242,7 +242,7 @@ export interface UnregisterListenerMethod {
 }
 
 export enum FetchStateStatus {
-    Initial = 'loading',
+    Initial = 'initial',
     Loading = 'loading',
     Error = 'error',
     Success = 'success',
