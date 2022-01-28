@@ -244,10 +244,10 @@ describe('helpers', () => {
             const eventrix = new Eventrix();
             const mockListener = jest.fn();
             registerListeners(eventrix, 'a.b.c.d', mockListener);
-            expect(eventrix.eventsEmitter.listeners['setState:a.*'].length).toEqual(1);
-            expect(eventrix.eventsEmitter.listeners['setState:a.b.*'].length).toEqual(1);
-            expect(eventrix.eventsEmitter.listeners['setState:a.b.c.*'].length).toEqual(1);
-            expect(eventrix.eventsEmitter.listeners['setState:a.b.c.d'].length).toEqual(1);
+            expect(eventrix.eventsEmitter.listeners['setState:a.*']).toHaveLength(1);
+            expect(eventrix.eventsEmitter.listeners['setState:a.b.*']).toHaveLength(1);
+            expect(eventrix.eventsEmitter.listeners['setState:a.b.c.*']).toHaveLength(1);
+            expect(eventrix.eventsEmitter.listeners['setState:a.b.c.d']).toHaveLength(1);
         });
         it('should unregister all register listeners', () => {
             const eventrix = new Eventrix();

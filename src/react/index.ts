@@ -9,6 +9,7 @@ export { default as useEmit } from './hooks/useEmit';
 export { default as useEvent } from './hooks/useEvent';
 export { default as useEventState } from './hooks/useEventState';
 export { default as useFetchToState } from './hooks/useFetchToState';
+export { default as useFetchState } from './hooks/useFetchState';
 // decorators
 export { default as eventrixComponent } from './decorators/eventrixComponent';
 export { default as eventListener } from './decorators/listener';
