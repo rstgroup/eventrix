@@ -19,13 +19,17 @@ $ npm install eventrix --save
 
 ### Documentation
 
-[Get started](https://eventrix.gitbook.io/eventrix/getting-started)
+[**Get started**](https://eventrix.gitbook.io/eventrix/getting-started)
 |
-[API](https://eventrix.gitbook.io/eventrix/hooks/useeventrixstate)
+[**API**](https://eventrix.gitbook.io/eventrix/hooks/useeventrixstate)
 |
-[Migration from Redux](https://eventrix.gitbook.io/eventrix/redux-greater-than-eventrix)
+[**Migration from Redux**](https://eventrix.gitbook.io/eventrix/redux-greater-than-eventrix)
 |
-[Demo](https://eventrix.gitbook.io/eventrix/demo)
+[**Demo**](https://eventrix.gitbook.io/eventrix/demo)
+
+### Home page
+
+We have website dedicated to eventrix. Go to [**eventrix.io**](https://eventrix.io) and see what eventrix has to offer.
 
 ### Quickstart
 
