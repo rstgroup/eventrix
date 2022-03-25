@@ -247,3 +247,8 @@ export enum FetchStateStatus {
     Error = 'error',
     Success = 'success',
 }
+
+export interface RequestHandlerInstance {
+    eventrix: EventrixI;
+    handle<RequestResponse>(request: Promise<RequestResponse>, abortEventName: string): Promise<RequestResponse>;
+}
