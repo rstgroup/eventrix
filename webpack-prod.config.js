@@ -15,6 +15,7 @@ const config = {
         sourceMapFilename: '[name].map',
         library: 'eventrix',
         libraryTarget: 'umd',
+        globalObject: 'this',
         umdNamedDefine: true,
     },
     externals(context, request, callback) {
