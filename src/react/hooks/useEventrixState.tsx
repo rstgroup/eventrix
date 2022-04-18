@@ -1,13 +1,15 @@
-import { useState, useContext, useEffect, useCallback } from 'react';
+import { useContext, useCallback } from 'react';
+import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { EventrixContext } from '../context';
 import { SetStateI } from '../../interfaces';
 import { registerListeners } from '../../helpers';
 
 function useEventrixState<StateI>(stateName: string): [StateI, SetStateI<StateI>] {
     const { eventrix } = useContext(EventrixContext);
-    const [state, setState] = useState<StateI>(eventrix.getState<StateI>(stateName));
 
-    const onSetEventrixState = useCallback(() => setState(eventrix.getState(stateName)), [setState, stateName]);
+    const getState = useCallback((): StateI => eventrix.getState(stateName), [stateName]);
+
+    const subscribe = useCallback((onStoreChange: any) => registerListeners(eventrix, stateName, onStoreChange), [eventrix, stateName]);
 
     const setEventrixState = useCallback(
         (value: StateI) => {
@@ -16,13 +18,7 @@ function useEventrixState<StateI>(stateName: string): [StateI, SetStateI<StateI>
         [eventrix.emit, stateName],
     );
 
-    useEffect(() => {
-        const unregisterListeners = registerListeners(eventrix, stateName, onSetEventrixState);
-        onSetEventrixState();
-        return () => {
-            unregisterListeners();
-        };
-    }, [stateName]);
+    const state = useSyncExternalStore<StateI>(subscribe, getState, getState);
 
     return [state, setEventrixState];
 }
