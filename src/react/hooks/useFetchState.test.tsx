@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { EventrixProvider } from '../context';
 import Eventrix from '../../Eventrix';
 import useFetchState from './useFetchState';
@@ -61,7 +61,7 @@ describe('useFetchState', () => {
         expect(getByTestId('loading').textContent).toEqual('Loading');
         expect(getByTestId('status').textContent).toEqual(FetchStateStatus.Loading);
     });
-    it('should fetch users and show fetch success message', () => {
+    it('should fetch users and show fetch success message', async () => {
         const mockedUsersList: UserI[] = [
             { name: 'Jan', surname: 'Kowalski' },
             { name: 'Jan', surname: 'Nowak' },
@@ -75,13 +75,13 @@ describe('useFetchState', () => {
             </TestContainer>,
         );
         fireEvent.click(getByTestId('fetchDataButton'));
-        return Promise.resolve().then(() => {
-            expect(mockedFetchMetchod).toHaveBeenCalledWith({ search: 'Jan' });
-            expect(getByTestId('success').textContent).toEqual('Success loaded list');
-            expect(getByTestId('status').textContent).toEqual(FetchStateStatus.Success);
-        });
+
+        await waitFor(() => getByTestId('success'));
+        expect(mockedFetchMetchod).toHaveBeenCalledWith({ search: 'Jan' });
+        expect(getByTestId('success').textContent).toEqual('Success loaded list');
+        expect(getByTestId('status').textContent).toEqual(FetchStateStatus.Success);
     });
-    it('should fetch users and show fetch error message', () => {
+    it('should fetch users and show fetch error message', async () => {
         const fetchErrorMessage = 'fetch error';
         const mockedFetchMetchod = jest.fn(() => Promise.reject({ message: fetchErrorMessage }));
         const usersFetchReceiver = fetchStateReceiver<FetchParamsI, UserI[]>('users', mockedFetchMetchod);
@@ -92,12 +92,9 @@ describe('useFetchState', () => {
             </TestContainer>,
         );
         fireEvent.click(getByTestId('fetchDataButton'));
-        return Promise.reject()
-            .catch(() => {})
-            .then(() => {
-                expect(mockedFetchMetchod).toHaveBeenCalledWith({ search: 'Jan' });
-                expect(getByTestId('error').textContent).toEqual(fetchErrorMessage);
-                expect(getByTestId('status').textContent).toEqual(FetchStateStatus.Error);
-            });
+        await waitFor(() => getByTestId('error'));
+        expect(mockedFetchMetchod).toHaveBeenCalledWith({ search: 'Jan' });
+        expect(getByTestId('error').textContent).toEqual(fetchErrorMessage);
+        expect(getByTestId('status').textContent).toEqual(FetchStateStatus.Error);
     });
 });

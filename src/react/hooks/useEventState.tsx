@@ -6,7 +6,7 @@ function useEventState<EventStateI>(eventName: string): [EventStateI | undefined
     const { eventrix } = useContext(EventrixContext);
     const [eventState, setEventState] = useState<EventStateI>();
 
-    const listener = useCallback((data) => setEventState(data), [setEventState]);
+    const listener = useCallback((data: EventStateI) => setEventState(data), [setEventState]);
 
     useEffect(() => {
         eventrix.listen(eventName, listener);

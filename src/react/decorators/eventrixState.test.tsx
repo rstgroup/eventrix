@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { render } from '@testing-library/react';
+import React from 'react';
+import { render, waitFor } from '@testing-library/react';
 import EventrixProvider from '../context/EventrixProvider';
 import Eventrix from '../../Eventrix';
 import eventrixComponent from './eventrixComponent';
@@ -11,7 +11,12 @@ describe('eventrixState', () => {
     class ItemComponent extends React.Component<any> {
         render() {
             const { fooBar }: any = this.state;
-            return <div data-testid="stateData">{fooBar}</div>;
+            return (
+                <div data-testid="stateData">
+                    {fooBar === 'test' && <div data-testid="testData" />}
+                    {fooBar}
+                </div>
+            );
         }
     }
 
@@ -29,6 +34,7 @@ describe('eventrixState', () => {
             const { fooBar, componentState }: any = this.state;
             return (
                 <div data-testid="stateData">
+                    {fooBar === 'test' && <div data-testid="testData" />}
                     {fooBar} {componentState}
                 </div>
             );
@@ -37,7 +43,7 @@ describe('eventrixState', () => {
 
     const TestContainer = ({ eventrix, children }: any) => <EventrixProvider eventrix={eventrix}>{children}</EventrixProvider>;
 
-    it('should change component state when eventrix state changed', () => {
+    it('should change component state when eventrix state changed', async () => {
         const eventrixInstance = new Eventrix({
             foo: {
                 bar: 'empty',
@@ -51,10 +57,11 @@ describe('eventrixState', () => {
             </TestContainer>,
         );
         eventrixInstance.stateManager.setState('foo.bar', 'test');
+        await waitFor(() => getByTestId('testData'));
         expect(getByTestId('stateData').textContent).toEqual('test');
     });
 
-    it('should change component state when eventrix state changed and component has own state', () => {
+    it('should change component state when eventrix state changed and component has own state', async () => {
         const eventrixInstance = new Eventrix({
             foo: {
                 bar: 'empty',
@@ -68,6 +75,7 @@ describe('eventrixState', () => {
             </TestContainer>,
         );
         eventrixInstance.stateManager.setState('foo.bar', 'test');
+        await waitFor(() => getByTestId('testData'));
         expect(getByTestId('stateData').textContent).toEqual('test test');
     });
 });
