@@ -4,6 +4,7 @@ import { EventrixI } from '../../interfaces';
 
 export interface EventrixProviderPropsI {
     eventrix: EventrixI;
+    children: React.ReactNode;
 }
 
 const EventrixProvider: React.FC<EventrixProviderPropsI> = ({ eventrix, children }): JSX.Element => {

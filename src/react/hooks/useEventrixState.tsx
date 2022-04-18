@@ -10,7 +10,7 @@ function useEventrixState<StateI>(stateName: string): [StateI, SetStateI<StateI>
     const onSetEventrixState = useCallback(() => setState(eventrix.getState(stateName)), [setState, stateName]);
 
     const setEventrixState = useCallback(
-        (value) => {
+        (value: StateI) => {
             eventrix.emit('setState', { stateName, value });
         },
         [eventrix.emit, stateName],

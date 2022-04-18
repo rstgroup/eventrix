@@ -1,16 +1,12 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { EventrixProvider } from '../context';
 import Eventrix from '../../Eventrix';
 import withEventrixState from './withEventrixState';
 
 describe('withEventrixState', () => {
     const ComponentTestFoo = ({ foo = '' }: { foo: string }) => {
-        return (
-            <div>
-                <div data-testid="testFoo">{foo}</div>
-            </div>
-        );
+        return <div data-testid="testFoo">{!!foo && <div data-testid="testFooValue">{foo}</div>}</div>;
     };
 
     interface FooStateI {
@@ -19,11 +15,7 @@ describe('withEventrixState', () => {
     const ComponentTestFooWS = withEventrixState<FooStateI>(ComponentTestFoo, ['foo']);
 
     const ComponentTestBarFoo = ({ barFoo = '' }: { barFoo: string }) => {
-        return (
-            <div>
-                <div data-testid="testBarFoo">{barFoo}</div>
-            </div>
-        );
+        return <div data-testid="testBarFoo">{!!barFoo && <div data-testid="testBarFooValue">{barFoo}</div>}</div>;
     };
 
     interface BarFooStateI {
@@ -34,11 +26,7 @@ describe('withEventrixState', () => {
     }));
 
     const ComponentTestBarBarFoo = ({ barBarFoo = '' }: { barBarFoo: string }) => {
-        return (
-            <div>
-                <div data-testid="testBarBarFoo">{barBarFoo}</div>
-            </div>
-        );
+        return <div data-testid="testBarBarFoo">{!!barBarFoo && <div data-testid="testBarBarFooValue">{barBarFoo}</div>}</div>;
     };
     interface BarBarFooStateI {
         barBarFoo: string;
@@ -49,7 +37,7 @@ describe('withEventrixState', () => {
 
     const TestContainer = ({ eventrix, children }: any) => <EventrixProvider eventrix={eventrix}>{children}</EventrixProvider>;
 
-    it('should change state when eventrix state has changed', () => {
+    it('should change state when eventrix state has changed', async () => {
         const initialState = {
             foo: '',
             bar: {
@@ -73,18 +61,21 @@ describe('withEventrixState', () => {
         expect(getByTestId('testBarBarFoo').textContent).toEqual(initialState.bar.bar.foo);
 
         eventrixInstance.stateManager.setState('foo', 'newFoo');
+        await waitFor(() => getByTestId('testFooValue'));
 
         expect(getByTestId('testFoo').textContent).toEqual('newFoo');
         expect(getByTestId('testBarFoo').textContent).toEqual(initialState.bar.foo);
         expect(getByTestId('testBarBarFoo').textContent).toEqual(initialState.bar.bar.foo);
 
         eventrixInstance.stateManager.setState('bar.foo', 'newBarFoo');
+        await waitFor(() => getByTestId('testBarFooValue'));
 
         expect(getByTestId('testFoo').textContent).toEqual('newFoo');
         expect(getByTestId('testBarFoo').textContent).toEqual('newBarFoo');
         expect(getByTestId('testBarBarFoo').textContent).toEqual(initialState.bar.bar.foo);
 
         eventrixInstance.stateManager.setState('bar.bar.foo', 'newBarBarFoo');
+        await waitFor(() => getByTestId('testBarBarFooValue'));
 
         expect(getByTestId('testFoo').textContent).toEqual('newFoo');
         expect(getByTestId('testBarFoo').textContent).toEqual('newBarFoo');
