@@ -5,18 +5,24 @@ import Eventrix from '../../Eventrix';
 import useEmit from './useEmit';
 import useEvent from './useEvent';
 import useEventrixState from './useEventrixState';
-import useFetchToState from './useFetchToState';
+import useReceiver from './useReceiver';
 
-describe('useFetchToState', () => {
+describe('useReceiver', () => {
     const ItemComponent = () => {
         const emit = useEmit();
-        const [emitFetch] = useFetchToState('testEvent', 'foo', (eventData) => Promise.resolve(eventData));
+        useReceiver<string>(
+            'testEvent',
+            (eventName, eventData, stateManager) => {
+                act(() => {
+                    stateManager.setState('foo', eventData);
+                });
+            },
+            [],
+        );
         useEvent('remoteFetch', () => {
             act(() => {
-                emitFetch('testData').then(() => {
-                    act(() => {
-                        emit('fetchData.success');
-                    });
+                emit('testEvent', 'testData').then(() => {
+                    emit('fetchData.success');
                 });
             });
         });
@@ -26,9 +32,7 @@ describe('useFetchToState', () => {
                 <button
                     data-testid="fetchDataButton"
                     onClick={() => {
-                        act(() => {
-                            emitFetch('testData');
-                        });
+                        emit('testEvent', 'testData');
                     }}
                 >
                     Fetch data
@@ -39,7 +43,7 @@ describe('useFetchToState', () => {
     };
     const TestContainer = ({ eventrix, children }: any) => <EventrixProvider eventrix={eventrix}>{children}</EventrixProvider>;
 
-    it('should fetch data and set state', async () => {
+    it('should set state on emit event', async () => {
         const eventrixInstance = new Eventrix({});
         const { getByTestId } = render(
             <TestContainer eventrix={eventrixInstance}>

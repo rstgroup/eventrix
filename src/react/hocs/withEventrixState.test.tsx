@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { EventrixProvider } from '../context';
 import Eventrix from '../../Eventrix';
 import withEventrixState from './withEventrixState';
@@ -60,21 +60,25 @@ describe('withEventrixState', () => {
         expect(getByTestId('testBarFoo').textContent).toEqual(initialState.bar.foo);
         expect(getByTestId('testBarBarFoo').textContent).toEqual(initialState.bar.bar.foo);
 
-        eventrixInstance.stateManager.setState('foo', 'newFoo');
+        act(() => {
+            eventrixInstance.stateManager.setState('foo', 'newFoo');
+        });
         await waitFor(() => getByTestId('testFooValue'));
 
         expect(getByTestId('testFoo').textContent).toEqual('newFoo');
         expect(getByTestId('testBarFoo').textContent).toEqual(initialState.bar.foo);
         expect(getByTestId('testBarBarFoo').textContent).toEqual(initialState.bar.bar.foo);
-
-        eventrixInstance.stateManager.setState('bar.foo', 'newBarFoo');
+        act(() => {
+            eventrixInstance.stateManager.setState('bar.foo', 'newBarFoo');
+        });
         await waitFor(() => getByTestId('testBarFooValue'));
 
         expect(getByTestId('testFoo').textContent).toEqual('newFoo');
         expect(getByTestId('testBarFoo').textContent).toEqual('newBarFoo');
         expect(getByTestId('testBarBarFoo').textContent).toEqual(initialState.bar.bar.foo);
-
-        eventrixInstance.stateManager.setState('bar.bar.foo', 'newBarBarFoo');
+        act(() => {
+            eventrixInstance.stateManager.setState('bar.bar.foo', 'newBarBarFoo');
+        });
         await waitFor(() => getByTestId('testBarBarFooValue'));
 
         expect(getByTestId('testFoo').textContent).toEqual('newFoo');
