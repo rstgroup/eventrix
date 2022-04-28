@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor, act } from '@testing-library/react';
 import { EventrixProvider } from '../context';
 import Eventrix from '../../Eventrix';
 import useFetchState from './useFetchState';
@@ -57,7 +57,9 @@ describe('useFetchState', () => {
             </TestContainer>,
         );
         expect(getByTestId('status').textContent).toEqual(FetchStateStatus.Initial);
-        fireEvent.click(getByTestId('fetchDataButton'));
+        act(() => {
+            fireEvent.click(getByTestId('fetchDataButton'));
+        });
         expect(getByTestId('loading').textContent).toEqual('Loading');
         expect(getByTestId('status').textContent).toEqual(FetchStateStatus.Loading);
     });
@@ -74,8 +76,9 @@ describe('useFetchState', () => {
                 <UsersListComponent />
             </TestContainer>,
         );
-        fireEvent.click(getByTestId('fetchDataButton'));
-
+        act(() => {
+            fireEvent.click(getByTestId('fetchDataButton'));
+        });
         await waitFor(() => getByTestId('success'));
         expect(mockedFetchMetchod).toHaveBeenCalledWith({ search: 'Jan' });
         expect(getByTestId('success').textContent).toEqual('Success loaded list');
@@ -91,7 +94,9 @@ describe('useFetchState', () => {
                 <UsersListComponent />
             </TestContainer>,
         );
-        fireEvent.click(getByTestId('fetchDataButton'));
+        act(() => {
+            fireEvent.click(getByTestId('fetchDataButton'));
+        });
         await waitFor(() => getByTestId('error'));
         expect(mockedFetchMetchod).toHaveBeenCalledWith({ search: 'Jan' });
         expect(getByTestId('error').textContent).toEqual(fetchErrorMessage);

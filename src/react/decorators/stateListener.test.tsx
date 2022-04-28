@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import EventrixProvider from '../context/EventrixProvider';
 import Eventrix from '../../Eventrix';
 import eventrixComponent from './eventrixComponent';
@@ -31,7 +31,9 @@ describe('stateListener', () => {
                 <ItemComponent callback={callbackMock} />
             </TestContainer>,
         );
-        eventrixInstance.stateManager.setState('foo.bar', 'test');
+        act(() => {
+            eventrixInstance.stateManager.setState('foo.bar', 'test');
+        });
         expect(callbackMock).toHaveBeenCalledWith('test');
     });
 });
