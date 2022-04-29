@@ -10,15 +10,11 @@ import useReceiver from './useReceiver';
 describe('useReceiver', () => {
     const ItemComponent = () => {
         const emit = useEmit();
-        useReceiver<string>(
-            'testEvent',
-            (eventName, eventData, stateManager) => {
-                act(() => {
-                    stateManager.setState('foo', eventData);
-                });
-            },
-            [],
-        );
+        useReceiver<string>('testEvent', (eventName, eventData, stateManager) => {
+            act(() => {
+                stateManager.setState('foo', eventData);
+            });
+        });
         useEvent('remoteFetch', () => {
             act(() => {
                 emit('testEvent', 'testData').then(() => {
