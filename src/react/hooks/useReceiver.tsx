@@ -1,23 +1,18 @@
-import React, { useContext, useEffect, useCallback } from 'react';
+import { useContext, useEffect } from 'react';
 import { EventrixContext } from '../context';
 import { ReceiverI } from '../../interfaces';
 import EventsReceiver from '../../EventsReceiver';
 
-function useReceiver<EventDataI>(
-    eventName: string,
-    receiverMethod: ReceiverI<EventDataI>,
-    receiverDependenciesList: React.DependencyList,
-): void {
+function useReceiver<EventDataI>(eventName: string, receiverMethod: ReceiverI<EventDataI>): void {
     const { eventrix } = useContext(EventrixContext);
-    const receiverCallback = useCallback(receiverMethod, receiverDependenciesList);
 
     useEffect(() => {
-        const receiver = new EventsReceiver(eventName, receiverCallback);
+        const receiver = new EventsReceiver(eventName, receiverMethod);
         eventrix.useReceiver(receiver);
         return () => {
             eventrix.removeReceiver(receiver);
         };
-    }, [eventName, receiverCallback]);
+    }, [eventName, receiverMethod]);
 }
 
 export default useReceiver;
