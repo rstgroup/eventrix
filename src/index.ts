@@ -15,6 +15,7 @@ export {
     useEventState,
     useFetchToState,
     useFetchState,
+    useReceiver,
     eventrixComponent,
     eventListener,
     stateListener,
