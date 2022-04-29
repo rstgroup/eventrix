@@ -1,6 +1,6 @@
 {
   "name": "eventrix",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "description": "A system for managing the state of the application based on the events broadcast in the application",
   "main": "dist/index.js",
   "repository": "https://github.com/rstgroup/eventrix",
