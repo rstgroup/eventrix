@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { EventrixProvider } from '../context';
 import Eventrix from '../../Eventrix';
 import useEventState from './useEventState';
@@ -19,7 +19,9 @@ describe('useEventState', () => {
                 <ItemComponent />
             </TestContainer>,
         );
-        eventrixInstance.emit('testEvent', 'testData');
+        act(() => {
+            eventrixInstance.emit('testEvent', 'testData');
+        });
         await waitFor(() => getByTestId('eventDataValue'));
         expect(getByTestId('eventData').textContent).toEqual('testData');
     });

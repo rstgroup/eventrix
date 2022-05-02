@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { EventrixProvider } from '../context';
 import Eventrix from '../../Eventrix';
@@ -66,16 +66,18 @@ describe('useEventrixState', () => {
         expect(getByTestId('fooDescription').textContent).toEqual(initialState.foo.description);
         expect(getByTestId('fooBarData').textContent).toEqual(initialState.foo.bar);
         expect(getByTestId('testData').textContent).toEqual(initialState.test);
-
-        eventrixInstance.emit('changeTest', secondTestData);
+        act(() => {
+            eventrixInstance.emit('changeTest', secondTestData);
+        });
         await waitFor(() => getByTestId('testDataValue'));
 
         expect(getByTestId('fooTitle').textContent).toEqual(initialState.foo.title);
         expect(getByTestId('fooDescription').textContent).toEqual(initialState.foo.description);
         expect(getByTestId('fooBarData').textContent).toEqual(initialState.foo.bar);
         expect(getByTestId('testData').textContent).toEqual(secondTestData);
-
-        eventrixInstance.emit('changeFoo', secondFooData);
+        act(() => {
+            eventrixInstance.emit('changeFoo', secondFooData);
+        });
         await waitFor(() => getByTestId('fooTitleValue'));
         await waitFor(() => getByTestId('fooDescriptionValue'));
         await waitFor(() => getByTestId('fooBarDataValue'));

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { EventrixProvider } from '../context';
 import Eventrix from '../../Eventrix';
 import useEmit from './useEmit';
@@ -8,7 +8,9 @@ describe('useEmit', () => {
     const ItemComponent = () => {
         const emit = useEmit();
         useEffect(() => {
-            emit('testEvent', 'test');
+            act(() => {
+                emit('testEvent', 'test');
+            });
         }, []);
         return <div>Test Item Component</div>;
     };
