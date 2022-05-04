@@ -25,6 +25,13 @@ class RequestHandler implements RequestHandlerInstance {
         const requestHandlers = { request, rejectHandler, resolveHandler };
         this._requests[requestId].push(requestHandlers);
     }
+    _hasRegisteredRequest(request: Promise<any>, requestId: string): boolean {
+        if (Array.isArray(this._requests[requestId])) {
+            const requestHandlers = this._requests[requestId].find((requestHandler) => requestHandler.request === request);
+            return !!requestHandlers;
+        }
+        return false;
+    }
     _unregisterRequest(request: Promise<any>, requestId: string): void {
         const { abortEventName, resolveEventName } = this._getEventNames(requestId);
         if (Array.isArray(this._requests[requestId])) {
@@ -56,12 +63,16 @@ class RequestHandler implements RequestHandlerInstance {
             this._registerRequest(request, requestId, rejectHandler, resolveHandler);
             request
                 .then((response) => {
-                    this._unregisterRequest(request, requestId);
-                    resolve(response);
+                    if (this._hasRegisteredRequest(request, requestId)) {
+                        this._unregisterRequest(request, requestId);
+                        resolve(response);
+                    }
                 })
                 .catch((error) => {
-                    this._unregisterRequest(request, requestId);
-                    reject(error);
+                    if (this._hasRegisteredRequest(request, requestId)) {
+                        this._unregisterRequest(request, requestId);
+                        reject(error);
+                    }
                 });
         });
     }
