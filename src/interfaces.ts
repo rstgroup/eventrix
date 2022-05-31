@@ -66,10 +66,11 @@ export interface FetchHandler {
 export interface EventrixI {
     listen<EventData = any>(name: string, listener: EventsListenerI<EventData>): void;
     unlisten(name: string, listener: EventsListenerI): void;
-    emit<EventData>(name: string, data: EventData): Promise<any>;
+    emit<EventData>(name: string, data?: EventData): Promise<any>;
     getState<StateI>(path?: string): StateI;
     useReceiver(eventReceiver: EventsReceiverI): void;
     removeReceiver(eventReceiver: EventsReceiverI): void;
+    persistStoreLoadPromise?: Promise<void>;
 }
 
 export interface EmitArgumentsI<EventDataI> {
@@ -246,4 +247,25 @@ export enum FetchStateStatus {
     Loading = 'loading',
     Error = 'error',
     Success = 'success',
+}
+
+export type StorageDataItem = [string, any];
+
+export interface SyncStorage {
+    setItem(key: string, value: string): void;
+    getItem(key: string): string;
+}
+
+export interface AsyncStorage {
+    setItem(key: string, value: string): Promise<void>;
+    getItem(key: string): Promise<string>;
+}
+
+export interface PersistStoreConfig {
+    blackList: string[];
+    whiteList: string[];
+    storage: AsyncStorage | SyncStorage;
+    storageKey: string;
+    parseFromStorage(state: any, stateName: string): any;
+    parseToStorage(state: any, stateName: string): any;
 }

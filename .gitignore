@@ -9,5 +9,6 @@ coverage/
 /decorators
 /types
 /dist
+/demo
 package-lock.json
 yarn.lock
