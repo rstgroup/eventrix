@@ -30,6 +30,7 @@ describe('persistStore', () => {
             c: 'c test',
             d: 'd test',
         }
+
         let eventrix;
         let config;
 
