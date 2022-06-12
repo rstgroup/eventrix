@@ -261,9 +261,13 @@ export interface AsyncStorage {
     getItem(key: string): Promise<string>;
 }
 
-export interface PersistStoreConfig {
-    blackList: string[];
-    whiteList: string[];
+export type StateKeys<StateI> = keyof StateI;
+
+export type StateKeysList<StateI> = StateKeys<StateI>[];
+
+export interface PersistStoreConfig<StateI> {
+    blackList: StateKeysList<StateI>;
+    whiteList: StateKeysList<StateI>;
     storage: AsyncStorage | SyncStorage;
     storageKey: string;
     parseFromStorage(state: any, stateName: string): any;
