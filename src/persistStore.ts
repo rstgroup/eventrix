@@ -1,14 +1,6 @@
 import { EventsReceiver } from './index';
 import { GET_PERSIST_STORE_STATE } from './eventsNames/persistStore';
-import {
-    AsyncStorage,
-    EventrixI,
-    PersistStoreConfig,
-    StateKeys,
-    StateKeysList,
-    StorageDataItem,
-    SyncStorage,
-} from './interfaces';
+import { AsyncStorage, EventrixI, PersistStoreConfig, StateKeys, StateKeysList, StorageDataItem, SyncStorage } from './interfaces';
 import { isPromise, registerListeners } from './helpers';
 
 const getStorageData = (storage: SyncStorage | AsyncStorage, storageKey: string): StorageDataItem | Promise<StorageDataItem> => {
@@ -26,7 +18,7 @@ const getStorageData = (storage: SyncStorage | AsyncStorage, storageKey: string)
 
 const getStateKeys = <StateI>(storeState: StateI): StateKeysList<StateI> => {
     return Object.keys(storeState) as StateKeysList<StateI>;
-}
+};
 
 export const connectPersistStore = <StateI>(eventrix: EventrixI, config: PersistStoreConfig<StateI>): void => {
     const {
@@ -39,11 +31,10 @@ export const connectPersistStore = <StateI>(eventrix: EventrixI, config: Persist
     } = config;
     const setPersistStoreState = (): void => {
         if (blackList) {
-            console.log('bl')
             const storeState = eventrix.getState<StateI>();
             const mappedState: StorageDataItem[] = [];
             getStateKeys(storeState).forEach((key): void => {
-                if (!blackList.includes(key) && typeof key === 'string' ) {
+                if (!blackList.includes(key) && typeof key === 'string') {
                     mappedState.push([key, parseToStorage(storeState[key], key)]);
                 }
             });
@@ -51,10 +42,9 @@ export const connectPersistStore = <StateI>(eventrix: EventrixI, config: Persist
             storage.setItem(storageKey, serializedData);
         }
         if (whiteList) {
-            console.log('wl')
             const mappedState: StorageDataItem[] = [];
             whiteList.forEach((key): void => {
-                if(typeof key === 'string') {
+                if (typeof key === 'string') {
                     mappedState.push([key, parseToStorage(eventrix.getState(key), key)]);
                 }
             });
@@ -96,7 +86,7 @@ export const connectPersistStore = <StateI>(eventrix: EventrixI, config: Persist
         return;
     }
     whiteList.forEach((stateName) => {
-        if(typeof stateName === 'string') {
+        if (typeof stateName === 'string') {
             registerListeners(eventrix, stateName, setPersistStoreState);
         }
     });
