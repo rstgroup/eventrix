@@ -255,10 +255,6 @@ export interface RequestI {
 }
 
 export interface RequestHandlerInstance {
-    _eventrix: EventrixI;
-    _requests: {
-        [key: string]: RequestI[];
-    };
     handle<RequestResponse>(request: Promise<RequestResponse>, abortEventName: string): Promise<RequestResponse>;
     abortAll<RejectData>(rejectData: RejectData): void;
     abortAllById<RejectData>(requestId: string, rejectData: RejectData): void;
