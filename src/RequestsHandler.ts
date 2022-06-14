@@ -1,6 +1,6 @@
 import { EventrixI, RequestI, EventsListenerI, RequestHandlerInstance } from './interfaces';
 
-class RequestHandler implements RequestHandlerInstance {
+class RequestsHandler implements RequestHandlerInstance {
     _eventrix: EventrixI;
     _requests: {
         [key: string]: RequestI[];
@@ -52,11 +52,9 @@ class RequestHandler implements RequestHandlerInstance {
     handle<RequestResponse>(request: Promise<RequestResponse>, requestId: string): Promise<RequestResponse> {
         return new Promise((resolve, reject) => {
             const rejectHandler = (eventData: any) => {
-                this._unregisterRequest(request, requestId);
                 reject(eventData);
             };
             const resolveHandler = (eventData: RequestResponse) => {
-                this._unregisterRequest(request, requestId);
                 resolve(eventData);
             };
 
@@ -90,11 +88,22 @@ class RequestHandler implements RequestHandlerInstance {
     }
     abortAllById<RejectData>(requestId: string, rejectData: RejectData): void {
         const { abortEventName } = this._getEventNames(requestId);
-        this._eventrix.emit<RejectData>(abortEventName, rejectData);
+        if (Array.isArray(this._requests[requestId])) {
+            this._eventrix.emit<RejectData>(abortEventName, rejectData);
+            this._requests[requestId].forEach((requestHandler) => {
+                this._unregisterRequest(requestHandler.request, requestId);
+            });
+        }
     }
     resolveAllById<ResolveData>(requestId: string, resolveData: ResolveData): void {
         const { resolveEventName } = this._getEventNames(requestId);
         this._eventrix.emit<ResolveData>(resolveEventName, resolveData);
+        if (Array.isArray(this._requests[requestId])) {
+            this._eventrix.emit<ResolveData>(resolveEventName, resolveData);
+            this._requests[requestId].forEach((requestHandler) => {
+                this._unregisterRequest(requestHandler.request, requestId);
+            });
+        }
     }
     isAnyPending(): boolean {
         let hasPendingRequests = false;
@@ -110,4 +119,4 @@ class RequestHandler implements RequestHandlerInstance {
     }
 }
 
-export default RequestHandler;
+export default RequestsHandler;

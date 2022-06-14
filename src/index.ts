@@ -2,7 +2,7 @@
 export { default as Eventrix } from './Eventrix';
 export { default as EventsReceiver, fetchToStateReceiver, fetchStateReceiver, fetchHandler } from './EventsReceiver';
 export { default as EventrixDebugger } from './EventrixDebugger';
-export { default as RequestHandler } from './RequestHandler';
+export { default as RequestsHandler } from './RequestsHandler';
 
 /*** REACT ***/
 export {
