@@ -1,50 +1,55 @@
 import { EventrixI, RequestI, EventsListenerI, RequestHandlerInstance } from './interfaces';
 
 class RequestsHandler implements RequestHandlerInstance {
-    _eventrix: EventrixI;
-    _requests: {
+    private eventrix: EventrixI;
+    private requests: {
         [key: string]: RequestI[];
     };
     constructor(eventrix: EventrixI) {
-        this._eventrix = eventrix;
-        this._requests = {};
+        this.eventrix = eventrix;
+        this.requests = {};
     }
-    _getEventNames(requestId: string) {
+    private getEventNames(requestId: string) {
         const abortEventName = `AbortRequest:${requestId}`;
         const resolveEventName = `ResolveRequest:${requestId}`;
         return { abortEventName, resolveEventName };
     }
-    _registerRequest(request: Promise<any>, requestId: string, rejectHandler: EventsListenerI, resolveHandler: EventsListenerI): void {
-        const { abortEventName, resolveEventName } = this._getEventNames(requestId);
+    private registerRequest(
+        request: Promise<any>,
+        requestId: string,
+        rejectHandler: EventsListenerI,
+        resolveHandler: EventsListenerI,
+    ): void {
+        const { abortEventName, resolveEventName } = this.getEventNames(requestId);
 
-        if (!Array.isArray(this._requests[requestId])) {
-            this._requests[requestId] = [];
+        if (!Array.isArray(this.requests[requestId])) {
+            this.requests[requestId] = [];
         }
-        this._eventrix.listen(abortEventName, rejectHandler);
-        this._eventrix.listen(resolveEventName, resolveHandler);
+        this.eventrix.listen(abortEventName, rejectHandler);
+        this.eventrix.listen(resolveEventName, resolveHandler);
         const requestHandlers = { request, rejectHandler, resolveHandler };
-        this._requests[requestId].push(requestHandlers);
+        this.requests[requestId].push(requestHandlers);
     }
-    _hasRegisteredRequest(request: Promise<any>, requestId: string): boolean {
-        if (Array.isArray(this._requests[requestId])) {
-            const requestHandlers = this._requests[requestId].find((requestHandler) => requestHandler.request === request);
+    private hasRegisteredRequest(request: Promise<any>, requestId: string): boolean {
+        if (Array.isArray(this.requests[requestId])) {
+            const requestHandlers = this.requests[requestId].find((requestHandler) => requestHandler.request === request);
             return !!requestHandlers;
         }
         return false;
     }
-    _unregisterRequest(request: Promise<any>, requestId: string): void {
-        const { abortEventName, resolveEventName } = this._getEventNames(requestId);
-        if (Array.isArray(this._requests[requestId])) {
-            const requestHandlers = this._requests[requestId].find((requestHandler) => requestHandler.request === request);
+    private unregisterRequest(request: Promise<any>, requestId: string): void {
+        const { abortEventName, resolveEventName } = this.getEventNames(requestId);
+        if (Array.isArray(this.requests[requestId])) {
+            const requestHandlers = this.requests[requestId].find((requestHandler) => requestHandler.request === request);
             if (requestHandlers) {
-                this._requests[requestId] = this._requests[requestId].filter(
+                this.requests[requestId] = this.requests[requestId].filter(
                     (requestHandlersItem) => requestHandlersItem.request !== requestHandlers.request,
                 );
                 const { rejectHandler, resolveHandler } = requestHandlers;
-                this._eventrix.unlisten(abortEventName, rejectHandler);
-                this._eventrix.unlisten(resolveEventName, resolveHandler);
-                if (this._requests[requestId].length < 1) {
-                    delete this._requests[requestId];
+                this.eventrix.unlisten(abortEventName, rejectHandler);
+                this.eventrix.unlisten(resolveEventName, resolveHandler);
+                if (this.requests[requestId].length < 1) {
+                    delete this.requests[requestId];
                 }
             }
         }
@@ -58,56 +63,55 @@ class RequestsHandler implements RequestHandlerInstance {
                 resolve(eventData);
             };
 
-            this._registerRequest(request, requestId, rejectHandler, resolveHandler);
+            this.registerRequest(request, requestId, rejectHandler, resolveHandler);
             request
                 .then((response) => {
-                    if (this._hasRegisteredRequest(request, requestId)) {
-                        this._unregisterRequest(request, requestId);
+                    if (this.hasRegisteredRequest(request, requestId)) {
+                        this.unregisterRequest(request, requestId);
                         resolve(response);
                     }
                 })
                 .catch((error) => {
-                    if (this._hasRegisteredRequest(request, requestId)) {
-                        this._unregisterRequest(request, requestId);
+                    if (this.hasRegisteredRequest(request, requestId)) {
+                        this.unregisterRequest(request, requestId);
                         reject(error);
                     }
                 });
         });
     }
     abortAll<RejectData>(rejectData: RejectData): void {
-        const requestIds = Object.keys(this._requests);
+        const requestIds = Object.keys(this.requests);
         requestIds.forEach((requestId) => {
             this.abortAllById(requestId, rejectData);
         });
     }
     resolveAll<ResolveData>(resolveData: ResolveData): void {
-        const requestIds = Object.keys(this._requests);
+        const requestIds = Object.keys(this.requests);
         requestIds.forEach((requestId) => {
             this.resolveAllById(requestId, resolveData);
         });
     }
     abortAllById<RejectData>(requestId: string, rejectData: RejectData): void {
-        const { abortEventName } = this._getEventNames(requestId);
-        if (Array.isArray(this._requests[requestId])) {
-            this._eventrix.emit<RejectData>(abortEventName, rejectData);
-            this._requests[requestId].forEach((requestHandler) => {
-                this._unregisterRequest(requestHandler.request, requestId);
+        const { abortEventName } = this.getEventNames(requestId);
+        if (Array.isArray(this.requests[requestId])) {
+            this.eventrix.emit<RejectData>(abortEventName, rejectData);
+            this.requests[requestId].forEach((requestHandler) => {
+                this.unregisterRequest(requestHandler.request, requestId);
             });
         }
     }
     resolveAllById<ResolveData>(requestId: string, resolveData: ResolveData): void {
-        const { resolveEventName } = this._getEventNames(requestId);
-        this._eventrix.emit<ResolveData>(resolveEventName, resolveData);
-        if (Array.isArray(this._requests[requestId])) {
-            this._eventrix.emit<ResolveData>(resolveEventName, resolveData);
-            this._requests[requestId].forEach((requestHandler) => {
-                this._unregisterRequest(requestHandler.request, requestId);
+        const { resolveEventName } = this.getEventNames(requestId);
+        if (Array.isArray(this.requests[requestId])) {
+            this.eventrix.emit<ResolveData>(resolveEventName, resolveData);
+            this.requests[requestId].forEach((requestHandler) => {
+                this.unregisterRequest(requestHandler.request, requestId);
             });
         }
     }
     isAnyPending(): boolean {
         let hasPendingRequests = false;
-        Object.keys(this._requests).forEach((requestId) => {
+        Object.keys(this.requests).forEach((requestId) => {
             if (this.isPending(requestId)) {
                 hasPendingRequests = true;
             }
@@ -115,7 +119,7 @@ class RequestsHandler implements RequestHandlerInstance {
         return hasPendingRequests;
     }
     isPending(requestId: string): boolean {
-        return Array.isArray(this._requests[requestId]) && this._requests[requestId].length > 0;
+        return Array.isArray(this.requests[requestId]) && this.requests[requestId].length > 0;
     }
 }
 
