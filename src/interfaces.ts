@@ -254,11 +254,13 @@ export type StorageDataItem = [string, any];
 export interface SyncStorage {
     setItem(key: string, value: string): void;
     getItem(key: string): string;
+    [key: string]: any;
 }
 
 export interface AsyncStorage {
     setItem(key: string, value: string): Promise<void>;
     getItem(key: string): Promise<string>;
+    [key: string]: any;
 }
 
 export type StateKeys<StateI> = keyof StateI;
@@ -266,10 +268,10 @@ export type StateKeys<StateI> = keyof StateI;
 export type StateKeysList<StateI> = StateKeys<StateI>[];
 
 export interface PersistStoreConfig<StateI> {
-    blackList: StateKeysList<StateI>;
-    whiteList: StateKeysList<StateI>;
+    blackList?: StateKeysList<StateI>;
+    whiteList?: StateKeysList<StateI>;
     storage: AsyncStorage | SyncStorage;
     storageKey: string;
-    parseFromStorage(state: any, stateName: string): any;
-    parseToStorage(state: any, stateName: string): any;
+    parseFromStorage?(state: any, stateName: string): any;
+    parseToStorage?(state: any, stateName: string): any;
 }

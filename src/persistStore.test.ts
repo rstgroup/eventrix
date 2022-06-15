@@ -1,38 +1,75 @@
 import { connectPersistStore } from './persistStore';
 import Eventrix from './Eventrix';
+import { PersistStoreConfig, SyncStorage, AsyncStorage } from './interfaces';
+
+interface InitialStateI {
+    a: string;
+    b: string;
+    c: string;
+    d: string;
+    e: string;
+}
 
 describe('persistStore', () => {
-    const initialState = {
-        a: 'a state',
-        b: 'b state',
-        c: 'c state',
-        d: 'd state',
-    };
-
-    let eventrix = new Eventrix(initialState);
-    let config;
-
     describe('sync', () => {
-        const storage = {
-            setItem: jest.fn(),
-            getItem: jest.fn(() => ''),
-        };
+        let storage: SyncStorage;
+        let initialState: InitialStateI;
+        let eventrix: Eventrix;
 
         beforeEach(() => {
+            storage = {
+                setItem: jest.fn(),
+                getItem: jest.fn(() => ''),
+            };
+            initialState = {
+                a: 'a state',
+                b: 'b state',
+                c: 'c state',
+                d: 'd state',
+                e: 'e state',
+            };
             eventrix = new Eventrix(initialState);
-            config = {
-                blackList: ['a', 'b'],
-                whiteList: ['c', 'd'],
+        });
+
+        it('should add states from white list to the localstorage', () => {
+            const config: PersistStoreConfig<InitialStateI> = {
+                whiteList: ['c'],
                 storage,
                 storageKey: 'myStorageKey',
             };
+            connectPersistStore(eventrix, config);
+            eventrix.stateManager.setState('c', 'c new state');
+            const serializedData = JSON.stringify({
+                data: [['c', 'c new state']],
+            });
+            expect(storage.setItem).toHaveBeenCalledWith('myStorageKey', serializedData);
         });
 
-        it('should add states from white list to the storage', () => {
+        it('should not add states when there are not in white list', () => {
+            const config: PersistStoreConfig<InitialStateI> = {
+                whiteList: ['c'],
+                storage,
+                storageKey: 'myStorageKey',
+            };
             connectPersistStore(eventrix, config);
-            eventrix.stateManager.setState('a', {});
+            eventrix.stateManager.setState('d', 'd new state');
+            const serializedData = JSON.stringify({
+                data: [['d', 'd new state']],
+            });
+            expect(storage.setItem).not.toHaveBeenCalledWith('myStorageKey', serializedData);
+        });
+
+        it('should check if in localstorage are all states from initialState except states from black list', () => {
+            const config: PersistStoreConfig<InitialStateI> = {
+                blackList: ['a', 'e'],
+                storage,
+                storageKey: 'myStorageKey',
+            };
+            connectPersistStore(eventrix, config);
+            eventrix.stateManager.setState('b', 'b new state');
             const serializedData = JSON.stringify({
                 data: [
+                    ['b', 'b new state'],
                     ['c', 'c state'],
                     ['d', 'd state'],
                 ],
@@ -40,41 +77,77 @@ describe('persistStore', () => {
             expect(storage.setItem).toHaveBeenCalledWith('myStorageKey', serializedData);
         });
 
-        it('should check if in localstorage are items only from whiteList', () => {
+        it('should not add states to localstorage if setState was invoked with item from blackList', () => {
+            const config: PersistStoreConfig<InitialStateI> = {
+                blackList: ['a', 'e'],
+                storage,
+                storageKey: 'myStorageKey',
+            };
             connectPersistStore(eventrix, config);
-            // const savedStates = storage.getItem('myStorageKey');
-            expect(eventrix.getState()).toEqual({
-                data: [
-                    ['c', 'c test'],
-                    ['d', 'd test'],
-                ],
-            });
+            eventrix.stateManager.setState('a', 'a new state');
+            expect(storage.setItem).not.toHaveBeenCalled();
         });
-
-        // it('should run getItem method from storage and compare returned items with white list', () => {});
     });
 
     describe('async', () => {
-        const storage = {
-            setItem: jest.fn(() => Promise.resolve()),
-            getItem: jest.fn(() => Promise.resolve('')),
-        };
+        let storage: AsyncStorage;
+        let initialState: InitialStateI;
+        let eventrix: Eventrix;
 
         beforeEach(() => {
+            storage = {
+                setItem: jest.fn(() => Promise.resolve()),
+                getItem: jest.fn(() => Promise.resolve('')),
+            };
+            initialState = {
+                a: 'a state',
+                b: 'b state',
+                c: 'c state',
+                d: 'd state',
+                e: 'e state',
+            };
             eventrix = new Eventrix(initialState);
-            config = {
-                blackList: ['a', 'b'],
-                whiteList: ['c', 'd'],
+        });
+
+        it('should add states from white list to the localstorage', () => {
+            const config: PersistStoreConfig<InitialStateI> = {
+                whiteList: ['c'],
                 storage,
                 storageKey: 'myStorageKey',
             };
+            connectPersistStore(eventrix, config);
+            eventrix.stateManager.setState('c', 'c new state');
+            const serializedData = JSON.stringify({
+                data: [['c', 'c new state']],
+            });
+            expect(storage.setItem).toHaveBeenCalledWith('myStorageKey', serializedData);
         });
 
-        it('should add states from white list to the storage', () => {
+        it('should not add states when there are not in white list', () => {
+            const config: PersistStoreConfig<InitialStateI> = {
+                whiteList: ['c'],
+                storage,
+                storageKey: 'myStorageKey',
+            };
             connectPersistStore(eventrix, config);
-            eventrix.stateManager.setState('a', {});
+            eventrix.stateManager.setState('d', 'd new state');
+            const serializedData = JSON.stringify({
+                data: [['d', 'd new state']],
+            });
+            expect(storage.setItem).not.toHaveBeenCalledWith('myStorageKey', serializedData);
+        });
+
+        it('should check if in localstorage are all states from initialState except states from black list', () => {
+            const config: PersistStoreConfig<InitialStateI> = {
+                blackList: ['a', 'e'],
+                storage,
+                storageKey: 'myStorageKey',
+            };
+            connectPersistStore(eventrix, config);
+            eventrix.stateManager.setState('b', 'b new state');
             const serializedData = JSON.stringify({
                 data: [
+                    ['b', 'b new state'],
                     ['c', 'c state'],
                     ['d', 'd state'],
                 ],
@@ -82,6 +155,15 @@ describe('persistStore', () => {
             expect(storage.setItem).toHaveBeenCalledWith('myStorageKey', serializedData);
         });
 
-        // it('should run getItem method from storage and compare returned items with white list', () => {});
+        it('should not add states to localstorage if setState was invoked with item from blackList', () => {
+            const config: PersistStoreConfig<InitialStateI> = {
+                blackList: ['a', 'e'],
+                storage,
+                storageKey: 'myStorageKey',
+            };
+            connectPersistStore(eventrix, config);
+            eventrix.stateManager.setState('a', 'a new state');
+            expect(storage.setItem).not.toHaveBeenCalled();
+        });
     });
 });
