@@ -8,7 +8,7 @@ export { connectPersistStore } from './persistStore';
 export {
     EventrixContext,
     EventrixProvider,
-    EventrixPersistStoreProvider,
+    PersistStoreGate,
     withEventrixState,
     withEventrix,
     useEventrixState,
