@@ -18,11 +18,6 @@ const getStateKeys = <StateI>(storeState: StateI): StateKeysList<StateI> => {
     return Object.keys(storeState) as StateKeysList<StateI>;
 };
 
-const isDirectSetStateEvent = (eventName: string): boolean => eventName.indexOf('setState:') === 0 && eventName.indexOf('*') < 0;
-
-const isBlackListSetStateEvent = <StateI>(eventName: string, blackList: StateKeysList<StateI>): boolean =>
-    isDirectSetStateEvent(eventName) && blackList.findIndex((state) => eventName.indexOf(`setState:${state as string}`) === 0) > -1;
-
 export const connectPersistStore = <StateI>(eventrix: EventrixI, config: PersistStoreConfig<StateI>): void => {
     const {
         blackList,
@@ -74,9 +69,18 @@ export const connectPersistStore = <StateI>(eventrix: EventrixI, config: Persist
     );
     eventrix.useReceiver(getPersistStoreStateReceiver);
 
+    const isOnBlackList = <StateItem>(blackListKey: StateItem, eventName: string): boolean => {
+        return eventName.indexOf(`setState:${blackListKey}`) > -1;
+    }
+
+    const isBlackListEvent = <StateI>(blackList: StateKeysList<StateI>, eventName: string): boolean =>
+        !eventName.includes(':*') &&
+        !eventName.includes('.*') &&
+        blackList.findIndex((key) => isOnBlackList<keyof StateI>(key, eventName)) < 0;
+
     if (blackList) {
         const blackListReceiver = new EventsReceiver<unknown, void>('*', (eventName: string) => {
-            if (!isBlackListSetStateEvent<StateI>(eventName, blackList)) {
+            if (isBlackListEvent<StateI>(blackList, eventName)) {
                 setPersistStoreState();
             }
         });

@@ -265,7 +265,7 @@ export interface AsyncStorage {
 
 export type StateKeys<StateI> = keyof StateI;
 
-export type StateKeysList<StateI> = StateKeys<StateI>[];
+export type StateKeysList<StateI> = Array<StateKeys<StateI>>;
 
 export interface PersistStoreConfig<StateI> {
     blackList?: StateKeysList<StateI>;

@@ -8,6 +8,9 @@ interface InitialStateI {
     c: string;
     d: string;
     e: string;
+    f: {
+        g: string;
+    }
 }
 
 describe('persistStore', () => {
@@ -27,27 +30,34 @@ describe('persistStore', () => {
                 c: 'c state',
                 d: 'd state',
                 e: 'e state',
+                f: {
+                    g: 'g state',
+                }
             };
             eventrix = new Eventrix(initialState);
         });
 
         it('should add states from white list to the localstorage', () => {
-            const config: PersistStoreConfig<InitialStateI> = {
-                whiteList: ['c'],
+            const x = Symbol('a');
+            type BB = keyof InitialStateI
+            const list: Array<BB> = ['a', 'c'];
+            const config = {
+            // const config: PersistStoreConfig<InitialStateI> = {
+                whiteList: ['a', 'c'],
                 storage,
                 storageKey: 'myStorageKey',
             };
-            connectPersistStore(eventrix, config);
+            connectPersistStore<InitialStateI>(eventrix, config);
             eventrix.stateManager.setState('c', 'c new state');
             const serializedData = JSON.stringify({
-                data: [['c', 'c new state']],
+                data: [['a', 'a state'], ['c', 'c new state']],
             });
             expect(storage.setItem).toHaveBeenCalledWith('myStorageKey', serializedData);
         });
 
-        it('should not add states when there are not in white list', () => {
+        it('should not add states when they are not in the white list', () => {
             const config: PersistStoreConfig<InitialStateI> = {
-                whiteList: ['c'],
+                whiteList: ['c','u'],
                 storage,
                 storageKey: 'myStorageKey',
             };
@@ -72,6 +82,7 @@ describe('persistStore', () => {
                     ['b', 'b new state'],
                     ['c', 'c state'],
                     ['d', 'd state'],
+                    ['f', { g: 'g state'}]
                 ],
             });
             expect(storage.setItem).toHaveBeenCalledWith('myStorageKey', serializedData);
@@ -85,6 +96,17 @@ describe('persistStore', () => {
             };
             connectPersistStore(eventrix, config);
             eventrix.stateManager.setState('a', 'a new state');
+            expect(storage.setItem).not.toHaveBeenCalled();
+        });
+
+        it('should not add state to localstorage if setState was invoked with nested state from black list', () => {
+            const config: PersistStoreConfig<InitialStateI> = {
+                blackList: ['a', 'e', 'f'],
+                storage,
+                storageKey: 'myStorageKey',
+            };
+            connectPersistStore(eventrix, config);
+            eventrix.stateManager.setState('f.g', 'g new state');
             expect(storage.setItem).not.toHaveBeenCalled();
         });
     });
@@ -105,6 +127,7 @@ describe('persistStore', () => {
                 c: 'c state',
                 d: 'd state',
                 e: 'e state',
+                f: { g: 'g state' },
             };
             eventrix = new Eventrix(initialState);
         });
@@ -150,6 +173,7 @@ describe('persistStore', () => {
                     ['b', 'b new state'],
                     ['c', 'c state'],
                     ['d', 'd state'],
+                    ['f', { g: 'g state'}]
                 ],
             });
             expect(storage.setItem).toHaveBeenCalledWith('myStorageKey', serializedData);
