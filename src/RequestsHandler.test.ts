@@ -22,31 +22,31 @@ describe('RequestHandler', () => {
 
         it('should return success when request is resolved', () => {
             expect.assertions(1);
-            const requestPromise = requestHandler.handle<string>(request, requestId);
+            const requestPromise = requestHandler.handleRequest<string>(request, requestId);
             return requestPromise.then((result) => {
                 expect(result).toEqual('success');
             });
         });
         it('should return true when TestAbort request is pending', () => {
             expect.assertions(1);
-            requestHandler.handle<string>(request, requestId);
+            requestHandler.handleRequest<string>(request, requestId);
             expect(requestHandler.isPending(requestId)).toEqual(true);
         });
         it('should return true when any request is pending', () => {
             expect.assertions(1);
-            requestHandler.handle<string>(request, requestId);
+            requestHandler.handleRequest<string>(request, requestId);
             expect(requestHandler.isAnyPending()).toEqual(true);
         });
         it('should return false when all TestAbort requests are resolved', () => {
             expect.assertions(1);
-            const requestPromise = requestHandler.handle<string>(request, requestId);
+            const requestPromise = requestHandler.handleRequest<string>(request, requestId);
             return requestPromise.then(() => {
                 expect(requestHandler.isPending(requestId)).toEqual(false);
             });
         });
         it('should return false when all requests are resolved', () => {
             expect.assertions(1);
-            const requestPromise = requestHandler.handle<string>(request, requestId);
+            const requestPromise = requestHandler.handleRequest<string>(request, requestId);
             return requestPromise.then(() => {
                 expect(requestHandler.isAnyPending()).toEqual(false);
             });
@@ -58,14 +58,14 @@ describe('RequestHandler', () => {
                     reject('error');
                 }, 10);
             });
-            const requestPromise = requestHandler.handle<string>(request, requestId);
+            const requestPromise = requestHandler.handleRequest<string>(request, requestId);
             return requestPromise.catch((result) => {
                 expect(result).toEqual('error');
             });
         });
         it('should register and unregister request and listeners', () => {
             expect.assertions(4);
-            const requestPromise = requestHandler.handle<string>(request, requestId);
+            const requestPromise = requestHandler.handleRequest<string>(request, requestId);
 
             expect(eventrix.eventsEmitter.listeners[abortRequestEventName].length).toEqual(1);
             expect(eventrix.eventsEmitter.listeners[resolveRequestEventName].length).toEqual(1);
@@ -102,8 +102,8 @@ describe('RequestHandler', () => {
 
         it('abortAllById -> should reject all TestAbort requests with abortedAllById response', async () => {
             expect.assertions(2);
-            const requestPromise = requestHandler.handle<string>(request, requestId).catch((error) => error);
-            const requestPromise2 = requestHandler.handle<string>(request2, requestId).catch((error) => error);
+            const requestPromise = requestHandler.handleRequest<string>(request, requestId).catch((error) => error);
+            const requestPromise2 = requestHandler.handleRequest<string>(request2, requestId).catch((error) => error);
 
             requestHandler.abortAllById<string>(requestId, 'abortedAllById');
 
@@ -114,8 +114,8 @@ describe('RequestHandler', () => {
         });
         it('abortAll -> should reject all requests with abortedAll response', () => {
             expect.assertions(2);
-            const requestPromise = requestHandler.handle<string>(request, requestId).catch((error) => error);
-            const requestPromise2 = requestHandler.handle<string>(request2, requestId2).catch((error) => error);
+            const requestPromise = requestHandler.handleRequest<string>(request, requestId).catch((error) => error);
+            const requestPromise2 = requestHandler.handleRequest<string>(request2, requestId2).catch((error) => error);
 
             requestHandler.abortAll<string>('abortedAll');
 
@@ -126,7 +126,7 @@ describe('RequestHandler', () => {
         });
         it('should reject all TestAbort requests when abort event called', () => {
             expect.assertions(1);
-            const requestPromise = requestHandler.handle<string>(request, requestId);
+            const requestPromise = requestHandler.handleRequest<string>(request, requestId);
 
             eventrix.emit(abortRequestEventName, 'abortedByEvent');
 
@@ -161,8 +161,8 @@ describe('RequestHandler', () => {
 
         it('resolveAllById -> should reject all TestResolve requests with resolvedAllById response', async () => {
             expect.assertions(2);
-            const requestPromise = requestHandler.handle<string>(request, requestId).catch((error) => error);
-            const requestPromise2 = requestHandler.handle<string>(request2, requestId).catch((error) => error);
+            const requestPromise = requestHandler.handleRequest<string>(request, requestId).catch((error) => error);
+            const requestPromise2 = requestHandler.handleRequest<string>(request2, requestId).catch((error) => error);
 
             requestHandler.resolveAllById<string>(requestId, 'resolvedAllById');
 
@@ -173,8 +173,8 @@ describe('RequestHandler', () => {
         });
         it('resolveAll -> should reject all requests with resolvedAll response', () => {
             expect.assertions(2);
-            const requestPromise = requestHandler.handle<string>(request, requestId).catch((error) => error);
-            const requestPromise2 = requestHandler.handle<string>(request2, requestId2).catch((error) => error);
+            const requestPromise = requestHandler.handleRequest<string>(request, requestId).catch((error) => error);
+            const requestPromise2 = requestHandler.handleRequest<string>(request2, requestId2).catch((error) => error);
 
             requestHandler.resolveAll<string>('resolvedAll');
 
@@ -185,7 +185,7 @@ describe('RequestHandler', () => {
         });
         it('should resolve all TestResolve requests when resolve event called', () => {
             expect.assertions(1);
-            const requestPromise = requestHandler.handle<string>(request, requestId);
+            const requestPromise = requestHandler.handleRequest<string>(request, requestId);
 
             eventrix.emit(resolveRequestEventName, 'resolvedByEvent');
 

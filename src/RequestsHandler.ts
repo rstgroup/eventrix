@@ -54,7 +54,7 @@ class RequestsHandler implements RequestHandlerInstance {
             }
         }
     }
-    handle<RequestResponse>(request: Promise<RequestResponse>, requestId: string): Promise<RequestResponse> {
+    handleRequest<RequestResponse>(request: Promise<RequestResponse>, requestId: string): Promise<RequestResponse> {
         return new Promise((resolve, reject) => {
             const rejectHandler = (eventData: any) => {
                 reject(eventData);
@@ -82,13 +82,13 @@ class RequestsHandler implements RequestHandlerInstance {
     abortAll<RejectData>(rejectData: RejectData): void {
         const requestIds = Object.keys(this.requests);
         requestIds.forEach((requestId) => {
-            this.abortAllById(requestId, rejectData);
+            this.abortAllById<RejectData>(requestId, rejectData);
         });
     }
     resolveAll<ResolveData>(resolveData: ResolveData): void {
         const requestIds = Object.keys(this.requests);
         requestIds.forEach((requestId) => {
-            this.resolveAllById(requestId, resolveData);
+            this.resolveAllById<ResolveData>(requestId, resolveData);
         });
     }
     abortAllById<RejectData>(requestId: string, rejectData: RejectData): void {

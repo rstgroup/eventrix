@@ -255,7 +255,7 @@ export interface RequestI {
 }
 
 export interface RequestHandlerInstance {
-    handle<RequestResponse>(request: Promise<RequestResponse>, abortEventName: string): Promise<RequestResponse>;
+    handleRequest<RequestResponse>(request: Promise<RequestResponse>, abortEventName: string): Promise<RequestResponse>;
     abortAll<RejectData>(rejectData: RejectData): void;
     abortAllById<RejectData>(requestId: string, rejectData: RejectData): void;
     resolveAll<ResolveData>(resolveData: ResolveData): void;
