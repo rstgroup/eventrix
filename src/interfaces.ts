@@ -270,8 +270,8 @@ export type StateKeysList<StateI> = Array<StateKeys<StateI>>;
 export interface PersistStoreConfig<StateI> {
     blackList?: StateKeysList<StateI>;
     whiteList?: StateKeysList<StateI>;
-    storage: AsyncStorage | SyncStorage;
-    storageKey: string;
     parseFromStorage?(state: any, stateName: string): any;
     parseToStorage?(state: any, stateName: string): any;
+    storage: AsyncStorage | SyncStorage;
+    storageKey: string;
 }

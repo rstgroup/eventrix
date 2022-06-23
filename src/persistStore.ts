@@ -71,7 +71,7 @@ export const connectPersistStore = <StateI>(eventrix: EventrixI, config: Persist
 
     const isOnBlackList = <StateItem>(blackListKey: StateItem, eventName: string): boolean => {
         return eventName.indexOf(`setState:${blackListKey}`) > -1;
-    }
+    };
 
     const isBlackListEvent = <StateI>(blackList: StateKeysList<StateI>, eventName: string): boolean =>
         !eventName.includes(':*') &&
@@ -85,9 +85,7 @@ export const connectPersistStore = <StateI>(eventrix: EventrixI, config: Persist
             }
         });
         eventrix.useReceiver(blackListReceiver);
-        return;
-    }
-    if (whiteList) {
+    } else if (whiteList) {
         whiteList.forEach((stateName) => {
             if (typeof stateName === 'string') {
                 registerListeners(eventrix, stateName, setPersistStoreState);
