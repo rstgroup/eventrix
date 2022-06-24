@@ -275,3 +275,19 @@ export interface PersistStoreConfig<StateI> {
     storage: AsyncStorage | SyncStorage;
     storageKey: string;
 }
+
+export interface RequestI {
+    request: Promise<any>;
+    rejectHandler: EventsListenerI;
+    resolveHandler: EventsListenerI;
+}
+
+export interface RequestHandlerInstance {
+    handleRequest<RequestResponse>(request: Promise<RequestResponse>, abortEventName: string): Promise<RequestResponse>;
+    abortAll<RejectData>(rejectData: RejectData): void;
+    abortAllById<RejectData>(requestId: string, rejectData: RejectData): void;
+    resolveAll<ResolveData>(resolveData: ResolveData): void;
+    resolveAllById<ResolveData>(requestId: string, resolveData: ResolveData): void;
+    isAnyPending(): boolean;
+    isPending(requestId: string): boolean;
+}

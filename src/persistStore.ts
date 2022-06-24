@@ -18,7 +18,7 @@ const getStateKeys = <StateI>(storeState: StateI): StateKeysList<StateI> => {
     return Object.keys(storeState) as StateKeysList<StateI>;
 };
 
-export const connectPersistStore = <StateI>(eventrix: EventrixI, config: PersistStoreConfig<StateI>): void => {
+const connectPersistStore = <StateI>(eventrix: EventrixI, config: PersistStoreConfig<StateI>): void => {
     const {
         blackList,
         whiteList,
@@ -68,6 +68,7 @@ export const connectPersistStore = <StateI>(eventrix: EventrixI, config: Persist
         },
     );
     eventrix.useReceiver(getPersistStoreStateReceiver);
+    eventrix.persistStoreLoadPromise = eventrix.emit(GET_PERSIST_STORE_STATE);
 
     const isOnBlackList = <StateItem>(blackListKey: StateItem, eventName: string): boolean => {
         return eventName.indexOf(`setState:${blackListKey}`) > -1;
@@ -85,12 +86,16 @@ export const connectPersistStore = <StateI>(eventrix: EventrixI, config: Persist
             }
         });
         eventrix.useReceiver(blackListReceiver);
-    } else if (whiteList) {
+        return;
+    }
+
+    if (whiteList) {
         whiteList.forEach((stateName) => {
             if (typeof stateName === 'string') {
                 registerListeners(eventrix, stateName, setPersistStoreState);
             }
         });
     }
-    eventrix.persistStoreLoadPromise = eventrix.emit(GET_PERSIST_STORE_STATE);
 };
+
+export default connectPersistStore;

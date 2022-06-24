@@ -1,4 +1,4 @@
-import { connectPersistStore } from './persistStore';
+import connectPersistStore from './persistStore';
 import Eventrix from './Eventrix';
 import { PersistStoreConfig, SyncStorage, AsyncStorage } from './interfaces';
 
@@ -131,7 +131,7 @@ describe('persistStore', () => {
             eventrix = new Eventrix(initialState);
         });
 
-        it('should add states from white list to the localstorage', () => {
+        it('should add state to localstorage when setState was invoked with item from whiteList', () => {
             const config: PersistStoreConfig<InitialStateI> = {
                 whiteList: ['c'],
                 storage,
@@ -145,7 +145,7 @@ describe('persistStore', () => {
             expect(storage.setItem).toHaveBeenCalledWith('myStorageKey', serializedData);
         });
 
-        it('should not add states when there are not in white list', () => {
+        it('should not add state when setState was invoked with item not from whiteList', () => {
             const config: PersistStoreConfig<InitialStateI> = {
                 whiteList: ['c'],
                 storage,
@@ -159,7 +159,7 @@ describe('persistStore', () => {
             expect(storage.setItem).not.toHaveBeenCalledWith('myStorageKey', serializedData);
         });
 
-        it('should check if in localstorage are all states from initialState except states from black list', () => {
+        it('should save all states from initialState except states from blackList', () => {
             const config: PersistStoreConfig<InitialStateI> = {
                 blackList: ['a', 'e'],
                 storage,
@@ -186,6 +186,17 @@ describe('persistStore', () => {
             };
             connectPersistStore(eventrix, config);
             eventrix.stateManager.setState('a', 'a new state');
+            expect(storage.setItem).not.toHaveBeenCalled();
+        });
+
+        it('should not add state to localstorage if setState was invoked with nested state from blackList', () => {
+            const config: PersistStoreConfig<InitialStateI> = {
+                blackList: ['a', 'e', 'f'],
+                storage,
+                storageKey: 'myStorageKey',
+            };
+            connectPersistStore(eventrix, config);
+            eventrix.stateManager.setState('f.g', 'g new state');
             expect(storage.setItem).not.toHaveBeenCalled();
         });
     });
