@@ -66,10 +66,11 @@ export interface FetchHandler {
 export interface EventrixI {
     listen<EventData = any>(name: string, listener: EventsListenerI<EventData>): void;
     unlisten(name: string, listener: EventsListenerI): void;
-    emit<EventData>(name: string, data: EventData): Promise<any>;
+    emit<EventData>(name: string, data?: EventData): Promise<any>;
     getState<StateI>(path?: string): StateI;
     useReceiver(eventReceiver: EventsReceiverI): void;
     removeReceiver(eventReceiver: EventsReceiverI): void;
+    persistStoreLoadPromise?: Promise<void>;
 }
 
 export interface EmitArgumentsI<EventDataI> {
@@ -246,6 +247,33 @@ export enum FetchStateStatus {
     Loading = 'loading',
     Error = 'error',
     Success = 'success',
+}
+
+export type StorageDataItem = [string, any];
+
+export interface SyncStorage {
+    setItem(key: string, value: string): void;
+    getItem(key: string): string;
+    [key: string]: any;
+}
+
+export interface AsyncStorage {
+    setItem(key: string, value: string): Promise<void>;
+    getItem(key: string): Promise<string>;
+    [key: string]: any;
+}
+
+export type StateKeys<StateI> = keyof StateI;
+
+export type StateKeysList<StateI> = Array<StateKeys<StateI>>;
+
+export interface PersistStoreConfig<StateI> {
+    blackList?: StateKeysList<StateI>;
+    whiteList?: StateKeysList<StateI>;
+    parseFromStorage?(state: any, stateName: string): any;
+    parseToStorage?(state: any, stateName: string): any;
+    storage: AsyncStorage | SyncStorage;
+    storageKey: string;
 }
 
 export interface RequestI {

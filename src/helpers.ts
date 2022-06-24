@@ -1,6 +1,6 @@
 import { EventrixI, EventsListenerI, UnregisterListenerMethod } from './interfaces';
 
-export const isPromise = (value: any): boolean => typeof value === 'object' && typeof value.then === 'function';
+export const isPromise = (value: any): value is Promise<any> => typeof value === 'object' && typeof value.then === 'function';
 
 export const isNumber = (value: any): boolean => {
     if (value === '' || value === null || value !== value || Array.isArray(value)) {

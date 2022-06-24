@@ -67,8 +67,8 @@ describe('RequestHandler', () => {
             expect.assertions(4);
             const requestPromise = requestHandler.handleRequest<string>(request, requestId);
 
-            expect(eventrix.eventsEmitter.listeners[abortRequestEventName].length).toEqual(1);
-            expect(eventrix.eventsEmitter.listeners[resolveRequestEventName].length).toEqual(1);
+            expect(eventrix.eventsEmitter.listeners[abortRequestEventName]).toHaveLength(1);
+            expect(eventrix.eventsEmitter.listeners[resolveRequestEventName]).toHaveLength(1);
 
             return requestPromise.then(() => {
                 expect(eventrix.eventsEmitter.listeners[abortRequestEventName]).toEqual(undefined);

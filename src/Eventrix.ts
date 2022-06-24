@@ -17,7 +17,7 @@ class Eventrix<InitialStateI = any> implements EventrixI {
         this.useReceiver = this.useReceiver.bind(this);
         this.removeReceiver = this.removeReceiver.bind(this);
     }
-    getState<StateI>(path: string): StateI {
+    getState<StateI>(path?: string): StateI {
         return this.stateManager.getState(path);
     }
     mapEmitArguments<EventDataI>(name: string | [string, EventDataI], value?: EventDataI): EmitArgumentsI<EventDataI> {
