@@ -6,7 +6,7 @@ import withEventrix from './withEventrix';
 import { EventrixI } from '../../interfaces';
 
 describe('withEventrix', () => {
-    const TestComponent = ({ foo = '', eventrix }: { foo: string, eventrix: EventrixI }) => {
+    const TestComponent = ({ foo = '', eventrix }: { foo: string; eventrix: EventrixI }) => {
         eventrix.emit('testEvent');
         return <div data-testid="testFoo">{!!foo && <div data-testid="testFooValue">{foo}</div>}</div>;
     };
