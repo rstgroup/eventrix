@@ -11,13 +11,12 @@ export interface PersistStoreGatePropsI {
 const PersistStoreGate: React.FC<PersistStoreGatePropsI> = ({ eventrix, children, loader: Loader }): JSX.Element => {
     const [isLoading, setIsLoading] = useState<boolean>(isPromise(eventrix.persistStoreLoadPromise));
     const isUnmounted = useRef<boolean>(false);
-
+    const promiseRegistered = useRef<boolean>(false);
     useEffect(() => {
-        const persistStoreLoad = eventrix.persistStoreLoadPromise;
-        const isPersistStorePromise = isPromise(persistStoreLoad);
-
-        if (persistStoreLoad && isPersistStorePromise) {
-            persistStoreLoad.then(() => {
+        isUnmounted.current = false;
+        if (isPromise(eventrix.persistStoreLoadPromise) && !promiseRegistered.current) {
+            promiseRegistered.current = true;
+            eventrix.persistStoreLoadPromise.then(() => {
                 if (!isUnmounted.current) {
                     setIsLoading(false);
                 }
