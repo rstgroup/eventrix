@@ -15,9 +15,11 @@ describe('helpers', () => {
         });
         it('should return false when value is not promise', () => {
             const string = 'test';
+            const nulled = null;
             const number = 10;
             const object = {};
             expect(isPromise(string)).toEqual(false);
+            expect(isPromise(nulled)).toEqual(false);
             expect(isPromise(number)).toEqual(false);
             expect(isPromise(object)).toEqual(false);
         });
