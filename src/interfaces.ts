@@ -1,5 +1,17 @@
 import { ComponentClass, ComponentType } from 'react';
 
+export interface ScopesI {
+    eventScope?: string;
+    eventSeparator?: string;
+    stateScope?: string;
+}
+
+export interface EventrixOptionsI {
+    parent: EventrixI;
+    firstParent: EventrixI;
+    scopes: ScopesI;
+}
+
 export interface StateManagerI {
     state: any;
     receivers: {
@@ -70,6 +82,12 @@ export interface EventrixI {
     getState<StateI>(path?: string): StateI;
     useReceiver(eventReceiver: EventsReceiverI): void;
     removeReceiver(eventReceiver: EventsReceiverI): void;
+    create(scopes: ScopesI): EventrixI;
+    getFirstParent(): EventrixI;
+    getStatePathWithScope(path?: string): string | undefined;
+    getEventNameWithScope(eventName: string): string;
+    stateScope?: string;
+    eventScope?: string;
     persistStoreLoadPromise?: Promise<void>;
 }
 

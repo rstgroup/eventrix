@@ -5,15 +5,17 @@ import { registerListeners } from '../../helpers';
 
 function useEventrixState<StateI>(stateName: string): [StateI, SetStateI<StateI>] {
     const { eventrix } = useContext(EventrixContext);
+    const stateNameWithScope = eventrix.getStatePathWithScope(stateName) as string;
     const [state, setState] = useState<StateI>(eventrix.getState<StateI>(stateName));
 
     const onSetEventrixState = useCallback(() => setState(eventrix.getState(stateName)), [setState, stateName]);
 
     const setEventrixState = useCallback(
         (value: StateI) => {
-            eventrix.emit('setState', { stateName, value });
+            const firstEventrixInstance = eventrix.getFirstParent();
+            firstEventrixInstance.emit('setState', { stateName: stateNameWithScope, value });
         },
-        [eventrix.emit, stateName],
+        [eventrix, stateName],
     );
 
     useEffect(() => {
@@ -22,7 +24,7 @@ function useEventrixState<StateI>(stateName: string): [StateI, SetStateI<StateI>
         return () => {
             unregisterListeners();
         };
-    }, [stateName]);
+    }, [stateNameWithScope]);
 
     return [state, setEventrixState];
 }

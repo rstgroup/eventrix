@@ -1,5 +1,5 @@
 // context
-export { EventrixContext, EventrixProvider, PersistStoreGate } from './context';
+export { EventrixContext, EventrixProvider, PersistStoreGate, EventrixScope } from './context';
 // hocs
 export { default as withEventrixState } from './hocs/withEventrixState';
 export { default as withEventrix } from './hocs/withEventrix';

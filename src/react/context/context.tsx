@@ -4,7 +4,11 @@ import { EventrixI } from '../../interfaces';
 
 export const defaultEventrixInstance = new Eventrix({});
 
-const EventrixContext = React.createContext<{ eventrix: EventrixI }>({
+type EventrixContextType = {
+    eventrix: EventrixI;
+};
+
+const EventrixContext = React.createContext<EventrixContextType>({
     eventrix: defaultEventrixInstance,
 });
 
