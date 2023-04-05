@@ -83,7 +83,7 @@ export interface EventrixI {
     useReceiver(eventReceiver: EventsReceiverI): void;
     removeReceiver(eventReceiver: EventsReceiverI): void;
     create(scopes: ScopesI): EventrixI;
-    getParent(): EventrixI;
+    getParent(): EventrixI | undefined;
     getFirstParent(): EventrixI;
     getStatePathWithScope(path?: string): string | undefined;
     getEventNameWithScope(eventName: string): string;
