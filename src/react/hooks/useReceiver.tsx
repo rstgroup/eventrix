@@ -7,7 +7,8 @@ function useReceiver<EventDataI>(eventName: string, receiverMethod: ReceiverI<Ev
     const { eventrix } = useContext(EventrixContext);
 
     useEffect(() => {
-        const receiver = new EventsReceiver(eventName, receiverMethod);
+        const eventNameWithScope = eventrix.getEventNameWithScope(eventName);
+        const receiver = new EventsReceiver(eventNameWithScope, receiverMethod);
         eventrix.useReceiver(receiver);
         return () => {
             eventrix.removeReceiver(receiver);

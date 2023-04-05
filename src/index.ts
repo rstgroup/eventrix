@@ -7,11 +7,15 @@ export { default as RequestsHandler } from './RequestsHandler';
 
 /*** REACT ***/
 export {
+    // providers
     EventrixContext,
     EventrixProvider,
     PersistStoreGate,
+    EventrixScope,
+    // HOCs
     withEventrixState,
     withEventrix,
+    // hooks
     useEventrixState,
     useEmit,
     useEvent,
@@ -19,6 +23,7 @@ export {
     useFetchToState,
     useFetchState,
     useReceiver,
+    // decorators
     eventrixComponent,
     eventListener,
     stateListener,

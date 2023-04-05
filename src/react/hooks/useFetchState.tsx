@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
-import useEmit from './useEmit';
+import { useCallback, useContext } from 'react';
 import useEventrixState from './useEventrixState';
 import { FetchStateStatus } from '../../interfaces';
+import { EventrixContext } from '../context';
 
 interface FetchStateI<FetchResultsI> {
     data?: FetchResultsI;
@@ -28,12 +28,16 @@ const defaultFetchState = {
 function useFetchState<FetchResultsI = any, FetchParamsI = any>(
     fetchStateName: string,
 ): [FetchStateI<FetchResultsI>, EmitFetchMethodI<FetchParamsI>] {
-    const emit = useEmit<FetchParamsI>();
+    const { eventrix } = useContext(EventrixContext);
     const [fetchedState = { ...defaultFetchState }] = useEventrixState<FetchStateI<FetchResultsI>>(fetchStateName);
 
     const emitFetchMethod = useCallback<EmitFetchMethodI<FetchParamsI>>(
-        (data) => emit(`fetchState:${fetchStateName}`, data),
-        [emit, fetchStateName],
+        (data) => {
+            const firstParentInstance = eventrix.getFirstParent();
+            const fetchStateNameWithScope = eventrix.getStatePathWithScope(fetchStateName);
+            return firstParentInstance.emit(`fetchState:${fetchStateNameWithScope}`, data);
+        },
+        [eventrix, fetchStateName],
     );
 
     return [fetchedState, emitFetchMethod];

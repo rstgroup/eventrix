@@ -66,21 +66,23 @@ export const unsetValue = (state: any, path: string): any => {
 };
 
 export const registerListeners = (eventrix: EventrixI, stateName: string, listener: EventsListenerI): UnregisterListenerMethod => {
-    const stateEventName = `setState:${stateName}`;
+    const firstEventrixInstance = eventrix.getFirstParent();
+    const statNameWithScope = eventrix.getStatePathWithScope(stateName) as string;
+    const stateEventName = `setState:${statNameWithScope}`;
     const eventsList = [stateEventName];
-    const statePath = stateName.split('.');
+    const statePath = statNameWithScope.split('.');
     let tempStateName = '';
     for (let i = 0; i < statePath.length - 1; i++) {
         const name = statePath[i];
         tempStateName = `${tempStateName}${name}.`;
         const wildEventName = `setState:${tempStateName}*`;
         eventsList.push(wildEventName);
-        eventrix.listen(wildEventName, listener);
+        firstEventrixInstance.listen(wildEventName, listener);
     }
-    eventrix.listen(stateEventName, listener);
+    firstEventrixInstance.listen(stateEventName, listener);
     return () => {
         eventsList.forEach((name: string) => {
-            eventrix.unlisten(name, listener);
+            firstEventrixInstance.unlisten(name, listener);
         });
     };
 };

@@ -5,6 +5,7 @@ import Eventrix from '../../Eventrix';
 import useFetchState from './useFetchState';
 import { fetchStateReceiver } from '../../EventsReceiver';
 import { FetchStateStatus } from '../../interfaces';
+import EventrixScope from '../context/EventrixScope';
 
 describe('useFetchState', () => {
     interface FetchParamsI {
@@ -101,5 +102,25 @@ describe('useFetchState', () => {
         expect(mockedFetchMetchod).toHaveBeenCalledWith({ search: 'Jan' });
         expect(getByTestId('error').textContent).toEqual(fetchErrorMessage);
         expect(getByTestId('status').textContent).toEqual(FetchStateStatus.Error);
+    });
+
+    it('should start fetch users and set loading with scope', () => {
+        const mockedUsersList: UserI[] = [];
+        const mockedFetchMetchod = jest.fn(() => Promise.resolve(mockedUsersList));
+        const usersFetchReceiver = fetchStateReceiver<FetchParamsI, UserI[]>('selectData.users', mockedFetchMetchod);
+        const eventrixInstance = new Eventrix({}, [usersFetchReceiver]);
+        const { getByTestId } = render(
+            <TestContainer eventrix={eventrixInstance}>
+                <EventrixScope state="selectData">
+                    <UsersListComponent />
+                </EventrixScope>
+            </TestContainer>,
+        );
+        expect(getByTestId('status').textContent).toEqual(FetchStateStatus.Initial);
+        act(() => {
+            fireEvent.click(getByTestId('fetchDataButton'));
+        });
+        expect(getByTestId('loading').textContent).toEqual('Loading');
+        expect(getByTestId('status').textContent).toEqual(FetchStateStatus.Loading);
     });
 });
