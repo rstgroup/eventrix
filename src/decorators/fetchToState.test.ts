@@ -14,7 +14,7 @@ describe('fetchToState', () => {
         class FetchToStateTestClass {
             eventrix: EventrixI;
 
-            constructor(props) {
+            constructor(props: any) {
                 this.eventrix = props.eventrix;
             }
 
@@ -40,12 +40,12 @@ describe('fetchToState', () => {
         class FetchToStateTestClass2 {
             eventrix: EventrixI;
 
-            constructor(props) {
+            constructor(props: { eventrix: EventrixI }) {
                 this.eventrix = props.eventrix;
             }
 
             @fetchToState(EXTEND_LIST_EVENT_NAME, STATE_PATH)
-            extendList(eventData, state) {
+            extendList(eventData: any, state: { [x: string]: any }) {
                 return Promise.resolve([...state[STATE_PATH], 'test3']);
             }
         }

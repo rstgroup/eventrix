@@ -1,6 +1,6 @@
 import get from 'lodash/get';
 import EventsReceiver from './EventsReceiver';
-import { EventrixI, EventsReceiverI, StateManagerI } from './interfaces';
+import { EventrixI, EventsListenerI, EventsReceiverI, ReceiverI, StateManagerI } from './interfaces';
 
 interface DebuggerConfigI {
     live?: boolean;
@@ -60,13 +60,13 @@ class EventrixDebugger {
     }
 
     getEventsReceiversCount(eventName: string) {
-        const receivers = get(this.eventrix, 'stateManager.receivers', {});
+        const receivers = get(this.eventrix, 'stateManager.receivers', {}) as { [key: string]: ReceiverI };
         const receiversList = receivers[eventName];
         return Array.isArray(receiversList) ? receiversList.length : 0;
     }
 
     getAllEventsReceiversCount() {
-        const receivers = get(this.eventrix, 'stateManager.receivers', {});
+        const receivers = get(this.eventrix, 'stateManager.receivers', {}) as { [key: string]: ReceiverI };
         const eventsNames = Object.keys(receivers);
         return eventsNames.map((eventName) => {
             const receiversList = receivers[eventName];
@@ -78,13 +78,13 @@ class EventrixDebugger {
     }
 
     getEventListenersCount(eventName: string) {
-        const listeners = get(this.eventrix, 'stateManager.eventsEmitter.listeners', {});
+        const listeners = get(this.eventrix, 'stateManager.eventsEmitter.listeners', {}) as { [key: string]: EventsListenerI };
         const listenersList = listeners[eventName];
         return Array.isArray(listenersList) ? listenersList.length : 0;
     }
 
     getAllEventsListenersCount() {
-        const listeners = get(this.eventrix, 'stateManager.eventsEmitter.listeners', {});
+        const listeners = get(this.eventrix, 'stateManager.eventsEmitter.listeners', {}) as { [key: string]: EventsListenerI };
         const eventsNames = Object.keys(listeners);
         return eventsNames.map((eventName) => {
             const listenersList = listeners[eventName];

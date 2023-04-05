@@ -1,7 +1,7 @@
 import useEventrix from './useEventrix';
 import receiver from './receiver';
 import Eventrix from '../Eventrix';
-import { EventrixI } from '../interfaces';
+import { EventrixI, StateManagerI } from '../interfaces';
 
 describe('receiver', () => {
     const GET_LIST_EVENT_NAME = 'Test:loadList';
@@ -19,7 +19,7 @@ describe('receiver', () => {
             }
 
             @receiver(GET_LIST_EVENT_NAME)
-            getList(eventName, eventDate, stateManager) {
+            getList(eventName: string, eventDate: unknown, stateManager: StateManagerI) {
                 stateManager.setState(STATE_PATH, listResponse);
             }
         }
@@ -45,7 +45,7 @@ describe('receiver', () => {
             }
 
             @receiver(EXTEND_LIST_EVENT_NAME)
-            extendList(eventName, eventDate, stateManager) {
+            extendList(eventName: string, eventDate: any, stateManager: StateManagerI) {
                 const list = stateManager.getState(STATE_PATH);
                 stateManager.setState(STATE_PATH, [...list, 'test3']);
             }

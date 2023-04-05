@@ -14,11 +14,11 @@ const getStorageData = (storage: SyncStorage | AsyncStorage, storageKey: string)
     return JSON.parse(storageData || defaultData).data;
 };
 
-const getStateKeys = <StateI>(storeState: StateI): StateKeysList<StateI> => {
+const getStateKeys = <StateI extends {}>(storeState: StateI): StateKeysList<StateI> => {
     return Object.keys(storeState) as StateKeysList<StateI>;
 };
 
-const connectPersistStore = <StateI>(eventrix: EventrixI, config: PersistStoreConfig<StateI>): void => {
+const connectPersistStore = <StateI extends {}>(eventrix: EventrixI, config: PersistStoreConfig<StateI>): void => {
     const {
         blackList,
         whiteList,

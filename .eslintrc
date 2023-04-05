@@ -39,7 +39,7 @@
     "react/jsx-wrap-multilines": 2,
     "react/no-string-refs": 0,
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": ["error"],
+    "@typescript-eslint/no-unused-vars": "off",
     "no-redeclare": "off",
     "@typescript-eslint/no-redeclare": ["error"],
     "jest/no-disabled-tests": "warn",

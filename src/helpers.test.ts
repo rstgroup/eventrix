@@ -104,6 +104,7 @@ describe('helpers', () => {
             };
             const newValue = 'test';
             setValue(state, 'a.b.c.d', newValue);
+            // @ts-ignore
             expect(state.a.b.c.d).toEqual(newValue);
         });
         it('should fill object when object dont have property and end of path is array', () => {
@@ -114,6 +115,7 @@ describe('helpers', () => {
             };
             const newValue = 'test';
             setValue(state, 'a.b.c.d.0', newValue);
+            // @ts-ignore
             expect(state.a.b.c.d[0]).toEqual(newValue);
         });
         it('should create new reference for all element on path', () => {

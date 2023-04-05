@@ -114,10 +114,10 @@ describe('Eventrix', () => {
         const scopedInstance4 = scopedInstance3.create({ stateScope: 'scope4' });
 
         expect(scopedInstance4.getStatePathWithScope()).toEqual('scope1.scope2.scope3.scope4');
-        expect(scopedInstance4.getParent().getStatePathWithScope()).toEqual('scope1.scope2.scope3');
-        expect(scopedInstance4.getParent().getParent().getStatePathWithScope()).toEqual('scope1.scope2');
-        expect(scopedInstance4.getParent().getParent().getParent().getStatePathWithScope()).toEqual('scope1');
-        expect(scopedInstance4.getParent().getParent().getParent().getParent().getStatePathWithScope()).toEqual(undefined);
+        expect(scopedInstance4.getParent()?.getStatePathWithScope()).toEqual('scope1.scope2.scope3');
+        expect(scopedInstance4.getParent()?.getParent()?.getStatePathWithScope()).toEqual('scope1.scope2');
+        expect(scopedInstance4.getParent()?.getParent()?.getParent()?.getStatePathWithScope()).toEqual('scope1');
+        expect(scopedInstance4.getParent()?.getParent()?.getParent()?.getParent()?.getStatePathWithScope()).toEqual(undefined);
         expect(scopedInstance4.getFirstParent().getStatePathWithScope()).toEqual(undefined);
     });
     it('should get correct event name with scope', () => {
@@ -127,10 +127,10 @@ describe('Eventrix', () => {
         const scopedInstance4 = scopedInstance3.create({ eventScope: 'scope4' });
 
         expect(scopedInstance4.getEventNameWithScope('')).toEqual('scope1:scope2:scope3:scope4');
-        expect(scopedInstance4.getParent().getEventNameWithScope('')).toEqual('scope1:scope2:scope3');
-        expect(scopedInstance4.getParent().getParent().getEventNameWithScope('')).toEqual('scope1:scope2');
-        expect(scopedInstance4.getParent().getParent().getParent().getEventNameWithScope('')).toEqual('scope1');
-        expect(scopedInstance4.getParent().getParent().getParent().getParent().getEventNameWithScope('')).toEqual('');
+        expect(scopedInstance4.getParent()?.getEventNameWithScope('')).toEqual('scope1:scope2:scope3');
+        expect(scopedInstance4.getParent()?.getParent()?.getEventNameWithScope('')).toEqual('scope1:scope2');
+        expect(scopedInstance4.getParent()?.getParent()?.getParent()?.getEventNameWithScope('')).toEqual('scope1');
+        expect(scopedInstance4.getParent()?.getParent()?.getParent()?.getParent()?.getEventNameWithScope('')).toEqual('');
         expect(scopedInstance4.getFirstParent().getEventNameWithScope('')).toEqual('');
     });
 });

@@ -2,7 +2,7 @@ import StateManager from './StateManager';
 import EventsReceiver from './EventsReceiver';
 
 describe('StateManager', () => {
-    let eventsEmitter = {
+    let eventsEmitter: any = {
         listeners: {},
         listen: jest.fn(),
         unlisten: jest.fn(),
@@ -13,9 +13,9 @@ describe('StateManager', () => {
         runListeners: jest.fn(),
     };
     let stateManager = new StateManager(eventsEmitter);
-    let initialState;
+    let initialState: object;
     let eventsReceiver;
-    let eventsReceivers;
+    let eventsReceivers: any;
 
     beforeEach(() => {
         initialState = {
@@ -59,6 +59,7 @@ describe('StateManager', () => {
     });
     it('should not register events receiver when dont have handleEvent function', () => {
         console.warn = jest.fn();
+        // @ts-ignore
         stateManager.useReceiver({ getEventsNames: () => ['testEvent', 'secondTestEvent'], receiver: jest.fn(), eventsNames: [] });
         expect(console.warn).toHaveBeenCalledWith(`Store->registerReceiver - "testEvent" receiver is not a function`);
         expect(console.warn).toHaveBeenCalledWith(`Store->registerReceiver - "secondTestEvent" receiver is not a function`);
@@ -116,7 +117,7 @@ describe('StateManager', () => {
         const receiver = jest.fn(() => Promise.resolve({ asyncData: {} }));
         const asyncReceiver = new EventsReceiver('testEvent', receiver);
         stateManager.useReceiver(asyncReceiver);
-        return stateManager.runReceivers('testEvent', { eventData: {} }).then((results) => {
+        return stateManager.runReceivers('testEvent', { eventData: {} }).then((results: any) => {
             expect(results).toEqual([{ asyncData: {} }, { testData: {} }]);
             expect(receiver).toHaveBeenCalledWith('testEvent', { eventData: {} }, stateManager);
         });

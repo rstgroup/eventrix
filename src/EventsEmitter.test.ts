@@ -8,6 +8,7 @@ describe('EventsEmitter', () => {
 
         it('should not register listener if is not a function', () => {
             console.warn = jest.fn();
+            // @ts-ignore
             eventsEmitter.listen('testEvent', {});
             expect(eventsEmitter.listeners.testEvent).toHaveLength(0);
             expect(console.warn).toBeCalledWith('EventsEmitter->listen - "testEvent" listener is not a function');
@@ -49,6 +50,7 @@ describe('EventsEmitter', () => {
 
         it('should not unregistered listener if event dont have registred listeners', () => {
             console.warn = jest.fn();
+            // @ts-ignore
             eventsEmitter.listen('testEvent2', {});
             eventsEmitter.unlisten('testEvent2', mockListener);
             expect(eventsEmitter.listeners.testEvent2).toHaveLength(0);
