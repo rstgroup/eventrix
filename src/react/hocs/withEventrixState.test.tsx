@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, render, waitFor } from '@testing-library/react';
-import { EventrixProvider } from '../context';
+import { EventrixProvider, EventrixScope } from '../context';
 import Eventrix from '../../Eventrix';
 import withEventrixState from './withEventrixState';
 
@@ -78,6 +78,60 @@ describe('withEventrixState', () => {
         expect(getByTestId('testBarBarFoo').textContent).toEqual(initialState.bar.bar.foo);
         act(() => {
             eventrixInstance.stateManager.setState('bar.bar.foo', 'newBarBarFoo');
+        });
+        await waitFor(() => getByTestId('testBarBarFooValue'));
+
+        expect(getByTestId('testFoo').textContent).toEqual('newFoo');
+        expect(getByTestId('testBarFoo').textContent).toEqual('newBarFoo');
+        expect(getByTestId('testBarBarFoo').textContent).toEqual('newBarBarFoo');
+    });
+
+    it('should change state when eventrix state has changed with scope', async () => {
+        const initialState = {
+            scope1: {
+                foo: 'foo1',
+                bar: {
+                    foo: 'barFoo1',
+                    bar: {
+                        foo: 'barBarFoo1',
+                    },
+                },
+            },
+        };
+        const data = initialState.scope1;
+        const eventrixInstance = new Eventrix(initialState);
+        const { getByTestId } = render(
+            <TestContainer eventrix={eventrixInstance}>
+                <EventrixScope state="scope1">
+                    <ComponentTestFooWS />
+                    <ComponentTestBarFooWS />
+                    <ComponentTestBarBarFooWS />
+                </EventrixScope>
+            </TestContainer>,
+        );
+
+        expect(getByTestId('testFoo').textContent).toEqual(data.foo);
+        expect(getByTestId('testBarFoo').textContent).toEqual(data.bar.foo);
+        expect(getByTestId('testBarBarFoo').textContent).toEqual(data.bar.bar.foo);
+
+        act(() => {
+            eventrixInstance.stateManager.setState('scope1.foo', 'newFoo');
+        });
+        await waitFor(() => getByTestId('testFooValue'));
+
+        expect(getByTestId('testFoo').textContent).toEqual('newFoo');
+        expect(getByTestId('testBarFoo').textContent).toEqual(data.bar.foo);
+        expect(getByTestId('testBarBarFoo').textContent).toEqual(data.bar.bar.foo);
+        act(() => {
+            eventrixInstance.stateManager.setState('scope1.bar.foo', 'newBarFoo');
+        });
+        await waitFor(() => getByTestId('testBarFooValue'));
+
+        expect(getByTestId('testFoo').textContent).toEqual('newFoo');
+        expect(getByTestId('testBarFoo').textContent).toEqual('newBarFoo');
+        expect(getByTestId('testBarBarFoo').textContent).toEqual(data.bar.bar.foo);
+        act(() => {
+            eventrixInstance.stateManager.setState('scope1.bar.bar.foo', 'newBarBarFoo');
         });
         await waitFor(() => getByTestId('testBarBarFooValue'));
 

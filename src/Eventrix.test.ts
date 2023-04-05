@@ -16,6 +16,13 @@ describe('Eventrix', () => {
             bar: {
                 foo: 'bar',
             },
+            scope1: {
+                scope2: {
+                    scope3: {
+                        scope4: 'test',
+                    },
+                },
+            },
         };
         mockReceiver = jest.fn(() => 'testReceiverData');
         eventsReceivers = [new EventsReceiver('getFoo', mockReceiver)];
@@ -75,5 +82,55 @@ describe('Eventrix', () => {
         eventrix.emit(eventName, 'test');
         expect(mockListener).toHaveBeenCalledWith('test', []);
         expect(eventrix.getState('bar')).toEqual(newbarState);
+    });
+    it('should create new eventrix instance with event scope', () => {
+        const mockedListener = jest.fn();
+        eventrix.listen('Test:setTest', mockedListener);
+        const testInstance = eventrix.create({ eventScope: 'Test' });
+        testInstance.emit('setTest', 'test');
+        expect(mockedListener).toHaveBeenCalledWith('test', []);
+    });
+    it('should create new second level eventrix instance with event scope', () => {
+        const mockedListener = jest.fn();
+        eventrix.listen('Test:List:setTest', mockedListener);
+        const testInstance = eventrix.create({ eventScope: 'Test' });
+        const testListInstance = testInstance.create({ eventScope: 'List' });
+        testListInstance.emit('setTest', 'test');
+        expect(mockedListener).toHaveBeenCalledWith('test', []);
+    });
+    it('should create new eventrix instance with state scope', () => {
+        const testInstance = eventrix.create({ stateScope: 'scope1' });
+        expect(testInstance.getState('scope2')).toEqual(initialState.scope1.scope2);
+    });
+    it('should create new second level eventrix instance with state scope', () => {
+        const scopedInstance = eventrix.create({ stateScope: 'scope1' });
+        const scopedInstance2 = scopedInstance.create({ stateScope: 'scope2' });
+        expect(scopedInstance2.getState('scope3')).toEqual(initialState.scope1.scope2.scope3);
+    });
+    it('should get correct state path with scope', () => {
+        const scopedInstance = eventrix.create({ stateScope: 'scope1' });
+        const scopedInstance2 = scopedInstance.create({ stateScope: 'scope2' });
+        const scopedInstance3 = scopedInstance2.create({ stateScope: 'scope3' });
+        const scopedInstance4 = scopedInstance3.create({ stateScope: 'scope4' });
+
+        expect(scopedInstance4.getStatePathWithScope()).toEqual('scope1.scope2.scope3.scope4');
+        expect(scopedInstance4.getParent().getStatePathWithScope()).toEqual('scope1.scope2.scope3');
+        expect(scopedInstance4.getParent().getParent().getStatePathWithScope()).toEqual('scope1.scope2');
+        expect(scopedInstance4.getParent().getParent().getParent().getStatePathWithScope()).toEqual('scope1');
+        expect(scopedInstance4.getParent().getParent().getParent().getParent().getStatePathWithScope()).toEqual(undefined);
+        expect(scopedInstance4.getFirstParent().getStatePathWithScope()).toEqual(undefined);
+    });
+    it('should get correct event name with scope', () => {
+        const scopedInstance = eventrix.create({ eventScope: 'scope1' });
+        const scopedInstance2 = scopedInstance.create({ eventScope: 'scope2' });
+        const scopedInstance3 = scopedInstance2.create({ eventScope: 'scope3' });
+        const scopedInstance4 = scopedInstance3.create({ eventScope: 'scope4' });
+
+        expect(scopedInstance4.getEventNameWithScope('')).toEqual('scope1:scope2:scope3:scope4');
+        expect(scopedInstance4.getParent().getEventNameWithScope('')).toEqual('scope1:scope2:scope3');
+        expect(scopedInstance4.getParent().getParent().getEventNameWithScope('')).toEqual('scope1:scope2');
+        expect(scopedInstance4.getParent().getParent().getParent().getEventNameWithScope('')).toEqual('scope1');
+        expect(scopedInstance4.getParent().getParent().getParent().getParent().getEventNameWithScope('')).toEqual('');
+        expect(scopedInstance4.getFirstParent().getEventNameWithScope('')).toEqual('');
     });
 });
