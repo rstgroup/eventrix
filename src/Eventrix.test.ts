@@ -133,34 +133,37 @@ describe('Eventrix', () => {
         expect(scopedInstance4.getParent()?.getParent()?.getParent()?.getParent()?.getEventNameWithScope('')).toEqual('');
         expect(scopedInstance4.getFirstParent().getEventNameWithScope('')).toEqual('');
     });
-    it('should run error callback when emit catch error on receiver failed', () => {
-        const eventName = 'setBar';
-        const eventData = 'test';
-        const eventsReceiver = new EventsReceiver(eventName, (name, data, store) => {
-            throw 'failedReceiver';
-        });
-        const errorCallback = jest.fn();
-        eventrix.onError(errorCallback);
-        eventrix.useReceiver(eventsReceiver);
-        return eventrix.emit(eventName, eventData).catch(() => {
-            expect(errorCallback).toHaveBeenCalledWith('failedReceiver', eventName, eventData, initialState);
-            expect(eventrix.getState()).toEqual(initialState);
-        });
-    });
 
-    it('should run error callback when emit catch error on listener failed', () => {
-        const eventName = 'setBar';
-        const eventData = 'test';
+    describe('should run error callback', () => {
+        it('when emit catch error on receiver failed', () => {
+            const eventName = 'setBar';
+            const eventData = 'test';
+            const eventsReceiver = new EventsReceiver(eventName, (name, data, store) => {
+                throw 'failedReceiver';
+            });
+            const errorCallback = jest.fn();
+            eventrix.onError(errorCallback);
+            eventrix.useReceiver(eventsReceiver);
+            return eventrix.emit(eventName, eventData).catch(() => {
+                expect(errorCallback).toHaveBeenCalledWith('failedReceiver', eventName, eventData, initialState);
+                expect(eventrix.getState()).toEqual(initialState);
+            });
+        });
 
-        const failedListener = () => {
-            throw 'failedListener';
-        };
-        const errorCallback = jest.fn();
-        eventrix.onError(errorCallback);
-        eventrix.listen(eventName, failedListener);
-        return eventrix.emit(eventName, eventData).catch(() => {
-            expect(errorCallback).toHaveBeenCalledWith('failedListener', eventName, eventData, initialState);
-            expect(eventrix.getState()).toEqual(initialState);
+        it('when emit catch error on listener failed', () => {
+            const eventName = 'setBar';
+            const eventData = 'test';
+
+            const failedListener = () => {
+                throw 'failedListener';
+            };
+            const errorCallback = jest.fn();
+            eventrix.onError(errorCallback);
+            eventrix.listen(eventName, failedListener);
+            return eventrix.emit(eventName, eventData).catch(() => {
+                expect(errorCallback).toHaveBeenCalledWith('failedListener', eventName, eventData, initialState);
+                expect(eventrix.getState()).toEqual(initialState);
+            });
         });
     });
 });
