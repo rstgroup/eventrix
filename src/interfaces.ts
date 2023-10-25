@@ -90,6 +90,7 @@ export interface EventrixI {
     stateScope?: string;
     eventScope?: string;
     persistStoreLoadPromise?: Promise<void>;
+    onError(errorCallback: ErrorCallback): void;
 }
 
 export interface EmitArgumentsI<EventDataI> {
