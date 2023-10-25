@@ -7,6 +7,7 @@ import {
     EventsListenerI,
     EventsReceiverI,
     EmitArgumentsI,
+    ErrorCallback,
     EventrixOptionsI,
     ScopesI,
 } from './interfaces';
@@ -35,6 +36,7 @@ class Eventrix<InitialStateI = any> implements EventrixI {
         this.unlisten = this.unlisten.bind(this);
         this.useReceiver = this.useReceiver.bind(this);
         this.removeReceiver = this.removeReceiver.bind(this);
+        this.onError = this.onError.bind(this);
     }
     private getEventName(eventName: string): string {
         if (!this.eventScope) {
@@ -112,6 +114,9 @@ class Eventrix<InitialStateI = any> implements EventrixI {
         scopedInstance.eventsEmitter = this.eventsEmitter;
         scopedInstance.stateManager = this.stateManager;
         return scopedInstance;
+    }
+    onError(errorCallback: ErrorCallback<InitialStateI>) {
+        this.eventsEmitter.onError(errorCallback);
     }
 }
 

@@ -6,11 +6,11 @@
   "repository": "https://github.com/rstgroup/eventrix",
   "homepage": "https://eventrix.js.org",
   "scripts": {
-    "test": "jest",
+    "test": "jest --runInBand",
     "test:watch": "jest --watch",
     "test:clean": "jest --clearCache",
     "build": "webpack --config webpack-prod.config.js --stats-error-details",
-    "coverage": "jest --coverage",
+    "coverage": "jest --coverage --runInBand",
     "coverage:report": "cat ./coverage/lcov.info | coveralls",
     "lint": "eslint src --ext ts,tsx,js",
     "lint:fix": "eslint src --ext ts,tsx,js --fix "
