@@ -1,16 +1,20 @@
 import get from 'lodash/get';
 import { isPromise } from './helpers';
-import {ErrorCallback, EventsEmitterI, EventsListenerI, StateManagerI} from "./interfaces";
+import { EventsEmitterI, EventsListenerI, StateManagerI, ErrorCallback } from './interfaces';
 
 class EventsEmitter implements EventsEmitterI {
     listeners: {
         [key: string]: EventsListenerI[];
     };
     stateManager?: StateManagerI;
+    matchedListenersCache: {
+        [key: string]: string[];
+    };
     errorCallbacks: Set<ErrorCallback>;
 
     constructor() {
         this.listeners = {};
+        this.matchedListenersCache = {};
         this.errorCallbacks = new Set();
 
         this.emit = this.emit.bind(this);
@@ -24,7 +28,7 @@ class EventsEmitter implements EventsEmitterI {
     }
 
     handleError(error: Error, eventName: string, eventData: any, state: any): void {
-        this.errorCallbacks.forEach(callback => {
+        this.errorCallbacks.forEach((callback: ErrorCallback) => {
             callback(error, eventName, eventData, state);
         });
     }
@@ -35,6 +39,7 @@ class EventsEmitter implements EventsEmitterI {
 
     listen(name: string, listener: EventsListenerI): void {
         if (!this.listeners[name]) {
+            this.clearMatchedListenersCache();
             this.listeners[name] = [];
         }
         if (typeof listener !== 'function') {
@@ -63,6 +68,10 @@ class EventsEmitter implements EventsEmitterI {
             return;
         }
         this.listeners[name].splice(index, 1);
+        if (this.listeners[name].length === 0) {
+            delete this.listeners[name];
+            this.clearMatchedListenersCache();
+        }
     }
 
     getEventData<EventDataI>(name: string, eventName: string, data: EventDataI): EventDataI {
@@ -76,18 +85,33 @@ class EventsEmitter implements EventsEmitterI {
 
     runListeners<EventDataI>(name: string, data: EventDataI, receiversData: any[]): void {
         if (this.listeners[name] && Array.isArray(this.listeners[name])) {
-            this.listeners[name].forEach(listener => listener(data, receiversData));
+            this.listeners[name].forEach((listener) => listener(data, receiversData));
         }
+    }
+
+    setMatchedListenersCache(eventName: string, matchedEventNames: string[]) {
+        this.matchedListenersCache[eventName] = matchedEventNames;
+    }
+
+    clearMatchedListenersCache() {
+        this.matchedListenersCache = {};
+    }
+
+    getMatchedListeners(name: string): string[] {
+        if (this.matchedListenersCache[name]) {
+            return this.matchedListenersCache[name];
+        }
+        const listenEvents = Object.keys(this.listeners);
+        const matchedEvents = listenEvents.filter((eventName) => eventName.indexOf(name) === 0);
+        this.setMatchedListenersCache(name, matchedEvents);
+        return matchedEvents;
     }
 
     emitWild<EventDataI>(name: string, data: EventDataI): void {
         try {
-            const listenEvents = Object.keys(this.listeners);
-            const matchedEvents = listenEvents.filter((eventName) => eventName.indexOf(name) === 0);
-            return matchedEvents.forEach(eventName => {
-                if (this.listeners[eventName] && Array.isArray(this.listeners[eventName])) {
-                    this.listeners[eventName].forEach(listener => listener(this.getEventData(name, eventName, data), []));
-                }
+            const matchedEvents = this.getMatchedListeners(name);
+            return matchedEvents.forEach((eventName) => {
+                this.runListeners(eventName, this.getEventData(name, eventName, data), []);
             });
         } catch (error) {
             if (this.errorCallbacks.size > 0) {
@@ -98,16 +122,11 @@ class EventsEmitter implements EventsEmitterI {
 
     emit<EventDataI = any>(name: string, data: EventDataI): Promise<any> {
         try {
-            const receiversResponse = this.stateManager!.runReceivers<EventDataI>(name, data);
+            const receiversResponse = this.stateManager?.runReceivers<EventDataI>(name, data);
             if (isPromise(receiversResponse)) {
                 return receiversResponse.then((receiversData: any) => {
                     this.runListeners(name, data, receiversData);
-                }).catch((error: Error) => {
-                    if (this.errorCallbacks.size > 0) {
-                        this.handleError(error, name, data, this.stateManager!.getState());
-                    }
-                    throw error;
-                })
+                });
             }
             this.runListeners(name, data, receiversResponse);
             return Promise.resolve(receiversResponse);

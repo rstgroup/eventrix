@@ -3,7 +3,7 @@ interface ListenerDecoratorI {
 }
 
 function listener(eventName: string): ListenerDecoratorI {
-    return function registerListenerDecorator(target: any, name: string, descriptor: any): any{
+    return function registerListenerDecorator(target: any, name: string, descriptor: any): any {
         if (!Array.isArray(target.eventrixListeners)) {
             target.eventrixListeners = [];
         }

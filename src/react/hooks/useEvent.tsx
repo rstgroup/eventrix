@@ -1,9 +1,6 @@
-import {
-    useContext,
-    useEffect,
-} from 'react';
+import { useContext, useEffect } from 'react';
 import { EventrixContext } from '../context';
-import { EventsListenerI } from "../../interfaces";
+import { EventsListenerI } from '../../interfaces';
 
 function useEvent(eventName: string, callback: EventsListenerI): void {
     const { eventrix } = useContext(EventrixContext);

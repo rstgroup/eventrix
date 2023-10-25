@@ -1,13 +1,13 @@
 import get from 'lodash/get';
-import { isPromise, setValue, unsetValue } from "./helpers";
+import { isPromise, setValue, unsetValue } from './helpers';
 import EventsReceiver from './EventsReceiver';
-import {EventsEmitterI, EventsReceiverI, StateManagerI} from "./interfaces";
+import { EventsEmitterI, EventsReceiverI, StateManagerI } from './interfaces';
 
 class StateManager implements StateManagerI {
     eventsEmitter: EventsEmitterI;
     state: any;
     receivers: {
-        [key: string]: EventsReceiverI[]
+        [key: string]: EventsReceiverI[];
     };
 
     constructor(eventsEmitter: EventsEmitterI, initialState?: any, eventsReceivers?: EventsReceiverI[]) {
@@ -16,28 +16,26 @@ class StateManager implements StateManagerI {
         this.receivers = {};
         this.eventsEmitter.useStore(this);
         if (eventsReceivers && Array.isArray(eventsReceivers)) {
-            eventsReceivers.forEach(receiver => {
+            eventsReceivers.forEach((receiver) => {
                 this.useReceiver(receiver);
             });
         }
-        this.useReceiver(new EventsReceiver('setState', (name, data, store) => {
-            const { stateName, value } = data;
-            store.setState(stateName, value);
-        }));
+        this.useReceiver(
+            new EventsReceiver('setState', (name, data, store) => {
+                const { stateName, value } = data;
+                store.setState(stateName, value);
+            }),
+        );
     }
 
     useReceiver(receiver: EventsReceiverI): void {
         const eventsNames = receiver.getEventsNames();
-        eventsNames.forEach(
-            eventName => this.registerReceiver(eventName, receiver)
-        );
+        eventsNames.forEach((eventName) => this.registerReceiver(eventName, receiver));
     }
 
     removeReceiver(receiver: EventsReceiverI): void {
         const eventsNames = receiver.getEventsNames();
-        eventsNames.forEach(
-            eventName => this.unregisterReceiver(eventName, receiver)
-        );
+        eventsNames.forEach((eventName) => this.unregisterReceiver(eventName, receiver));
     }
 
     registerReceiver(name: string, receiver: EventsReceiverI): void {
@@ -76,8 +74,8 @@ class StateManager implements StateManagerI {
         const promisesList: Promise<any>[] = [];
         const receiversData: any[] = [];
         if (this.receivers[name] && Array.isArray(this.receivers[name])) {
-            this.receivers[name].forEach(receiver => {
-                const receiverData = receiver.handleEvent<any, any | Promise<any>>(name, data, this);
+            this.receivers[name].forEach((receiver) => {
+                const receiverData = receiver.handleEvent(name, data, this);
                 if (isPromise(receiverData)) {
                     return promisesList.push(receiverData);
                 }
@@ -87,10 +85,10 @@ class StateManager implements StateManagerI {
             });
         }
         if (this.receivers['*'] && Array.isArray(this.receivers['*'])) {
-            this.receivers['*'].forEach(receiver => receiver.handleEvent(name, data, this));
+            this.receivers['*'].forEach((receiver) => receiver.handleEvent(name, data, this));
         }
         if (promisesList.length) {
-            return Promise.all(promisesList).then(receiversResponse => [...receiversResponse, ...receiversData]);
+            return Promise.all(promisesList).then((receiversResponse) => [...receiversResponse, ...receiversData]);
         }
         return receiversData;
     }
@@ -117,7 +115,7 @@ class StateManager implements StateManagerI {
         }
         if (isFullPath) {
             this.eventsEmitter.emit('setState:*', this.getState());
-            this.eventsEmitter.emitWild(`setState:${path}.`, value);
+            this.eventsEmitter.emit(`setState:${path}.*`, value);
         }
     }
 

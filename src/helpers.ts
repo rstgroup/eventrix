@@ -1,15 +1,10 @@
-export const isPromise = (value: any): boolean =>  (
-    typeof value === 'object' &&
-    typeof value.then === 'function'
-);
+import { EventrixI, EventsListenerI, UnregisterListenerMethod } from './interfaces';
+
+export const isPromise = (value: any): value is Promise<any> =>
+    typeof value === 'object' && value !== null && typeof value.then === 'function';
 
 export const isNumber = (value: any): boolean => {
-    if (
-        value === '' ||
-        value === null ||
-        value !== value ||
-        Array.isArray(value)
-    ) {
+    if (value === '' || value === null || value !== value || Array.isArray(value)) {
         return false;
     }
 
@@ -20,11 +15,7 @@ export const isNumber = (value: any): boolean => {
 export const isObject = (value: any): boolean => {
     const type = typeof value;
 
-    return (
-        value !== null &&
-        !Array.isArray(value) &&
-        (type === 'object' || type === 'function')
-    );
+    return value !== null && !Array.isArray(value) && (type === 'object' || type === 'function');
 };
 
 export const setValue = (state: any, path: string, value: any): any => {
@@ -36,17 +27,17 @@ export const setValue = (state: any, path: string, value: any): any => {
         return state;
     }
     const firstKeyValue = state[firstKey];
-    const subPath = (restKeys.length > 1) ? restKeys.join('.') : restKeys[0];
+    const subPath = restKeys.length > 1 ? restKeys.join('.') : restKeys[0];
     if (Array.isArray(firstKeyValue)) {
         state[firstKey] = setValue([...firstKeyValue], subPath, value);
         return state;
     }
     if (isObject(firstKeyValue)) {
-        state[firstKey] = setValue({...firstKeyValue}, subPath, value);
+        state[firstKey] = setValue({ ...firstKeyValue }, subPath, value);
         return state;
     }
     if (isNumber(restKeys[0])) {
-        state[firstKey] = setValue([], subPath , value);
+        state[firstKey] = setValue([], subPath, value);
         return state;
     }
     state[firstKey] = setValue({}, subPath, value);
@@ -62,15 +53,36 @@ export const unsetValue = (state: any, path: string): any => {
         return state;
     }
     const firstKeyValue = state[firstKey];
-    const subPath = (restKeys.length > 1) ? restKeys.join('.') : restKeys[0];
+    const subPath = restKeys.length > 1 ? restKeys.join('.') : restKeys[0];
     if (Array.isArray(firstKeyValue)) {
         state[firstKey] = unsetValue([...firstKeyValue], subPath);
         return state;
     }
     if (isObject(firstKeyValue)) {
-        state[firstKey] = unsetValue({...firstKeyValue}, subPath);
+        state[firstKey] = unsetValue({ ...firstKeyValue }, subPath);
         return state;
     }
     return state;
 };
 
+export const registerListeners = (eventrix: EventrixI, stateName: string, listener: EventsListenerI): UnregisterListenerMethod => {
+    const firstEventrixInstance = eventrix.getFirstParent();
+    const statNameWithScope = eventrix.getStatePathWithScope(stateName) as string;
+    const stateEventName = `setState:${statNameWithScope}`;
+    const eventsList = [stateEventName];
+    const statePath = statNameWithScope.split('.');
+    let tempStateName = '';
+    for (let i = 0; i < statePath.length - 1; i++) {
+        const name = statePath[i];
+        tempStateName = `${tempStateName}${name}.`;
+        const wildEventName = `setState:${tempStateName}*`;
+        eventsList.push(wildEventName);
+        firstEventrixInstance.listen(wildEventName, listener);
+    }
+    firstEventrixInstance.listen(stateEventName, listener);
+    return () => {
+        eventsList.forEach((name: string) => {
+            firstEventrixInstance.unlisten(name, listener);
+        });
+    };
+};

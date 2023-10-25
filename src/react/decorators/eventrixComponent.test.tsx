@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import EventrixProvider from '../context/EventrixProvider';
 import Eventrix from '../../Eventrix';
 import eventrixComponent from './eventrixComponent';
-import {EventrixI} from "../../interfaces";
+import { EventrixI } from '../../interfaces';
 
 interface PropsI {
     callback(eventrix: EventrixI): void;
@@ -15,18 +15,12 @@ describe('listener', () => {
         eventrix: EventrixI;
         render() {
             this.props.callback(this.eventrix);
-            return (
-                <div>
-                    Test Item Component
-                </div>
-            );
+            return <div>Test Item Component</div>;
         }
     }
 
-    const TestContainer = ({ eventrix, children }: { eventrix: EventrixI, children: any }) => (
-        <EventrixProvider eventrix={eventrix}>
-            {children}
-        </EventrixProvider>
+    const TestContainer = ({ eventrix, children }: { eventrix: EventrixI; children: any }) => (
+        <EventrixProvider eventrix={eventrix}>{children}</EventrixProvider>
     );
 
     it('should use eventrix context and extend component by eventrix', () => {

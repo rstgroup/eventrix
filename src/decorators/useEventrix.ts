@@ -1,5 +1,5 @@
-import EventsReceiver, { fetchToStateReceiver } from "../EventsReceiver";
-import {EventrixI} from "../interfaces";
+import EventsReceiver, { fetchToStateReceiver } from '../EventsReceiver';
+import { EventrixI } from '../interfaces';
 
 export interface ReceiverRegister {
     eventsNames: string[] | string;
@@ -31,7 +31,6 @@ export interface EventrixClassI {
     [key: string]: any;
 }
 
-
 function useEventrix(targetClass: any) {
     const original: EventrixClassI = targetClass;
     const eventrixClass: any = function (services: ServicesI, ...args: any[]) {
@@ -46,7 +45,7 @@ function useEventrix(targetClass: any) {
         if (Array.isArray(classInstance.eventrixFetchToStateReceivers)) {
             classInstance.eventrixFetchToStateReceivers.forEach(({ eventName, statePath, name }) => {
                 classInstance[name] = classInstance[name].bind(classInstance);
-                classInstance.eventrix!.useReceiver(fetchToStateReceiver(eventName, statePath, classInstance[name]))
+                classInstance.eventrix!.useReceiver(fetchToStateReceiver(eventName, statePath, classInstance[name]));
             });
         }
         if (Array.isArray(classInstance.eventrixListeners)) {
@@ -58,7 +57,7 @@ function useEventrix(targetClass: any) {
         return classInstance;
     };
     eventrixClass.prototype = original.prototype;
-    return eventrixClass
+    return eventrixClass;
 }
 
 export default useEventrix;

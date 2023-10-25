@@ -1,5 +1,30 @@
 import { ComponentClass, ComponentType } from 'react';
 
+export interface ScopesI {
+    eventScope?: string;
+    eventSeparator?: string;
+    stateScope?: string;
+}
+
+export interface EventrixOptionsI {
+    parent: EventrixI;
+    firstParent: EventrixI;
+    scopes: ScopesI;
+}
+
+export interface StateManagerI {
+    state: any;
+    receivers: {
+        [key: string]: EventsReceiverI[];
+    };
+    eventsEmitter: EventsEmitterI;
+    setState<StateValueI = any>(path: string | undefined | null, value: StateValueI): void;
+    getState<StateValueI = any>(path?: string): StateValueI;
+    useReceiver(receiver: EventsReceiverI): void;
+    removeReceiver(receiver: EventsReceiverI): void;
+    runReceivers<EventDataI>(name: string, data: EventDataI): any;
+}
+
 export interface ReceiverI<EventData = any, ReceiverResponse = any> {
     (eventName: string, eventData: EventData, stateManager: StateManagerI): ReceiverResponse;
 }
@@ -8,20 +33,7 @@ export interface EventsReceiverI<EventDataI = any, ReceiverResponseI = any> {
     eventsNames: string[];
     receiver: ReceiverI<EventDataI, ReceiverResponseI>;
     getEventsNames(): string[];
-    handleEvent<EventData, ReceiverResponse>(name: string, data: EventData, stateManager: StateManagerI): ReceiverResponse;
-}
-
-export interface StateManagerI {
-    state: any;
-    receivers: {
-        [key: string]: EventsReceiverI[]
-    };
-    eventsEmitter: EventsEmitterI;
-    setState<StateValueI>(path: string | undefined | null, value: StateValueI): void;
-    getState<StateValueI>(path?: string): StateValueI;
-    useReceiver(receiver: EventsReceiverI): void;
-    removeReceiver(receiver: EventsReceiverI): void;
-    runReceivers<EventDataI>(name: string, data: EventDataI): any;
+    handleEvent(name: string, data: EventDataI, stateManager: StateManagerI): ReceiverResponseI;
 }
 
 export interface EmitI<EventData = any> {
@@ -33,10 +45,14 @@ export interface SetStateI<StateI> {
 }
 
 export interface FetchMethodI {
-    (eventData: any, state: any, emit: EmitI<any>): Promise<any>
+    (eventData: any, state: any, emit: EmitI<any>): Promise<any>;
 }
 
-export interface EmitFetchI<EventDataI>{
+export interface FetchStateMethodI<FetchParamsI = any, FetchResponseI = any> {
+    (eventData: FetchParamsI): Promise<FetchResponseI>;
+}
+
+export interface EmitFetchI<EventDataI> {
     (data: EventDataI): Promise<any>;
 }
 
@@ -62,10 +78,18 @@ export interface FetchHandler {
 export interface EventrixI {
     listen<EventData = any>(name: string, listener: EventsListenerI<EventData>): void;
     unlisten(name: string, listener: EventsListenerI): void;
-    emit<EventData>(name: string, data: EventData): Promise<any>;
+    emit<EventData>(name: string, data?: EventData): Promise<any>;
     getState<StateI>(path?: string): StateI;
     useReceiver(eventReceiver: EventsReceiverI): void;
     removeReceiver(eventReceiver: EventsReceiverI): void;
+    create(scopes: ScopesI): EventrixI;
+    getParent(): EventrixI | undefined;
+    getFirstParent(): EventrixI;
+    getStatePathWithScope(path?: string): string | undefined;
+    getEventNameWithScope(eventName: string): string;
+    stateScope?: string;
+    eventScope?: string;
+    persistStoreLoadPromise?: Promise<void>;
 }
 
 export interface EmitArgumentsI<EventDataI> {
@@ -103,15 +127,12 @@ export interface WithEventrixState<Props, State> {
         BaseComponent: ComponentClass | ComponentType,
         stateNames: string | string[] | StateNamesFunction<Props>,
         mapStateToProps?: MapStateToPropsFunction<Props, State>,
-        Context?: any
-    ): ComponentClass
+        Context?: any,
+    ): ComponentClass;
 }
 
 export interface WithEventrix {
-    (
-        BaseComponent: ComponentClass | ComponentType,
-        Context?: any
-    ): ComponentClass
+    (BaseComponent: ComponentClass | ComponentType, Context?: any): ComponentClass;
 }
 
 export interface UseEventrixState {
@@ -150,6 +171,9 @@ export interface EventsEmitterI {
     listeners: {
         [key: string]: EventsListenerI<any>[];
     };
+    matchedListenersCache: {
+        [key: string]: string[];
+    };
     errorCallbacks: Set<ErrorCallback>;
     stateManager?: StateManagerI;
     onError(errorCallback: ErrorCallback): void;
@@ -160,7 +184,7 @@ export interface EventsEmitterI {
     unlisten(eventName: string, listener: EventsListenerI<any>): void;
     getEventData<EventDataI>(name: string, eventName: string, data: any): EventDataI;
     runListeners<EventDataI>(name: string, data: EventDataI, receiversData: any[]): void;
-    emitWild<EventDataI>(name: string, data: EventDataI): void
+    emitWild<EventDataI>(name: string, data: EventDataI): void;
     useStore(stateManager: StateManagerI): void;
     onError(errorCallback: ErrorCallback): void;
 }
@@ -168,12 +192,12 @@ export interface EventsEmitterI {
 export interface FetchHandlersI<DataI = any, ResponseI = any, EventDataI = any> {
     success: {
         eventName: string;
-        data: DataI;
+        data?: DataI;
         getData?(response: ResponseI, eventData: EventDataI): DataI;
     };
     error: {
         eventName: string;
-        data: DataI;
+        data?: DataI;
         getData?(errorResponse: ResponseI, eventData: EventDataI): DataI;
     };
 }
@@ -189,6 +213,7 @@ export interface DecoratorEventrixStateI {
 
 export interface DecoratorEventrixListenerI {
     eventName: string;
+    statePath?: string;
     name: string;
 }
 
@@ -202,11 +227,10 @@ export interface DescriptorI {
     (): any | void;
 }
 
-
 // REDUX ADAPTER
 
 export interface ReducerI {
-    (state: any, action: any): any
+    (state: any, action: any): any;
 }
 
 export interface ReducersI {
@@ -221,7 +245,7 @@ export interface DispatchI {
     (action: ActionI): void;
 }
 
-export interface mapStateToPropsType <StateI = any, ReducedStateI = any>{
+export interface mapStateToPropsType<StateI = any, ReducedStateI = any> {
     (state: StateI): ReducedStateI;
 }
 
@@ -233,8 +257,62 @@ export interface mapDispatchToPropsResponseType {
     [key: string]: DispatchActionI;
 }
 
-export interface mapDispatchToPropsType <StateI = any, ReducedStateI = any>{
+export interface mapDispatchToPropsType {
     (dispatch: DispatchI): mapDispatchToPropsResponseType;
+}
+
+export interface UnregisterListenerMethod {
+    (): void;
+}
+
+export enum FetchStateStatus {
+    Initial = 'initial',
+    Loading = 'loading',
+    Error = 'error',
+    Success = 'success',
+}
+
+export type StorageDataItem = [string, any];
+
+export interface SyncStorage {
+    setItem(key: string, value: string): void;
+    getItem(key: string): string;
+    [key: string]: any;
+}
+
+export interface AsyncStorage {
+    setItem(key: string, value: string): Promise<void>;
+    getItem(key: string): Promise<string>;
+    [key: string]: any;
+}
+
+export type StateKeys<StateI> = keyof StateI;
+
+export type StateKeysList<StateI> = Array<StateKeys<StateI>>;
+
+export interface PersistStoreConfig<StateI> {
+    blackList?: StateKeysList<StateI>;
+    whiteList?: StateKeysList<StateI>;
+    parseFromStorage?(state: any, stateName: string): any;
+    parseToStorage?(state: any, stateName: string): any;
+    storage: AsyncStorage | SyncStorage;
+    storageKey: string;
+}
+
+export interface RequestI {
+    request: Promise<any>;
+    rejectHandler: EventsListenerI;
+    resolveHandler: EventsListenerI;
+}
+
+export interface RequestHandlerInstance {
+    handleRequest<RequestResponse>(request: Promise<RequestResponse>, abortEventName: string): Promise<RequestResponse>;
+    abortAll<RejectData>(rejectData: RejectData): void;
+    abortAllById<RejectData>(requestId: string, rejectData: RejectData): void;
+    resolveAll<ResolveData>(resolveData: ResolveData): void;
+    resolveAllById<ResolveData>(requestId: string, resolveData: ResolveData): void;
+    isAnyPending(): boolean;
+    isPending(requestId: string): boolean;
 }
 
 export interface ErrorCallback<StateI = any> {
