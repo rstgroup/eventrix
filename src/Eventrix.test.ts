@@ -142,9 +142,10 @@ describe('Eventrix', () => {
         const errorCallback = jest.fn();
         eventrix.onError(errorCallback);
         eventrix.useReceiver(eventsReceiver);
-        eventrix.emit(eventName, eventData);
-        expect(errorCallback).toHaveBeenCalledWith('failedReceiver', eventName, eventData, initialState);
-        expect(eventrix.getState()).toEqual(initialState);
+        return eventrix.emit(eventName, eventData).catch(() => {
+            expect(errorCallback).toHaveBeenCalledWith('failedReceiver', eventName, eventData, initialState);
+            expect(eventrix.getState()).toEqual(initialState);
+        });
     });
 
     it('should run error callback when emit catch error on listener failed', () => {
@@ -157,8 +158,9 @@ describe('Eventrix', () => {
         const errorCallback = jest.fn();
         eventrix.onError(errorCallback);
         eventrix.listen(eventName, failedListener);
-        eventrix.emit(eventName, eventData);
-        expect(errorCallback).toHaveBeenCalledWith('failedListener', eventName, eventData, initialState);
-        expect(eventrix.getState()).toEqual(initialState);
+        return eventrix.emit(eventName, eventData).catch(() => {
+            expect(errorCallback).toHaveBeenCalledWith('failedListener', eventName, eventData, initialState);
+            expect(eventrix.getState()).toEqual(initialState);
+        });
     });
 });
