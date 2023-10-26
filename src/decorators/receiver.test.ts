@@ -10,7 +10,7 @@ describe('receiver', () => {
     it('should set new state', () => {
         const listResponse = ['test', 'test2'];
 
-        @useEventrix
+        @useEventrix()
         class FetchToStateTestClass {
             eventrix: EventrixI;
 
@@ -36,7 +36,7 @@ describe('receiver', () => {
         const initialState = ['test', 'test2'];
         const expectedState = ['test', 'test2', 'test3'];
 
-        @useEventrix
+        @useEventrix()
         class FetchToStateTestClass2 {
             eventrix: EventrixI;
 

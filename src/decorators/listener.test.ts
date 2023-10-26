@@ -11,7 +11,7 @@ describe('listener', () => {
         const callback = jest.fn();
         const data: string[] = ['test'];
 
-        @useEventrix
+        @useEventrix()
         class FetchToStateTestClass {
             eventrix: EventrixI;
 
@@ -37,7 +37,7 @@ describe('listener', () => {
         const extendCallback = jest.fn();
         const extendEventData: string[] = ['test', 'test2'];
 
-        @useEventrix
+        @useEventrix()
         class FetchToStateTestClass {
             eventrix: EventrixI;
 

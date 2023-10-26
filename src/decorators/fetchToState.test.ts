@@ -10,7 +10,7 @@ describe('fetchToState', () => {
     it('should fetch data and set new state', () => {
         const listResponse: string[] = ['test', 'test2'];
 
-        @useEventrix
+        @useEventrix()
         class FetchToStateTestClass {
             eventrix: EventrixI;
 
@@ -36,7 +36,7 @@ describe('fetchToState', () => {
         const initialState: string[] = ['test', 'test2'];
         const expectedState: string[] = ['test', 'test2', 'test3'];
 
-        @useEventrix
+        @useEventrix()
         class FetchToStateTestClass2 {
             eventrix: EventrixI;
 
