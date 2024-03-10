@@ -119,7 +119,10 @@ describe('StateManager', () => {
         stateManager.useReceiver(asyncReceiver);
         return stateManager.runReceivers('testEvent', { eventData: {} }).then((results: any) => {
             expect(results).toEqual([{ asyncData: {} }, { testData: {} }]);
-            expect(receiver).toHaveBeenCalledWith('testEvent', { eventData: {} }, stateManager);
+            expect(receiver).toHaveBeenCalledWith('testEvent', { eventData: {} }, stateManager, {
+                emitMetadata: undefined,
+                receiverMetadata: { eventsNames: ['testEvent'], functionName: 'mockConstructor' },
+            });
         });
     });
     it('should set default initial state', () => {

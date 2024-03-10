@@ -36,7 +36,13 @@ describe('Eventrix', () => {
         const eventName = 'getFoo';
         eventrix.listen(eventName, mockListener);
         eventrix.emit(eventName, 'test');
-        expect(mockListener).toHaveBeenCalledWith('test', ['testReceiverData']);
+        expect(mockListener).toHaveBeenCalledWith('test', ['testReceiverData'], undefined);
+    });
+    it('should call listener on emit event with metadata', () => {
+        const eventName = 'getFoo';
+        eventrix.listen(eventName, mockListener);
+        eventrix.emit(eventName, 'test', { context: 'Eventrix' });
+        expect(mockListener).toHaveBeenCalledWith('test', ['testReceiverData'], { context: 'Eventrix' });
     });
     it('should map emit arguments and emit event', () => {
         const eventName = 'getFoo';
@@ -45,7 +51,7 @@ describe('Eventrix', () => {
         };
         eventrix.listen(eventName, mockListener);
         eventrix.emit(getFooEvent<string>('test'));
-        expect(mockListener).toHaveBeenCalledWith('test', ['testReceiverData']);
+        expect(mockListener).toHaveBeenCalledWith('test', ['testReceiverData'], undefined);
     });
     it('should not call event listener after unlisten', () => {
         const eventName = 'getFoo';
@@ -62,14 +68,50 @@ describe('Eventrix', () => {
         eventrix.useReceiver(eventsReceiver);
         eventrix.listen(eventName, mockListener);
         eventrix.emit(eventName, 'test');
-        expect(mockListener).toHaveBeenCalledWith('test', ['testReceiverData', initialState.foo]);
+        expect(mockListener).toHaveBeenCalledWith('test', ['testReceiverData', initialState.foo], undefined);
+    });
+    it('should call receiver with metadata', () => {
+        const eventName = 'getFoo';
+        const emitMetadata = { context: 'Eventrix' };
+        const receiverMetadata = { context: 'EventsReceiver' };
+        const testMethod = jest.fn();
+        function testReceiver(name: string, data: any, store: any, metadata: any) {
+            testMethod(metadata);
+        }
+        const eventsReceiver = new EventsReceiver(eventName, testReceiver, receiverMetadata);
+        eventrix.useReceiver(eventsReceiver);
+        eventrix.emit(eventName, 'test', emitMetadata);
+        expect(testMethod).toHaveBeenCalledWith({
+            emitMetadata,
+            receiverMetadata: { eventsNames: [eventName], functionName: 'testReceiver', ...receiverMetadata },
+        });
+    });
+    it('should call receiver with metadata without functionName', () => {
+        const eventName = 'getFoo';
+        const emitMetadata = { context: 'Eventrix' };
+        const receiverMetadata = { context: 'EventsReceiver' };
+        const testMethod = jest.fn();
+
+        const eventsReceiver = new EventsReceiver(
+            eventName,
+            (name: string, data: any, store: any, metadata: any) => {
+                testMethod(metadata);
+            },
+            receiverMetadata,
+        );
+        eventrix.useReceiver(eventsReceiver);
+        eventrix.emit(eventName, 'test', emitMetadata);
+        expect(testMethod).toHaveBeenCalledWith({
+            emitMetadata,
+            receiverMetadata: { eventsNames: [eventName], functionName: '', ...receiverMetadata },
+        });
     });
     it('should call listener on emit event without receiver response', () => {
         const eventName = 'getFoo';
         eventrix.removeReceiver(eventsReceivers[0]);
         eventrix.listen(eventName, mockListener);
         eventrix.emit(eventName, 'test');
-        expect(mockListener).toHaveBeenCalledWith('test', []);
+        expect(mockListener).toHaveBeenCalledWith('test', [], undefined);
     });
     it('should event receiver update store on emit event', () => {
         const eventName = 'setBar';
@@ -80,7 +122,7 @@ describe('Eventrix', () => {
         eventrix.useReceiver(eventsReceiver);
         eventrix.listen(eventName, mockListener);
         eventrix.emit(eventName, 'test');
-        expect(mockListener).toHaveBeenCalledWith('test', []);
+        expect(mockListener).toHaveBeenCalledWith('test', [], undefined);
         expect(eventrix.getState('bar')).toEqual(newbarState);
     });
     it('should create new eventrix instance with event scope', () => {
@@ -88,7 +130,7 @@ describe('Eventrix', () => {
         eventrix.listen('Test:setTest', mockedListener);
         const testInstance = eventrix.create({ eventScope: 'Test' });
         testInstance.emit('setTest', 'test');
-        expect(mockedListener).toHaveBeenCalledWith('test', []);
+        expect(mockedListener).toHaveBeenCalledWith('test', [], undefined);
     });
     it('should create new second level eventrix instance with event scope', () => {
         const mockedListener = jest.fn();
@@ -96,7 +138,7 @@ describe('Eventrix', () => {
         const testInstance = eventrix.create({ eventScope: 'Test' });
         const testListInstance = testInstance.create({ eventScope: 'List' });
         testListInstance.emit('setTest', 'test');
-        expect(mockedListener).toHaveBeenCalledWith('test', []);
+        expect(mockedListener).toHaveBeenCalledWith('test', [], undefined);
     });
     it('should create new eventrix instance with state scope', () => {
         const testInstance = eventrix.create({ stateScope: 'scope1' });

@@ -1,6 +1,6 @@
 import get from 'lodash/get';
 import EventsReceiver from './EventsReceiver';
-import { EventrixI, EventsListenerI, EventsReceiverI, ReceiverI, StateManagerI } from './interfaces';
+import { EventrixI, EventsListenerI, EventsReceiverI, StateManagerI } from './interfaces';
 
 interface DebuggerConfigI {
     live?: boolean;
@@ -26,15 +26,25 @@ class EventrixDebugger {
         if (name === 'setState:*') {
             return;
         }
-        const receiversCount = this.getEventsReceiversCount(name);
-        const listenersCount = this.getEventListenersCount(name);
+        const receivers = this.getEventsReceivers(name);
+        const listeners = this.getEventListeners(name);
+        const receiversCount = receivers.length;
+        const listenersCount = listeners.length;
+        const receiversMetadata = receivers.map((r) => r.metadata);
         const timestamp = new Date().getTime();
-        this.eventsHistory.push({ name, data, receiversCount, listenersCount, timestamp });
+        this.eventsHistory.push({ name, data, receiversCount, listenersCount, timestamp, receivers: receiversMetadata });
         this.printInlineEventInfo({ name, data, receiversCount, listenersCount });
         if (name.indexOf('setState:') === 0 && name.indexOf('*') < 0) {
             const path = name.split(':')[1];
             const state = { ...stateManager.getState<object>() };
-            this.stateHistory.push({ path, state, receiversCount, listenersCount, timestamp });
+            this.stateHistory.push({
+                path,
+                state,
+                receiversCount,
+                listenersCount,
+                timestamp,
+                receivers: receiversMetadata,
+            });
             this.printInlineStateInfo({ path, state, receiversCount, listenersCount });
         }
     };
@@ -59,14 +69,18 @@ class EventrixDebugger {
         this.stateHistory = [];
     }
 
+    getEventsReceivers(eventName: string): EventsReceiverI[] {
+        const receivers = get(this.eventrix, 'stateManager.receivers', {}) as { [key: string]: EventsReceiverI[] };
+        return receivers[eventName] ?? [];
+    }
+
     getEventsReceiversCount(eventName: string) {
-        const receivers = get(this.eventrix, 'stateManager.receivers', {}) as { [key: string]: ReceiverI };
-        const receiversList = receivers[eventName];
+        const receiversList = this.getEventsReceivers(eventName);
         return Array.isArray(receiversList) ? receiversList.length : 0;
     }
 
     getAllEventsReceiversCount() {
-        const receivers = get(this.eventrix, 'stateManager.receivers', {}) as { [key: string]: ReceiverI };
+        const receivers = get(this.eventrix, 'stateManager.receivers', {}) as { [key: string]: EventsReceiverI[] };
         const eventsNames = Object.keys(receivers);
         return eventsNames.map((eventName) => {
             const receiversList = receivers[eventName];
@@ -77,14 +91,18 @@ class EventrixDebugger {
         });
     }
 
+    getEventListeners(eventName: string): EventsListenerI[] {
+        const listeners = get(this.eventrix, 'stateManager.eventsEmitter.listeners', {}) as { [key: string]: EventsListenerI[] };
+        return listeners[eventName] ?? [];
+    }
+
     getEventListenersCount(eventName: string) {
-        const listeners = get(this.eventrix, 'stateManager.eventsEmitter.listeners', {}) as { [key: string]: EventsListenerI };
-        const listenersList = listeners[eventName];
+        const listenersList = this.getEventListeners(eventName);
         return Array.isArray(listenersList) ? listenersList.length : 0;
     }
 
     getAllEventsListenersCount() {
-        const listeners = get(this.eventrix, 'stateManager.eventsEmitter.listeners', {}) as { [key: string]: EventsListenerI };
+        const listeners = get(this.eventrix, 'stateManager.eventsEmitter.listeners', {}) as { [key: string]: EventsListenerI[] };
         const eventsNames = Object.keys(listeners);
         return eventsNames.map((eventName) => {
             const listenersList = listeners[eventName];

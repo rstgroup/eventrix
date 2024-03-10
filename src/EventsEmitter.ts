@@ -1,6 +1,6 @@
 import get from 'lodash/get';
 import { isPromise } from './helpers';
-import { EventsEmitterI, EventsListenerI, StateManagerI, ErrorCallback } from './interfaces';
+import { EventsEmitterI, EventsListenerI, StateManagerI, ErrorCallback, EmitMetadataI } from './interfaces';
 
 class EventsEmitter implements EventsEmitterI {
     listeners: {
@@ -83,9 +83,9 @@ class EventsEmitter implements EventsEmitterI {
         return path ? get(data, hasDotAsFirstChar ? path.slice(1, path.length) : path) : data;
     }
 
-    runListeners<EventDataI>(name: string, data: EventDataI, receiversData: any[]): void {
+    runListeners<EventDataI>(name: string, data: EventDataI, receiversData: any[], metadata?: EmitMetadataI): void {
         if (this.listeners[name] && Array.isArray(this.listeners[name])) {
-            this.listeners[name].forEach((listener) => listener(data, receiversData));
+            this.listeners[name].forEach((listener) => listener(data, receiversData, metadata));
         }
     }
 
@@ -120,15 +120,15 @@ class EventsEmitter implements EventsEmitterI {
         }
     }
 
-    emit<EventDataI = any>(name: string, data: EventDataI): Promise<any> {
+    emit<EventDataI = any>(name: string, data: EventDataI, metadata?: EmitMetadataI): Promise<any> {
         try {
-            const receiversResponse = this.stateManager?.runReceivers<EventDataI>(name, data);
+            const receiversResponse = this.stateManager?.runReceivers<EventDataI>(name, data, metadata);
             if (isPromise(receiversResponse)) {
                 return receiversResponse.then((receiversData: any) => {
-                    this.runListeners(name, data, receiversData);
+                    this.runListeners(name, data, receiversData, metadata);
                 });
             }
-            this.runListeners(name, data, receiversResponse);
+            this.runListeners(name, data, receiversResponse, metadata);
             return Promise.resolve(receiversResponse);
         } catch (error) {
             if (this.errorCallbacks.size > 0) {

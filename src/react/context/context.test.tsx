@@ -23,7 +23,7 @@ describe('context with default eventrix instance', () => {
             </TestContainer>,
         );
         eventrixInstance.emit('testEvent', 'test');
-        expect(callbackMock).toHaveBeenCalledWith('test', []);
+        expect(callbackMock).toHaveBeenCalledWith('test', [], undefined);
     });
 
     it('should invoke callback when event emitted with scope', () => {
@@ -38,7 +38,7 @@ describe('context with default eventrix instance', () => {
             </TestContainer>,
         );
         eventrixInstance.emit('Test:testEvent', 'test');
-        expect(callbackMock).toHaveBeenCalledWith('test', []);
+        expect(callbackMock).toHaveBeenCalledWith('test', [], undefined);
     });
 
     it('should invoke callback when event emitted with deep scope', () => {
@@ -55,6 +55,6 @@ describe('context with default eventrix instance', () => {
             </TestContainer>,
         );
         eventrixInstance.emit('Test:List:testEvent', 'test');
-        expect(callbackMock).toHaveBeenCalledWith('test', []);
+        expect(callbackMock).toHaveBeenCalledWith('test', [], undefined);
     });
 });

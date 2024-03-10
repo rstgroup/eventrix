@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import { isPromise, setValue, unsetValue } from './helpers';
 import EventsReceiver from './EventsReceiver';
-import { EventsEmitterI, EventsReceiverI, StateManagerI } from './interfaces';
+import { EmitMetadataI, EventsEmitterI, EventsReceiverI, StateManagerI } from './interfaces';
 
 class StateManager implements StateManagerI {
     eventsEmitter: EventsEmitterI;
@@ -70,12 +70,15 @@ class StateManager implements StateManagerI {
         this.receivers[name].splice(index, 1);
     }
 
-    runReceivers<EventDataI>(name: string, data: EventDataI): Promise<any> | any {
+    runReceivers<EventDataI>(name: string, data: EventDataI, metadata?: EmitMetadataI): Promise<any> | any {
         const promisesList: Promise<any>[] = [];
         const receiversData: any[] = [];
         if (this.receivers[name] && Array.isArray(this.receivers[name])) {
             this.receivers[name].forEach((receiver) => {
-                const receiverData = receiver.handleEvent(name, data, this);
+                const receiverData = receiver.handleEvent(name, data, this, {
+                    receiverMetadata: receiver.metadata,
+                    emitMetadata: metadata,
+                });
                 if (isPromise(receiverData)) {
                     return promisesList.push(receiverData);
                 }
@@ -85,7 +88,9 @@ class StateManager implements StateManagerI {
             });
         }
         if (this.receivers['*'] && Array.isArray(this.receivers['*'])) {
-            this.receivers['*'].forEach((receiver) => receiver.handleEvent(name, data, this));
+            this.receivers['*'].forEach((receiver) =>
+                receiver.handleEvent(name, data, this, { receiverMetadata: receiver.metadata, emitMetadata: metadata }),
+            );
         }
         if (promisesList.length) {
             return Promise.all(promisesList).then((receiversResponse) => [...receiversResponse, ...receiversData]);

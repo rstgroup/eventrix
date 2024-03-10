@@ -12,6 +12,22 @@ export interface EventrixOptionsI {
     scopes: ScopesI;
 }
 
+export interface ReceiverMetadataI {
+    functionName?: string;
+    context?: string;
+    source?: string;
+    eventsNames?: string[];
+    setStatePaths?: string[];
+    getStatePaths?: string[];
+}
+
+export interface EmitMetadataI {
+    component?: string;
+    context?: string;
+    receiverMetadata?: ReceiverMetadataI;
+    source?: string;
+}
+
 export interface StateManagerI {
     state: any;
     receivers: {
@@ -22,22 +38,33 @@ export interface StateManagerI {
     getState<StateValueI = any>(path?: string): StateValueI;
     useReceiver(receiver: EventsReceiverI): void;
     removeReceiver(receiver: EventsReceiverI): void;
-    runReceivers<EventDataI>(name: string, data: EventDataI): any;
+    runReceivers<EventDataI>(name: string, data: EventDataI, metadata?: EmitMetadataI): any;
 }
 
 export interface ReceiverI<EventData = any, ReceiverResponse = any> {
-    (eventName: string, eventData: EventData, stateManager: StateManagerI): ReceiverResponse;
+    (
+        eventName: string,
+        eventData: EventData,
+        stateManager: StateManagerI,
+        metadata?: { receiverMetadata?: ReceiverMetadataI; emitMetadata?: EmitMetadataI },
+    ): ReceiverResponse;
 }
 
 export interface EventsReceiverI<EventDataI = any, ReceiverResponseI = any> {
     eventsNames: string[];
+    metadata?: ReceiverMetadataI;
     receiver: ReceiverI<EventDataI, ReceiverResponseI>;
     getEventsNames(): string[];
-    handleEvent(name: string, data: EventDataI, stateManager: StateManagerI): ReceiverResponseI;
+    handleEvent(
+        name: string,
+        data: EventDataI,
+        stateManager: StateManagerI,
+        metadata?: { receiverMetadata?: ReceiverMetadataI; emitMetadata?: EmitMetadataI },
+    ): ReceiverResponseI;
 }
 
 export interface EmitI<EventData = any> {
-    (name: string, data?: EventData): Promise<any>;
+    (name: string, data?: EventData, metadata?: EmitMetadataI): Promise<any>;
 }
 
 export interface SetStateI<StateI> {
@@ -78,7 +105,7 @@ export interface FetchHandler {
 export interface EventrixI {
     listen<EventData = any>(name: string, listener: EventsListenerI<EventData>): void;
     unlisten(name: string, listener: EventsListenerI): void;
-    emit<EventData>(name: string, data?: EventData): Promise<any>;
+    emit<EventData>(name: string, data?: EventData, metadata?: EmitMetadataI): Promise<any>;
     getState<StateI>(path?: string): StateI;
     useReceiver(eventReceiver: EventsReceiverI): void;
     removeReceiver(eventReceiver: EventsReceiverI): void;
@@ -165,7 +192,7 @@ export interface UseFetchToState {
 }
 
 export interface EventsListenerI<EventDataI = any> {
-    (eventData?: EventDataI | any, receiversData?: any[]): void;
+    (eventData?: EventDataI | any, receiversData?: any[], metadata?: EmitMetadataI): void;
 }
 
 export interface EventsEmitterI {
@@ -179,7 +206,7 @@ export interface EventsEmitterI {
     stateManager?: StateManagerI;
     onError(errorCallback: ErrorCallback): void;
     handleError(error: Error, eventName: string, eventData: any, state: any): void;
-    emit<EventDataI = any>(eventName: string, eventData?: EventDataI): Promise<any>;
+    emit<EventDataI = any>(eventName: string, eventData?: EventDataI, metadata?: EmitMetadataI): Promise<any>;
     emitWild<EventDataI = any>(eventName: string, eventData: EventDataI): void;
     listen(eventName: string, listener: EventsListenerI<any>): void;
     unlisten(eventName: string, listener: EventsListenerI<any>): void;

@@ -27,7 +27,7 @@ describe('useEmit', () => {
                 <ItemComponent />
             </TestContainer>,
         );
-        expect(mockListener).toHaveBeenCalledWith('test', []);
+        expect(mockListener).toHaveBeenCalledWith('test', [], undefined);
     });
 
     it('should emit event when component did mount with scope', () => {
@@ -42,7 +42,7 @@ describe('useEmit', () => {
                 </EventrixScope>
             </TestContainer>,
         );
-        expect(mockListener).toHaveBeenCalledWith('test', []);
+        expect(mockListener).toHaveBeenCalledWith('test', [], undefined);
     });
 
     it('should emit event when component did mount with deep scope', () => {
@@ -59,6 +59,6 @@ describe('useEmit', () => {
                 </EventrixScope>
             </TestContainer>,
         );
-        expect(mockListener).toHaveBeenCalledWith('test', []);
+        expect(mockListener).toHaveBeenCalledWith('test', [], undefined);
     });
 });

@@ -8,21 +8,34 @@ import {
     ReceiverStatePathI,
     FetchStateStatus,
     FetchStateMethodI,
+    ReceiverMetadataI,
+    EmitMetadataI,
 } from './interfaces';
 
 class EventsReceiver<EventData = any, ReceiverResponse = any> implements EventsReceiverI<EventData, ReceiverResponse> {
     eventsNames: string[];
+    metadata?: ReceiverMetadataI;
     receiver: ReceiverI<EventData, ReceiverResponse>;
 
-    constructor(eventsNames: string | string[], receiver: ReceiverI<EventData, ReceiverResponse>) {
+    constructor(eventsNames: string | string[], receiver: ReceiverI<EventData, ReceiverResponse>, metadata?: ReceiverMetadataI) {
         this.eventsNames = Array.isArray(eventsNames) ? eventsNames : [eventsNames];
+        this.metadata = {
+            functionName: receiver?.name,
+            eventsNames: this.eventsNames,
+            ...metadata,
+        };
         this.receiver = receiver;
     }
     getEventsNames(): string[] {
         return this.eventsNames;
     }
-    handleEvent(name: string, data: EventData, stateManager: StateManagerI): ReceiverResponse {
-        return this.receiver(name, data, stateManager);
+    handleEvent(
+        name: string,
+        data: EventData,
+        stateManager: StateManagerI,
+        metadata?: { receiverMetadata?: ReceiverMetadataI; emitMetadata?: EmitMetadataI },
+    ): ReceiverResponse {
+        return this.receiver(name, data, stateManager, metadata);
     }
 }
 
@@ -46,23 +59,29 @@ export const fetchToStateReceiver = (
     eventName: string | string[],
     statePath: string | ReceiverStatePathI,
     fetchMethod: FetchMethodI,
+    metadata?: ReceiverMetadataI,
 ): EventsReceiverI => {
-    return new EventsReceiver(eventName, (name, eventData, stateManager: StateManagerI) => {
-        const state = stateManager.getState();
-        const emit = stateManager.eventsEmitter.emit;
-        return fetchMethod(eventData, state, emit).then((nextState) => {
-            if (nextState !== undefined) {
-                const path = typeof statePath === 'function' ? statePath(eventData, nextState) : statePath;
-                stateManager.setState(path, nextState);
-                return nextState;
-            }
-        });
-    });
+    return new EventsReceiver(
+        eventName,
+        (name, eventData, stateManager: StateManagerI) => {
+            const state = stateManager.getState();
+            const emit = stateManager.eventsEmitter.emit;
+            return fetchMethod(eventData, state, emit).then((nextState) => {
+                if (nextState !== undefined) {
+                    const path = typeof statePath === 'function' ? statePath(eventData, nextState) : statePath;
+                    stateManager.setState(path, nextState);
+                    return nextState;
+                }
+            });
+        },
+        metadata,
+    );
 };
 
 export const fetchStateReceiver = <FetchParamsI = any, FetchResponseI = any>(
     stateName: string,
     fetchMethod: FetchStateMethodI<FetchParamsI, FetchResponseI>,
+    metadata?: ReceiverMetadataI,
 ): EventsReceiverI<FetchParamsI, Promise<any>> => {
     return new EventsReceiver<FetchParamsI, Promise<any>>(
         `fetchState:${stateName}`,
@@ -99,6 +118,7 @@ export const fetchStateReceiver = <FetchParamsI = any, FetchResponseI = any>(
                     });
                 });
         },
+        metadata,
     );
 };
 

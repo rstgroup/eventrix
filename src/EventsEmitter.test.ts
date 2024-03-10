@@ -116,7 +116,7 @@ describe('EventsEmitter', () => {
             eventsEmitter.useStore(store);
             const data = { foo: 'bar', bar: 'foo' };
             eventsEmitter.emit('testEvent', data);
-            expect(mockListener).toBeCalledWith(data, ['test']);
+            expect(mockListener).toBeCalledWith(data, ['test'], undefined);
         });
         describe('emitWild', () => {
             it('should call all matched events listeners with data and set matched listeners cache', () => {
@@ -134,9 +134,9 @@ describe('EventsEmitter', () => {
                 };
                 eventsEmitter.emitWild('foo', data);
                 expect(mockListener).not.toBeCalled();
-                expect(fooMockListener).toBeCalledWith(data, []);
-                expect(fooBarMockListener).toBeCalledWith(data.bar, []);
-                expect(fooBarFooMockListener).toBeCalledWith(data.bar.foo, []);
+                expect(fooMockListener).toBeCalledWith(data, [], undefined);
+                expect(fooBarMockListener).toBeCalledWith(data.bar, [], undefined);
+                expect(fooBarFooMockListener).toBeCalledWith(data.bar.foo, [], undefined);
                 expect(eventsEmitter.matchedListenersCache).toEqual({ foo: ['foo', 'foo.bar', 'foo.bar.foo'] });
             });
 
@@ -177,7 +177,7 @@ describe('EventsEmitter', () => {
             eventsEmitter.useStore(storeWithPromiseReceivers);
             const data = { foo: 'bar', bar: 'foo' };
             return eventsEmitter.emit('testEvent', data).then(() => {
-                expect(mockListener).toBeCalledWith(data, ['testResponse']);
+                expect(mockListener).toBeCalledWith(data, ['testResponse'], undefined);
             });
         });
     });

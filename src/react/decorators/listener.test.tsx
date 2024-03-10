@@ -78,7 +78,21 @@ describe('listener', () => {
             </TestContainer>,
         );
         eventrixInstance.emit('testEvent', 'test');
-        expect(callbackMock).toHaveBeenCalledWith('test', []);
+        expect(callbackMock).toHaveBeenCalledWith('test', [], undefined);
+    });
+
+    it('should invoke callback when event emitted with metadata', () => {
+        const eventrixInstance = new Eventrix({});
+        const callbackMock = jest.fn();
+        const metadata = { component: 'testComponent', source: 'listener.test.tsx', context: 'test' };
+
+        render(
+            <TestContainer eventrix={eventrixInstance}>
+                <ItemComponent callback={callbackMock} />
+            </TestContainer>,
+        );
+        eventrixInstance.emit('testEvent', 'test', metadata);
+        expect(callbackMock).toHaveBeenCalledWith('test', [], metadata);
     });
 
     it('should invoke callback when event emitted and extend componentDidMount method', () => {
@@ -93,7 +107,7 @@ describe('listener', () => {
         );
         eventrixInstance.emit('testEvent', 'test');
         expect(didMountCallbackMock).toHaveBeenCalled();
-        expect(callbackMock).toHaveBeenCalledWith('test', []);
+        expect(callbackMock).toHaveBeenCalledWith('test', [], undefined);
     });
 
     it('should invoke callback when event emitted and extend componentWillUnmount method', () => {
@@ -107,7 +121,7 @@ describe('listener', () => {
             </TestContainer>,
         );
         eventrixInstance.emit('testEvent', 'test');
-        expect(callbackMock).toHaveBeenCalledWith('test', []);
+        expect(callbackMock).toHaveBeenCalledWith('test', [], undefined);
         unmount();
         expect(willUnmountCallbackMock).toHaveBeenCalled();
     });

@@ -10,6 +10,7 @@ import {
     ErrorCallback,
     EventrixOptionsI,
     ScopesI,
+    EmitMetadataI,
 } from './interfaces';
 
 class Eventrix<InitialStateI = any> implements EventrixI {
@@ -79,9 +80,9 @@ class Eventrix<InitialStateI = any> implements EventrixI {
         }
         return { eventName: name, eventData: value };
     }
-    emit<EventDataI = any>(name: string | [string, EventDataI], value?: EventDataI): Promise<any> {
+    emit<EventDataI = any>(name: string | [string, EventDataI], value?: EventDataI, metadata?: EmitMetadataI): Promise<any> {
         const { eventName, eventData } = this.mapEmitArguments<EventDataI>(name, value);
-        return this.eventsEmitter.emit<EventDataI>(this.getEventName(eventName), eventData);
+        return this.eventsEmitter.emit<EventDataI>(this.getEventName(eventName), eventData, metadata);
     }
     listen<EventData = any>(name: string, listener: EventsListenerI<EventData>): void {
         this.eventsEmitter.listen(this.getEventName(name), listener);

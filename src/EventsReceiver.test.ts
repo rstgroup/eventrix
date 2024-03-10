@@ -14,8 +14,14 @@ describe('EventsReceiver', () => {
         const receiver = jest.fn();
         const stateManager: any = {};
         const eventsReceiver = new EventsReceiver('testEvent', receiver);
-        eventsReceiver.handleEvent('testEvent', {}, stateManager);
-        expect(receiver).toHaveBeenCalledWith('testEvent', {}, {});
+        eventsReceiver.handleEvent('testEvent', {}, stateManager, {});
+        expect(receiver).toHaveBeenCalledWith('testEvent', {}, {}, {});
+    });
+    it('should get receiver metadata', () => {
+        const receiver = function testReceiver() {};
+        const metadata = { context: 'EventsReceiver' };
+        const eventsReceiver = new EventsReceiver('testEvent', receiver, metadata);
+        expect(eventsReceiver.metadata).toEqual({ functionName: 'testReceiver', eventsNames: ['testEvent'], context: metadata.context });
     });
 });
 
