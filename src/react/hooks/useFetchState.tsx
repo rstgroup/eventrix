@@ -15,7 +15,7 @@ interface FetchStateI<FetchResultsI> {
 }
 
 interface EmitFetchMethodI<FetchParamsI> {
-    (params: FetchParamsI): void;
+    (params: FetchParamsI): Promise<void>;
 }
 
 const defaultFetchState = {
@@ -25,7 +25,7 @@ const defaultFetchState = {
     status: FetchStateStatus.Initial,
 };
 
-function useFetchState<FetchResultsI = any, FetchParamsI = any>(
+function useFetchState<FetchResultsI = unknown, FetchParamsI = unknown>(
     fetchStateName: string,
 ): [FetchStateI<FetchResultsI>, EmitFetchMethodI<FetchParamsI>] {
     const { eventrix } = useContext(EventrixContext);
