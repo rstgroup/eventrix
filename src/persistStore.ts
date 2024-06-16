@@ -30,6 +30,9 @@ const connectPersistStore = <StateI extends {}>(eventrix: EventrixI, config: Per
     const setPersistStoreState = (): void => {
         if (blackList) {
             const storeState = eventrix.getState<StateI>();
+            if (!storeState) {
+                return;
+            }
             const mappedState: StorageDataItem[] = [];
             getStateKeys(storeState).forEach((key): void => {
                 if (!blackList.includes(key) && typeof key === 'string') {

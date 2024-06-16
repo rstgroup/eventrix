@@ -79,7 +79,7 @@ export interface EventrixI {
     listen<EventData = any>(name: string, listener: EventsListenerI<EventData>): void;
     unlisten(name: string, listener: EventsListenerI): void;
     emit<EventData>(name: string, data?: EventData): Promise<any>;
-    getState<StateI>(path?: string): StateI;
+    getState<StateI>(path?: string): StateI | undefined;
     useReceiver(eventReceiver: EventsReceiverI): void;
     removeReceiver(eventReceiver: EventsReceiverI): void;
     create(scopes: ScopesI): EventrixI;
