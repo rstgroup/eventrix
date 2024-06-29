@@ -47,7 +47,7 @@ class ReduxAdapter {
     dispatch(action: any): void {
         this.eventrix.emit(DISPATCH_EVENT_NAME, action);
     }
-    getState<StateI>(): StateI {
+    getState<StateI>(): StateI | undefined {
         return this.eventrix.getState();
     }
     subscribe(listener: EventsListenerI): UnsubscribeI {

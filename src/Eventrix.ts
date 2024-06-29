@@ -69,7 +69,7 @@ class Eventrix<InitialStateI = any> implements EventrixI {
     getEventNameWithScope(eventName: string): string {
         return this.getEventName(eventName);
     }
-    getState<StateI>(path?: string): StateI {
+    getState<StateI>(path?: string): StateI | undefined {
         return this.stateManager.getState(this.getStatePath(path));
     }
     mapEmitArguments<EventDataI>(name: string | [string, EventDataI], value?: EventDataI): EmitArgumentsI<EventDataI> {

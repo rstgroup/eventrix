@@ -3,10 +3,10 @@ import { EventrixContext } from '../context';
 import { SetStateI } from '../../interfaces';
 import { registerListeners } from '../../helpers';
 
-function useEventrixState<StateI>(stateName: string): [StateI, SetStateI<StateI>] {
+function useEventrixState<StateI>(stateName: string): [StateI | undefined, SetStateI<StateI>] {
     const { eventrix } = useContext(EventrixContext);
     const stateNameWithScope = eventrix.getStatePathWithScope(stateName) as string;
-    const [state, setState] = useState<StateI>(eventrix.getState<StateI>(stateName));
+    const [state, setState] = useState<StateI | undefined>(eventrix.getState<StateI>(stateName));
 
     const onSetEventrixState = useCallback(() => setState(eventrix.getState(stateName)), [setState, stateName]);
 
