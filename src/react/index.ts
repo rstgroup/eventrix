@@ -11,6 +11,8 @@ export { default as useEventState } from './hooks/useEventState';
 export { default as useFetchToState } from './hooks/useFetchToState';
 export { default as useFetchState } from './hooks/useFetchState';
 export { default as useReceiver } from './hooks/useReceiver';
+export { default as useGetState } from './hooks/useGetState';
+export { default as useSetState } from './hooks/useSetState';
 // decorators
 export { default as eventrixComponent } from './decorators/eventrixComponent';
 export { default as eventListener } from './decorators/listener';
