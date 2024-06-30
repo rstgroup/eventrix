@@ -23,6 +23,8 @@ export {
     useFetchToState,
     useFetchState,
     useReceiver,
+    useGetState,
+    useSetState,
     // decorators
     eventrixComponent,
     eventListener,
