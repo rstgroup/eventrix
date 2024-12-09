@@ -246,7 +246,7 @@ describe('helpers', () => {
     describe('registerListeners', () => {
         it('should register listeners all wild listeners', () => {
             const eventrix = new Eventrix();
-            const mockListener = jest.fn();
+            const mockListener = vi.fn();
             registerListeners(eventrix, 'a.b.c.d', mockListener);
             expect(eventrix.eventsEmitter.listeners['setState:a.*']).toHaveLength(1);
             expect(eventrix.eventsEmitter.listeners['setState:a.b.*']).toHaveLength(1);
@@ -255,7 +255,7 @@ describe('helpers', () => {
         });
         it('should unregister all register listeners', () => {
             const eventrix = new Eventrix();
-            const mockListener = jest.fn();
+            const mockListener = vi.fn();
             const unregisterListeners = registerListeners(eventrix, 'a.b.c.d', mockListener);
             unregisterListeners();
             expect(eventrix.eventsEmitter.listeners['setState:a.*']).toEqual(undefined);

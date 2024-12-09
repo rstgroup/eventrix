@@ -18,6 +18,7 @@
       "dom",
       "es2016"
     ],
+    "types": ["vitest/globals"],
     "experimentalDecorators": true,
     "suppressImplicitAnyIndexErrors": false,
     "baseUrl": "./",

@@ -25,7 +25,7 @@ describe('listener', () => {
 
     it('should use eventrix context and extend component by eventrix', () => {
         const eventrixInstance = new Eventrix({});
-        const callbackMock = jest.fn();
+        const callbackMock = vi.fn();
 
         render(
             <TestContainer eventrix={eventrixInstance}>

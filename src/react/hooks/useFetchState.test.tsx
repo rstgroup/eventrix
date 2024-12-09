@@ -49,7 +49,7 @@ describe('useFetchState', () => {
 
     it('should start fetch users and set loading', () => {
         const mockedUsersList: UserI[] = [];
-        const mockedFetchMetchod = jest.fn(() => Promise.resolve(mockedUsersList));
+        const mockedFetchMetchod = vi.fn(() => Promise.resolve(mockedUsersList));
         const usersFetchReceiver = fetchStateReceiver<FetchParamsI, UserI[]>('users', mockedFetchMetchod);
         const eventrixInstance = new Eventrix({}, [usersFetchReceiver]);
         const { getByTestId } = render(
@@ -69,7 +69,7 @@ describe('useFetchState', () => {
             { name: 'Jan', surname: 'Kowalski' },
             { name: 'Jan', surname: 'Nowak' },
         ];
-        const mockedFetchMetchod = jest.fn(() => Promise.resolve(mockedUsersList));
+        const mockedFetchMetchod = vi.fn(() => Promise.resolve(mockedUsersList));
         const usersFetchReceiver = fetchStateReceiver<FetchParamsI, UserI[]>('users', mockedFetchMetchod);
         const eventrixInstance = new Eventrix({}, [usersFetchReceiver]);
         const { getByTestId } = render(
@@ -87,7 +87,7 @@ describe('useFetchState', () => {
     });
     it('should fetch users and show fetch error message', async () => {
         const fetchErrorMessage = 'fetch error';
-        const mockedFetchMetchod = jest.fn(() => Promise.reject({ message: fetchErrorMessage }));
+        const mockedFetchMetchod = vi.fn(() => Promise.reject({ message: fetchErrorMessage }));
         const usersFetchReceiver = fetchStateReceiver<FetchParamsI, UserI[]>('users', mockedFetchMetchod);
         const eventrixInstance = new Eventrix({}, [usersFetchReceiver]);
         const { getByTestId } = render(
@@ -106,7 +106,7 @@ describe('useFetchState', () => {
 
     it('should start fetch users and set loading with scope', () => {
         const mockedUsersList: UserI[] = [];
-        const mockedFetchMetchod = jest.fn(() => Promise.resolve(mockedUsersList));
+        const mockedFetchMetchod = vi.fn(() => Promise.resolve(mockedUsersList));
         const usersFetchReceiver = fetchStateReceiver<FetchParamsI, UserI[]>('selectData.users', mockedFetchMetchod);
         const eventrixInstance = new Eventrix({}, [usersFetchReceiver]);
         const { getByTestId } = render(

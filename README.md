@@ -1,6 +1,6 @@
 ![Eventrix](assets/logo_br.svg)
 
-STATE MANAGMENT FOR **REACT** AND **REACT NATIVE** APPS
+STATE MANAGEMENT FOR **REACT** AND **REACT NATIVE** APPS
 
 [![Build Status](https://travis-ci.org/rstgroup/eventrix.svg?branch=master)](https://travis-ci.org/rstgroup/eventrix)
 [![npm](https://img.shields.io/npm/l/eventrix.svg)](https://npmjs.org/package/eventrix)

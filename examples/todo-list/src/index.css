@@ -1,0 +1,27 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.logo {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.logo img {
+  height: 80px;
+}
+
+.todo-app {
+  width: 350px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.todo-footer {
+  width: 100%;
+  background: #efefef;
+  border-radius: 0 0 4px 4px;
+  border-top: 1px solid #c1c1c1;
+  padding: 10px;
+}

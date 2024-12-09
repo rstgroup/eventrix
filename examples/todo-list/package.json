@@ -1,0 +1,29 @@
+{
+  "name": "example-todo-list",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint --ext .ts,.tsx src --fix",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "11.10.5",
+    "@emotion/styled": "11.10.5",
+    "@mui/material": "5.10.16",
+    "@mui/types": "7.2.2",
+    "axios": "^1.7.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "globals": "^15.11.0",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.1"
+  }
+}

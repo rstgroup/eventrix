@@ -17,7 +17,7 @@ describe('EventrixDebugger', () => {
                 foo: 'bar',
             },
         };
-        mockReceiver = jest.fn(() => 'testReceiverData');
+        mockReceiver = vi.fn(() => 'testReceiverData');
         eventsReceivers = [new EventsReceiver('getFoo', mockReceiver)];
         eventrix = new Eventrix(initialState, eventsReceivers);
         eDebugger = new EventrixDebugger(eventrix);

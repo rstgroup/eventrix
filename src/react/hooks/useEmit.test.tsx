@@ -19,7 +19,7 @@ describe('useEmit', () => {
 
     it('should emit event when component did mount', () => {
         const eventrixInstance = new Eventrix({});
-        const mockListener = jest.fn();
+        const mockListener = vi.fn();
         eventrixInstance.listen('testEvent', mockListener);
 
         render(
@@ -32,7 +32,7 @@ describe('useEmit', () => {
 
     it('should emit event when component did mount with scope', () => {
         const eventrixInstance = new Eventrix({});
-        const mockListener = jest.fn();
+        const mockListener = vi.fn();
         eventrixInstance.listen('Test:testEvent', mockListener);
 
         render(
@@ -47,7 +47,7 @@ describe('useEmit', () => {
 
     it('should emit event when component did mount with deep scope', () => {
         const eventrixInstance = new Eventrix({});
-        const mockListener = jest.fn();
+        const mockListener = vi.fn();
         eventrixInstance.listen('Test:List:testEvent', mockListener);
 
         render(

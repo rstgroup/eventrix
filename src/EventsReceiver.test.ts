@@ -11,7 +11,7 @@ describe('EventsReceiver', () => {
         expect(eventsReceiver.getEventsNames()).toEqual(['testEvent']);
     });
     it('should handle event by receiver', () => {
-        const receiver = jest.fn();
+        const receiver = vi.fn();
         const stateManager: any = {};
         const eventsReceiver = new EventsReceiver('testEvent', receiver);
         eventsReceiver.handleEvent('testEvent', {}, stateManager);
@@ -23,10 +23,10 @@ describe('fetchToStateReceiver', () => {
     let stateManager: any = {};
     beforeEach(() => {
         stateManager = {
-            setState: jest.fn(),
-            getState: jest.fn(() => ({})),
+            setState: vi.fn(),
+            getState: vi.fn(() => ({})),
             eventsEmitter: {
-                emit: jest.fn(),
+                emit: vi.fn(),
             },
         };
     });
@@ -72,10 +72,10 @@ describe('fetchStateReceiver', () => {
     let stateManager: any = {};
     beforeEach(() => {
         stateManager = {
-            setState: jest.fn(),
-            getState: jest.fn(() => ({})),
+            setState: vi.fn(),
+            getState: vi.fn(() => ({})),
             eventsEmitter: {
-                emit: jest.fn(),
+                emit: vi.fn(),
             },
         };
     });
@@ -127,7 +127,7 @@ describe('fetchStateReceiver', () => {
 describe('fetchHandler', () => {
     let emit: EmitI;
     beforeEach(() => {
-        emit = jest.fn();
+        emit = vi.fn();
     });
     it('should fetch data and emit success event when promise resolved', () => {
         const fetchResponse = { test: 'test' };

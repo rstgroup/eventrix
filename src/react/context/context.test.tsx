@@ -15,7 +15,7 @@ describe('context with default eventrix instance', () => {
 
     it('should invoke callback when event emitted', () => {
         const eventrixInstance = defaultEventrixInstance;
-        const callbackMock = jest.fn();
+        const callbackMock = vi.fn();
 
         render(
             <TestContainer>
@@ -28,7 +28,7 @@ describe('context with default eventrix instance', () => {
 
     it('should invoke callback when event emitted with scope', () => {
         const eventrixInstance = defaultEventrixInstance;
-        const callbackMock = jest.fn();
+        const callbackMock = vi.fn();
 
         render(
             <TestContainer>
@@ -43,7 +43,7 @@ describe('context with default eventrix instance', () => {
 
     it('should invoke callback when event emitted with deep scope', () => {
         const eventrixInstance = defaultEventrixInstance;
-        const callbackMock = jest.fn();
+        const callbackMock = vi.fn();
 
         render(
             <TestContainer>

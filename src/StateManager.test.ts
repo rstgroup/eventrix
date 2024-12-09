@@ -4,13 +4,13 @@ import EventsReceiver from './EventsReceiver';
 describe('StateManager', () => {
     let eventsEmitter: any = {
         listeners: {},
-        listen: jest.fn(),
-        unlisten: jest.fn(),
-        useStore: jest.fn(),
-        emit: jest.fn(),
-        emitWild: jest.fn(),
-        getEventData: jest.fn(),
-        runListeners: jest.fn(),
+        listen: vi.fn(),
+        unlisten: vi.fn(),
+        useStore: vi.fn(),
+        emit: vi.fn(),
+        emitWild: vi.fn(),
+        getEventData: vi.fn(),
+        runListeners: vi.fn(),
     };
     let stateManager = new StateManager(eventsEmitter);
     let initialState: object;
@@ -23,15 +23,15 @@ describe('StateManager', () => {
         };
         eventsEmitter = {
             listeners: {},
-            listen: jest.fn(),
-            unlisten: jest.fn(),
-            useStore: jest.fn(),
-            emit: jest.fn(),
-            emitWild: jest.fn(),
-            getEventData: jest.fn(),
-            runListeners: jest.fn(),
+            listen: vi.fn(),
+            unlisten: vi.fn(),
+            useStore: vi.fn(),
+            emit: vi.fn(),
+            emitWild: vi.fn(),
+            getEventData: vi.fn(),
+            runListeners: vi.fn(),
         };
-        eventsReceiver = jest.fn(() => ({ testData: {} }));
+        eventsReceiver = vi.fn(() => ({ testData: {} }));
         eventsReceivers = [new EventsReceiver(['testEvent', 'secondTestEvent'], eventsReceiver)];
         stateManager = new StateManager(eventsEmitter, initialState, eventsReceivers);
     });
@@ -52,15 +52,15 @@ describe('StateManager', () => {
         });
     });
     it('should register events receiver only one time', () => {
-        console.warn = jest.fn();
+        console.warn = vi.fn();
         stateManager.useReceiver(eventsReceivers[0]);
         expect(console.warn).toHaveBeenCalledWith(`Store->registerReceiver - "testEvent" events receiver is already registered`);
         expect(console.warn).toHaveBeenCalledWith(`Store->registerReceiver - "secondTestEvent" events receiver is already registered`);
     });
     it('should not register events receiver when dont have handleEvent function', () => {
-        console.warn = jest.fn();
+        console.warn = vi.fn();
         // @ts-ignore
-        stateManager.useReceiver({ getEventsNames: () => ['testEvent', 'secondTestEvent'], receiver: jest.fn(), eventsNames: [] });
+        stateManager.useReceiver({ getEventsNames: () => ['testEvent', 'secondTestEvent'], receiver: vi.fn(), eventsNames: [] });
         expect(console.warn).toHaveBeenCalledWith(`Store->registerReceiver - "testEvent" receiver is not a function`);
         expect(console.warn).toHaveBeenCalledWith(`Store->registerReceiver - "secondTestEvent" receiver is not a function`);
     });
@@ -73,12 +73,12 @@ describe('StateManager', () => {
         });
     });
     it('should not unregister events receiver when event not exists', () => {
-        console.warn = jest.fn();
-        stateManager.removeReceiver({ getEventsNames: () => ['testEvent2'], handleEvent: jest.fn(), receiver: jest.fn(), eventsNames: [] });
+        console.warn = vi.fn();
+        stateManager.removeReceiver({ getEventsNames: () => ['testEvent2'], handleEvent: vi.fn(), receiver: vi.fn(), eventsNames: [] });
         expect(console.warn).toHaveBeenCalledWith(`Store->unregisterReceiver - "testEvent2" event not registered`);
     });
     it('should not unregister events receiver when event receivers are empty array', () => {
-        console.warn = jest.fn();
+        console.warn = vi.fn();
         stateManager.receivers = {
             testEvent: [],
             secondTestEvent: [],
@@ -88,8 +88,8 @@ describe('StateManager', () => {
         expect(console.warn).toHaveBeenCalledWith(`Store->unregisterReceiver - "secondTestEvent" event dont have registered receiver`);
     });
     it('should not unregister events receiver when event receiver not registered', () => {
-        console.warn = jest.fn();
-        stateManager.removeReceiver({ getEventsNames: () => ['testEvent'], handleEvent: jest.fn(), receiver: jest.fn(), eventsNames: [] });
+        console.warn = vi.fn();
+        stateManager.removeReceiver({ getEventsNames: () => ['testEvent'], handleEvent: vi.fn(), receiver: vi.fn(), eventsNames: [] });
         expect(console.warn).toHaveBeenCalledWith(`Store->unregisterReceiver - "testEvent" receiver not exists`);
     });
     it('should emit change state event for parents and children', () => {
@@ -114,7 +114,7 @@ describe('StateManager', () => {
         expect(stateManager.getParentPath('a')).toEqual('');
     });
     it('should handle promise from events receivers', () => {
-        const receiver = jest.fn(() => Promise.resolve({ asyncData: {} }));
+        const receiver = vi.fn(() => Promise.resolve({ asyncData: {} }));
         const asyncReceiver = new EventsReceiver('testEvent', receiver);
         stateManager.useReceiver(asyncReceiver);
         return stateManager.runReceivers('testEvent', { eventData: {} }).then((results: any) => {

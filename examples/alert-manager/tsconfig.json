@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "eventrix": ["../../src/index.ts"]
+    },
+    "baseUrl": "./",
+    "rootDir": "./",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "jsx": "react-jsx",
+    "types": ["vite/client", "node", "react"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "useDefineForClassFields": true,
+    "strict": true,
+    "skipLibCheck": false,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": false,
+    "forceConsistentCasingInFileNames": true
+
+  },
+}

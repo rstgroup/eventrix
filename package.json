@@ -2,18 +2,27 @@
   "name": "eventrix",
   "version": "2.10.2",
   "description": "A system for managing the state of the application based on the events broadcast in the application",
-  "main": "dist/index.js",
-  "repository": "https://github.com/rstgroup/eventrix",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rstgroup/eventrix.git"
+  },
+  "files": [
+    "dist"
+  ],
   "homepage": "https://eventrix.js.org",
   "scripts": {
-    "test": "jest --runInBand",
-    "test:watch": "jest --watch",
-    "test:clean": "jest --clearCache",
-    "build": "webpack --config webpack-prod.config.js --stats-error-details",
-    "coverage": "jest --coverage --runInBand",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:clean": "vitest --clearCache",
+    "build": "vite build",
+    "coverage": "vitest run --coverage",
     "coverage:report": "cat ./coverage/lcov.info | coveralls",
-    "lint": "eslint src --ext ts,tsx,js",
-    "lint:fix": "eslint src --ext ts,tsx,js --fix "
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "pre-commit": [
     "lint",
@@ -31,6 +40,7 @@
     "use-sync-external-store": "^1.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.16.0",
     "@babel/cli": "^7.7.0",
     "@babel/core": "^7.7.0",
     "@babel/plugin-proposal-class-properties": "^7.2.1",
@@ -51,34 +61,35 @@
     "@babel/traverse": "^7.7.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.15 || ^13.1.1",
-    "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.170",
     "@types/react": "^17.0.11 || ^18.0.0",
     "@types/use-sync-external-store": "0.0.3",
-    "@typescript-eslint/eslint-plugin": "^4.28.0",
-    "@typescript-eslint/parser": "^4.28.0",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "^8.17.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^2.1.8",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^27.5.1",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^4.0.0",
     "coveralls": "^3.1.0",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^6.14.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jest": "^25.0.1",
-    "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-react": "^7.21.5",
+    "eslint": "^9.16.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsdoc": "^50.6.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.2",
     "jest": "^27.5.1",
     "loader-utils": "^2.0.0",
     "pre-commit": "^1.2.2",
-    "prettier": "^2.4.1",
-    "ts-jest": "^27.1.4",
+    "prettier": "^3.4.2",
     "ts-loader": "^9.2.3",
-    "typescript": "^4.2.4",
-    "webpack": "^5.31.2",
-    "webpack-cli": "^4.6.0"
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.17.0",
+    "vite": "^6.0.1",
+    "vite-plugin-dts": "^4.3.0",
+    "vitest": "^2.1.8"
   },
-  "types": "./types/index.d.ts",
   "jest": {
     "testEnvironment": "jsdom",
     "moduleFileExtensions": [
@@ -96,5 +107,12 @@
       }
     },
     "collectCoverage": true
+  },
+  "directories": {
+    "lib": "dist",
+    "test": "__tests__"
+  },
+  "bugs": {
+    "url": "https://github.com/rstgroup/eventrix/issues"
   }
 }

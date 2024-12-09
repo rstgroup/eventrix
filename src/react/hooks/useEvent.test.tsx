@@ -14,7 +14,7 @@ describe('useEvent', () => {
 
     it('should invoke callback when event emitted', () => {
         const eventrixInstance = new Eventrix({});
-        const callbackMock = jest.fn();
+        const callbackMock = vi.fn();
 
         render(
             <TestContainer eventrix={eventrixInstance}>
@@ -27,7 +27,7 @@ describe('useEvent', () => {
 
     it('should invoke callback when event emitted with scope', () => {
         const eventrixInstance = new Eventrix({});
-        const callbackMock = jest.fn();
+        const callbackMock = vi.fn();
 
         render(
             <TestContainer eventrix={eventrixInstance}>
@@ -42,7 +42,7 @@ describe('useEvent', () => {
 
     it('should invoke callback when event emitted with deep scope', () => {
         const eventrixInstance = new Eventrix({});
-        const callbackMock = jest.fn();
+        const callbackMock = vi.fn();
 
         render(
             <TestContainer eventrix={eventrixInstance}>

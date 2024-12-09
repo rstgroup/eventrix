@@ -24,7 +24,7 @@ describe('stateListener', () => {
 
     it('should invoke callback when state changed', () => {
         const eventrixInstance = new Eventrix({});
-        const callbackMock = jest.fn();
+        const callbackMock = vi.fn();
 
         render(
             <TestContainer eventrix={eventrixInstance}>

@@ -14,7 +14,7 @@ describe('useEventrix', () => {
             }
         }
         const eventrix = new Eventrix({});
-        const testClassInstance = new FetchToStateTestClass({ eventrix, ajax: jest.fn() });
+        const testClassInstance = new FetchToStateTestClass({ eventrix, ajax: vi.fn() });
         expect(testClassInstance.eventrix).toEqual(eventrix);
     });
 });

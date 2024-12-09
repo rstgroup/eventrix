@@ -1,0 +1,82 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.logo {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.logo img {
+  height: 80px;
+}
+
+.usersList {
+  display: block;
+  margin-top: 15px;
+}
+
+.usersItem {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+
+.userItemColl {
+  padding: 15px;
+  width: 120px;
+}
+
+.usersListHeader {
+  display: flex;
+}
+
+.usersListHeaderColl {
+  padding: 15px;
+  background: #333;
+  color: #fff;
+  width: 120px;
+}
+
+.usersListPlaceholder {
+  padding: 50px;
+}
+
+.inputWrapper {
+  text-align: left;
+  margin-top: 10px;
+}
+
+.inputWrapper label {
+  display: inline-block;
+  margin-right: 10px;
+  text-align: left;
+  padding-left: 5px;
+  width: 100px;
+}
+
+.inputWrapper input {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.formContainer {
+  display: flex;
+}
+
+.formContainer button {
+  margin-top: 15px;
+}
+
+.formContainer > div {
+  width: 45%;
+}
+
+.userPreview {
+  padding: 20px;
+  background: #ddd;
+  width: 100%;
+  height: 90%;
+  text-align: left;
+}

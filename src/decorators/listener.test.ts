@@ -8,7 +8,7 @@ describe('listener', () => {
     const GET_LIST_EVENT_NAME = 'Test:loadList';
     const EXTEND_LIST_EVENT_NAME = 'Test:extendList';
     it('should invoke listener when get list event is emitted', () => {
-        const callback = jest.fn();
+        const callback = vi.fn();
         const data: string[] = ['test'];
 
         @useEventrix
@@ -33,8 +33,8 @@ describe('listener', () => {
     });
 
     it('should invoke listener when extend list event is emitted', () => {
-        const callback = jest.fn();
-        const extendCallback = jest.fn();
+        const callback = vi.fn();
+        const extendCallback = vi.fn();
         const extendEventData: string[] = ['test', 'test2'];
 
         @useEventrix

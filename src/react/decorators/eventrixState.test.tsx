@@ -49,7 +49,7 @@ describe('eventrixState', () => {
                 bar: 'empty',
             },
         });
-        const callbackMock = jest.fn();
+        const callbackMock = vi.fn();
 
         const { getByTestId } = render(
             <TestContainer eventrix={eventrixInstance}>
@@ -69,7 +69,7 @@ describe('eventrixState', () => {
                 bar: 'empty',
             },
         });
-        const callbackMock = jest.fn();
+        const callbackMock = vi.fn();
 
         const { getByTestId } = render(
             <TestContainer eventrix={eventrixInstance}>
