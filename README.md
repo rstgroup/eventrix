@@ -1,23 +1,23 @@
 ![Eventrix](assets/logo_br.svg)
 
-STATE MANAGEMENT FOR **REACT** AND **REACT NATIVE** APPS
+State Management for **React** and **React Native** Applications
 
 [![Build Status](https://travis-ci.org/rstgroup/eventrix.svg?branch=master)](https://travis-ci.org/rstgroup/eventrix)
 [![npm](https://img.shields.io/npm/l/eventrix.svg)](https://npmjs.org/package/eventrix)
 [![npm](https://img.shields.io/npm/v/eventrix.svg)](https://npmjs.org/package/eventrix)
 
-### Support
+# Support
 - React
 - React Native
 - SSR (Next.js)
 
-### Installation
+# Installation
 
 ```bash
 $ npm install eventrix --save
 ```
 
-### Documentation
+# Documentation
 
 [**Get started**](https://eventrix.gitbook.io/eventrix/getting-started)
 |
@@ -27,14 +27,15 @@ $ npm install eventrix --save
 |
 [**Demo**](https://eventrix.gitbook.io/eventrix/demo)
 
-### Home page
+# Home page
 
 We have website dedicated to eventrix. Go to [**eventrix.io**](https://eventrix.io) and see what eventrix has to offer.
 
-### Quickstart
+# Quickstart
 
-eventrixStore.js
 ```js
+// eventrixStore.js
+
 import { Eventrix } from 'eventrix';
 import receiversList from './receivers';
 
@@ -46,8 +47,9 @@ const eventrixStore = new Eventrix(initialState, receiversList);
 export default eventrixStore;
 ```
 
-App.jsx
 ```jsx harmony
+// App.tsx
+
 import { StrictMode } from "react";
 import ReactDOM from "react-dom";
 import { EventrixProvider } from 'eventrix';
@@ -64,8 +66,9 @@ ReactDOM.render(
 );
 ```
 
-UsersList.jsx
 ```jsx harmony
+// UsersList.jsx
+
 import React, { useCallback } from 'react';
 import { useEventrixState, useEmit } from 'eventrix';
 
@@ -88,8 +91,9 @@ const UsersList = () => {
 }
 ```
 
-receivers.js
 ```js
+// receivers.js
+
 import axios from 'axios';
 import { EventsReceiver } from 'eventrix';
 
@@ -105,7 +109,9 @@ const receiversList = [fetchUsersReceiver];
 export default receiversList;
 ```
 
-### About
+For more usage examples see the `examples` directory.
+
+# About
 
 [Eventrix](https://eventrix.io/) is a scaling and predictable JS library for state managing and centralizing application global state.
 
@@ -131,17 +137,32 @@ Greater control of data flow thanks to additional tools (devtools) and a small t
 [Eventrix DevTools](https://github.com/rstgroup/eventrix-devtools)
 
 
-### Contribute
+# Contribute
 
 - use eslint rules
 - write clean code
 - unit tests (min 85% of your code should be tested)
-- [code of conduct](https://github.com/rstgroup/eventrix/blob/master/docs/code_of_conduct.md)
 
-### License
+## Development
+
+To start development, clone the repository and install the dependencies. Then you can develop the library using the example application.
+
+```bash
+$ git clone https://github.com/rstgroup/eventrix.git
+$ npm install
+
+# Run the example application
+cd examples/todo-list
+npm install
+npm run dev
+```
+
+For more example applications see the `examples` directory.
+
+# License
 
 eventrix package are [MIT licensed](https://github.com/rstgroup/eventrix/blob/master/LICENSE)
 
-### Powered by
+# Powered by
 
-[RST Software Masters](https://rst.software) look on RST [Github](https://github.com/rstgroup)
+[RST Software](https://rst.software), see our [Github](https://github.com/rstgroup)

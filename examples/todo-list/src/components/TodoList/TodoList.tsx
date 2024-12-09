@@ -15,7 +15,7 @@ const TodoList: React.FC = () => {
                     All
                 </div>
                 <div className={`status-button ${statusFilter === 'todo' ? 'active' : ''}`} onClick={() => setStatusFilter('todo')}>
-                    Todo
+                    To do
                 </div>
                 <div className={`status-button ${statusFilter === 'done' ? 'active' : ''}`} onClick={() => setStatusFilter('done')}>
                     Done
