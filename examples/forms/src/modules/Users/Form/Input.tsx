@@ -9,6 +9,7 @@ interface InputProps {
 
 const Input: React.FC<InputProps> = ({ name, label, placeholder }) => {
     const [value, setValue] = useEventrixState(`user.${name}`);
+
     return (
         <div className="inputWrapper">
             <label>{label || placeholder}</label>

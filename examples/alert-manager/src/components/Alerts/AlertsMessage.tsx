@@ -1,7 +1,7 @@
 import Alert from '@mui/material/Alert';
 import { useEmit } from 'eventrix';
 import React, { useEffect } from 'react';
-import { ALERTS_REMOVE } from '../../appEvents/alerts';
+import { ALERTS_REMOVE } from '../../alertEvents';
 import { AlertTypes } from '../../types/alerts';
 
 type AlertMessageProps = {

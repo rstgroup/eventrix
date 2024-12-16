@@ -1,7 +1,7 @@
 import { useEvent } from 'eventrix';
 import React, { useState } from 'react';
 import { Stack } from '@mui/material';
-import { ALERTS_REMOVE, ALERTS_SHOW_ERROR, ALERTS_SHOW_INFO, ALERTS_SHOW_SUCCESS, ALERTS_SHOW_WARNING } from '../../appEvents/alerts';
+import { ALERTS_REMOVE, ALERTS_SHOW_ERROR, ALERTS_SHOW_INFO, ALERTS_SHOW_SUCCESS, ALERTS_SHOW_WARNING } from '../../alertEvents';
 import { Alert, AlertEventPayload, AlertTypes } from '../../types/alerts';
 import AlertMessage from './AlertsMessage';
 

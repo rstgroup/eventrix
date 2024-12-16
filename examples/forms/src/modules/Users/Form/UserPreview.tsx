@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useEventrixState, useEvent } from 'eventrix';
-import { CHANGE_PREVIEW_COLOR } from './Form';
+import { USERS_CHANGE_PREVIEW_COLOR } from '../userEvents';
 
 const UserPreview = () => {
     const [color, setColor] = useState('black');
     const [user] = useEventrixState('user');
-    useEvent(CHANGE_PREVIEW_COLOR, (data) => {
+
+    useEvent(USERS_CHANGE_PREVIEW_COLOR, (data) => {
         setColor(data.color);
     });
+
     return (
         <div className="userPreview">
             <i>

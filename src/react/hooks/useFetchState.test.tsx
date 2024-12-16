@@ -1,5 +1,5 @@
-import React from 'react';
-import { render, fireEvent, waitFor, act } from '@testing-library/react';
+import React, { act } from 'react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { EventrixProvider } from '../context';
 import Eventrix from '../../Eventrix';
 import useFetchState from './useFetchState';

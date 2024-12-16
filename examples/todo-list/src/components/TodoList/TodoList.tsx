@@ -8,6 +8,7 @@ const TodoList: React.FC = () => {
     const [tasks] = useEventrixState<any[]>('tasks');
     const [statusFilter, setStatusFilter] = useEventrixState('filter.status');
     const tasksList = statusFilter ? tasks.filter((task) => task.status === statusFilter) : tasks;
+
     return (
         <div>
             <div className="filters">

@@ -1,6 +1,6 @@
 import React from 'react';
-import { MARK_TASK_AS_DONE_EVENT_NAME, MARK_TASK_AS_TODO_EVENT_NAME, REMOVE_TASK_EVENT_NAME } from '../eventrix/tasks';
 import { useEmit } from 'eventrix';
+import { MARK_TASK_AS_DONE_EVENT_NAME, MARK_TASK_AS_TODO_EVENT_NAME, REMOVE_TASK_EVENT_NAME } from '../taskEvents';
 
 interface TaskProps {
     task: {
@@ -10,7 +10,7 @@ interface TaskProps {
     };
 }
 
-const Task: React.FC<TaskProps> = ({ task }) => {
+const Task = ({ task }: TaskProps) => {
     const emit = useEmit();
     return (
         <div className="list-item">

@@ -2,7 +2,7 @@ import useEventrix from './useEventrix';
 import listener from './listener';
 import Eventrix from '../Eventrix';
 import { EventrixI } from '../interfaces';
-import { act } from '@testing-library/react';
+import { act } from 'react';
 
 describe('listener', () => {
     const GET_LIST_EVENT_NAME = 'Test:loadList';

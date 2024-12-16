@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { act, render } from '@testing-library/react';
+import React, { useEffect, act } from 'react';
+import { render } from '@testing-library/react';
 import { EventrixProvider } from '../context';
 import Eventrix from '../../Eventrix';
 import useEmit from './useEmit';

@@ -2,7 +2,7 @@ import { useEmit } from 'eventrix';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { AlertEventPayload } from '../types/alerts';
-import { ALERTS_SHOW_ERROR, ALERTS_SHOW_INFO, ALERTS_SHOW_SUCCESS, ALERTS_SHOW_WARNING } from '../appEvents/alerts';
+import { ALERTS_SHOW_ERROR, ALERTS_SHOW_INFO, ALERTS_SHOW_SUCCESS, ALERTS_SHOW_WARNING } from '../alertEvents';
 import React from 'react';
 
 const Buttons = () => {

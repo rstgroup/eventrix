@@ -1,10 +1,6 @@
 import findIndex from 'lodash/findIndex';
 import { EventsReceiver } from 'eventrix';
-
-export const CREATE_TASK_EVENT_NAME = 'tasks:create';
-export const REMOVE_TASK_EVENT_NAME = 'tasks:remove';
-export const MARK_TASK_AS_DONE_EVENT_NAME = 'tasks:markAsDone';
-export const MARK_TASK_AS_TODO_EVENT_NAME = 'tasks:markAsTodo';
+import { CREATE_TASK_EVENT_NAME, MARK_TASK_AS_DONE_EVENT_NAME, MARK_TASK_AS_TODO_EVENT_NAME, REMOVE_TASK_EVENT_NAME } from '../taskEvents';
 
 const createTaskReceiver = new EventsReceiver(CREATE_TASK_EVENT_NAME, (eventName, { task }, stateManager) => {
     const tasks = stateManager.getState('tasks');
