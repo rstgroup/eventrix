@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef, useEffect, useRef } from 'react';
 import { render } from '@testing-library/react';
 import { EventrixProvider } from '../context';
 import Eventrix from '../../Eventrix';
@@ -28,5 +28,32 @@ describe('withEventrix', () => {
             </TestContainer>,
         );
         expect(mockedCallback).toHaveBeenCalled();
+    });
+
+    const SimpleComponent = forwardRef<HTMLDivElement, { children?: React.ReactNode }>((props, ref) => (
+        <div ref={ref}>{props.children}</div>
+    ));
+
+    const WrappedComponent = withEventrix(SimpleComponent);
+
+    it('should forward ref to wrapped component', () => {
+        const eventrixInstance = new Eventrix({});
+
+        const TestComponent = () => {
+            const ref = useRef<HTMLDivElement>(null);
+
+            useEffect(() => {
+                expect(ref.current).not.toBeNull();
+                expect(ref.current?.textContent).toBe('Test Content');
+            }, []);
+
+            return (
+                <EventrixProvider eventrix={eventrixInstance}>
+                    <WrappedComponent ref={ref}>Test Content</WrappedComponent>
+                </EventrixProvider>
+            );
+        };
+
+        render(<TestComponent />);
     });
 });
