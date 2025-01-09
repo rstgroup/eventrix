@@ -6,9 +6,16 @@ import path from 'path';
 import react from '@vitejs/plugin-react';
 
 emptyDir(resolve(__dirname, 'dist'));
+emptyDir(resolve(__dirname, 'types'));
 
 export default defineConfig({
-    plugins: [dts({ rollupTypes: true }), react()],
+    plugins: [
+        dts({
+            rollupTypes: false,
+            outDir: 'types',
+        }),
+        react(),
+    ],
     base: './',
     build: {
         sourcemap: true,

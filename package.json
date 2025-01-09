@@ -4,7 +4,7 @@
   "description": "A system for managing the state of the application based on the events broadcast in the application",
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",
-  "types": "dist/index.d.ts",
+  "types": "types/index.d.ts",
   "type": "module",
   "repository": {
     "type": "git",
@@ -40,7 +40,6 @@
     "use-sync-external-store": "^1.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.16.0",
     "@babel/cli": "^7.7.0",
     "@babel/core": "^7.7.0",
     "@babel/plugin-proposal-class-properties": "^7.2.1",
@@ -59,6 +58,7 @@
     "@babel/preset-typescript": "^7.13.0",
     "@babel/runtime": "^7.6.3",
     "@babel/traverse": "^7.7.0",
+    "@eslint/js": "^9.16.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.15 || ^13.1.1",
     "@types/lodash": "^4.14.170",
