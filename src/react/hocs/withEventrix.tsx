@@ -1,13 +1,17 @@
-import React, { useContext } from 'react';
+import React, { forwardRef, ForwardRefExoticComponent, PropsWithoutRef, ReactNode, RefAttributes, useContext } from 'react';
 import { EventrixContext } from '../context';
 import { EventrixI } from '../../interfaces';
 
-function withEventrix<PropsI>(BaseComponent: React.ComponentType<PropsI> | React.FC<PropsI>): React.FC<PropsI> {
-     
-    return (props: PropsI & { eventrix: EventrixI }): JSX.Element => {
-        const context = useContext(EventrixContext);
-        return <BaseComponent {...props} eventrix={context.eventrix} />;
-    };
+function withEventrix<PropsI, RefI = unknown>(
+    BaseComponent: React.ComponentType<PropsI & { eventrix: EventrixI }>,
+    Context = EventrixContext,
+): ForwardRefExoticComponent<PropsWithoutRef<PropsI> & RefAttributes<RefI>> {
+    return forwardRef<RefI, PropsI>((props: PropsWithoutRef<PropsI>, ref): ReactNode => {
+        const context = useContext(Context);
+
+        // @ts-ignore
+        return <BaseComponent {...props} ref={ref} eventrix={context.eventrix} />;
+    });
 }
 
 export default withEventrix;

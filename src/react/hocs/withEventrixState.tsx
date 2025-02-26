@@ -2,6 +2,7 @@ import * as React from 'react';
 import { EventrixContext } from '../context';
 import { EventrixContextI, EventsListenerI, UnregisterListenerMethod } from '../../interfaces';
 import { registerListeners } from '../../helpers';
+import { forwardRef, ForwardRefExoticComponent, PropsWithoutRef, RefAttributes, useEffect } from 'react';
 
 interface PropsI {
     [key: string]: any;
@@ -20,56 +21,47 @@ interface ListenersI {
 }
 
 interface MapStateToPropsI<StatePropsI = StateI, ComponentPropsI = PropsI> {
-    (state: StateI, props?: ComponentPropsI): StatePropsI;
+    (state: StateI, props?: PropsWithoutRef<ComponentPropsI>): StatePropsI;
 }
 
-function withEventrixState<StatePropsI = StateI, ComponentPropsI = PropsI>(
+function withEventrixState<StatePropsI = StateI, ComponentPropsI = PropsI, RefI = unknown>(
     BaseComponent: React.ComponentType<ComponentPropsI>,
-    stateNames: StateNamesMethodI<ComponentPropsI> | string[] | string,
+    stateNames: StateNamesMethodI<PropsWithoutRef<ComponentPropsI>> | string[] | string,
     mapStateToProps?: MapStateToPropsI<StatePropsI, ComponentPropsI>,
     Context = EventrixContext,
-): React.ComponentType<ComponentPropsI> {
-    return class WithEventrixState extends React.Component<ComponentPropsI, StateI> {
-        static contextType = Context;
-        context: EventrixContextI;
-        state: StateI = {};
-        stateNames: string[] = [];
-        listeners: ListenersI = {};
-        unregisterListeners: {
-            [key: string]: UnregisterListenerMethod;
-        } = {};
+): ForwardRefExoticComponent<PropsWithoutRef<PropsI> & RefAttributes<RefI>> {
+    return forwardRef<RefI, ComponentPropsI>((props: PropsWithoutRef<ComponentPropsI>, ref) => {
+        const context = React.useContext(Context) as EventrixContextI;
+        const [state, setState] = React.useState<StateI>({});
+        const stateNamesArray = getStateNames(props);
 
-        constructor(props: ComponentPropsI, context: EventrixContextI) {
-            super(props, context);
-            this.onStateUpdate = this.onStateUpdate.bind(this);
-            this.getStateNames().forEach((stateName) => {
-                this.state[stateName] = context.eventrix.getState(stateName) || '';
-                this.listeners[stateName] = () => this.onStateUpdate(stateName);
+        useEffect(() => {
+            const listeners: ListenersI = {};
+            const unregisterListeners: { [key: string]: UnregisterListenerMethod } = {};
+
+            stateNamesArray.forEach((stateName) => {
+                listeners[stateName] = () => onStateUpdate(stateName);
+                unregisterListeners[stateName] = registerListeners(context.eventrix, stateName, listeners[stateName]);
             });
+
+            refreshState();
+
+            return () => {
+                stateNamesArray.forEach((stateName) => {
+                    const unregisterMethod = unregisterListeners[stateName];
+                    unregisterMethod();
+                });
+            };
+        }, [props]);
+
+        function onStateUpdate(stateName: string) {
+            const newState = context.eventrix.getState(stateName);
+            setState((prevState) => ({ ...prevState, [stateName]: newState }));
         }
 
-        componentDidMount() {
-            this.getStateNames().forEach((stateName: string) => {
-                this.unregisterListeners[stateName] = registerListeners(this.context.eventrix, stateName, this.listeners[stateName]);
-            });
-            this.refreshState();
-        }
-
-        componentWillUnmount() {
-            this.getStateNames().forEach((stateName) => {
-                const unregisterMethod = this.unregisterListeners[stateName];
-                unregisterMethod();
-            });
-        }
-
-        onStateUpdate(stateName: string) {
-            const newState = this.context.eventrix.getState(stateName);
-            return this.setState({ [stateName]: newState });
-        }
-
-        getStateNames(): string[] {
+        function getStateNames(props: PropsWithoutRef<ComponentPropsI>): string[] {
             if (typeof stateNames === 'function') {
-                return stateNames(this.props);
+                return stateNames(props);
             }
             if (Array.isArray(stateNames)) {
                 return stateNames;
@@ -80,32 +72,31 @@ function withEventrixState<StatePropsI = StateI, ComponentPropsI = PropsI>(
             return [];
         }
 
-        getStateForProps(): StatePropsI | StateI {
+        function getStateForProps(): StatePropsI | StateI {
             if (mapStateToProps && typeof mapStateToProps === 'function') {
-                return mapStateToProps(this.state, this.props);
+                return mapStateToProps(state, props);
             }
-            return this.state;
+            return state;
         }
 
-        refreshState(): void {
-            let shouldRefreshState = false;
+        function refreshState(): void {
             const stateToRefresh: StateI = {};
-            this.getStateNames().forEach((stateName) => {
-                const currentState = this.context.eventrix.getState(stateName);
-                if (this.state[stateName] !== currentState) {
-                    shouldRefreshState = true;
+
+            stateNamesArray.forEach((stateName) => {
+                const currentState = context.eventrix.getState(stateName);
+                if (state[stateName] !== currentState) {
                     stateToRefresh[stateName] = currentState;
                 }
             });
-            if (shouldRefreshState) {
-                this.setState(stateToRefresh);
+
+            if (Object.keys(stateToRefresh).length > 0) {
+                setState(stateToRefresh);
             }
         }
 
-        render() {
-            return <BaseComponent {...this.props} {...this.getStateForProps()} />;
-        }
-    };
+        // @ts-ignore
+        return <BaseComponent {...props} {...getStateForProps()} ref={ref} />;
+    });
 }
 
 export default withEventrixState;
