@@ -16,7 +16,7 @@ export default tseslint.config(eslint.configs.recommended, tseslint.configs.reco
         },
     },
     files: ['src/**/*.{js,jsx,mjs,cjs,ts,tsx}'],
-    ignores: ['node_modules', 'dist', 'devtools'],
+    ignores: ['node_modules', 'dist', 'devtools', 'types'],
     plugins: {
         jsdoc: jsdoc,
         react: reactPlugin,
