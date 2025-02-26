@@ -11,8 +11,16 @@
     "url": "github:rstgroup/eventrix"
   },
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js"
+    }
+  },
   "homepage": "https://eventrix.js.org",
   "scripts": {
     "test": "vitest run",
@@ -29,7 +37,11 @@
     "test"
   ],
   "keywords": [
-    "store"
+    "store",
+    "state-management",
+    "events",
+    "react",
+    "typescript"
   ],
   "author": "Mariusz Przodała",
   "license": "MIT",
@@ -107,10 +119,6 @@
       }
     },
     "collectCoverage": true
-  },
-  "directories": {
-    "lib": "dist",
-    "test": "__tests__"
   },
   "bugs": {
     "url": "https://github.com/rstgroup/eventrix/issues"
