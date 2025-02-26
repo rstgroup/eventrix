@@ -70,7 +70,7 @@ describe('listener', () => {
 
     it('should invoke callback when event emitted', () => {
         const eventrixInstance = new Eventrix({});
-        const callbackMock = jest.fn();
+        const callbackMock = vi.fn();
 
         render(
             <TestContainer eventrix={eventrixInstance}>
@@ -83,8 +83,8 @@ describe('listener', () => {
 
     it('should invoke callback when event emitted and extend componentDidMount method', () => {
         const eventrixInstance = new Eventrix({});
-        const callbackMock = jest.fn();
-        const didMountCallbackMock = jest.fn();
+        const callbackMock = vi.fn();
+        const didMountCallbackMock = vi.fn();
 
         render(
             <TestContainer eventrix={eventrixInstance}>
@@ -98,8 +98,8 @@ describe('listener', () => {
 
     it('should invoke callback when event emitted and extend componentWillUnmount method', () => {
         const eventrixInstance = new Eventrix({});
-        const callbackMock = jest.fn();
-        const willUnmountCallbackMock = jest.fn();
+        const callbackMock = vi.fn();
+        const willUnmountCallbackMock = vi.fn();
 
         const { unmount } = render(
             <TestContainer eventrix={eventrixInstance}>

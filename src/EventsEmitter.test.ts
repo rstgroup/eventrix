@@ -3,11 +3,11 @@ import EventsEmitter from './EventsEmitter';
 describe('EventsEmitter', () => {
     describe('listen', () => {
         const eventsEmitter = new EventsEmitter();
-        const mockListener = jest.fn();
-        const mockListener2 = jest.fn();
+        const mockListener = vi.fn();
+        const mockListener2 = vi.fn();
 
         it('should not register listener if is not a function', () => {
-            console.warn = jest.fn();
+            console.warn = vi.fn();
             // @ts-ignore
             eventsEmitter.listen('testEvent', {});
             expect(eventsEmitter.listeners.testEvent).toHaveLength(0);
@@ -15,21 +15,21 @@ describe('EventsEmitter', () => {
         });
 
         it('should register listener', () => {
-            console.warn = jest.fn();
+            console.warn = vi.fn();
             eventsEmitter.listen('testEvent', mockListener);
             expect(eventsEmitter.listeners.testEvent).toHaveLength(1);
             expect(console.warn).not.toBeCalled();
         });
 
         it('should not register the same listener two times', () => {
-            console.warn = jest.fn();
+            console.warn = vi.fn();
             eventsEmitter.listen('testEvent', mockListener);
             expect(eventsEmitter.listeners.testEvent).toHaveLength(1);
             expect(console.warn).toBeCalledWith('EventsEmitter->listen - "testEvent" events listener is already registered');
         });
 
         it('should register next listeners if is not the same', () => {
-            console.warn = jest.fn();
+            console.warn = vi.fn();
             eventsEmitter.listen('testEvent', mockListener2);
             expect(eventsEmitter.listeners.testEvent).toHaveLength(2);
             expect(console.warn).not.toBeCalled();
@@ -37,19 +37,19 @@ describe('EventsEmitter', () => {
     });
     describe('unlisten', () => {
         const eventsEmitter = new EventsEmitter();
-        const mockListener = jest.fn();
-        const mockListener2 = jest.fn();
+        const mockListener = vi.fn();
+        const mockListener2 = vi.fn();
         eventsEmitter.listen('testEvent', mockListener);
 
         it('should not unregistered listener if event not exist', () => {
-            console.warn = jest.fn();
+            console.warn = vi.fn();
             eventsEmitter.unlisten('testEvent3', mockListener);
             expect(eventsEmitter.listeners.testEvent3).toBeUndefined();
             expect(console.warn).toBeCalledWith('EventsEmitter->unlisten - "testEvent3" event not registered');
         });
 
         it('should not unregistered listener if event dont have registred listeners', () => {
-            console.warn = jest.fn();
+            console.warn = vi.fn();
             // @ts-ignore
             eventsEmitter.listen('testEvent2', {});
             eventsEmitter.unlisten('testEvent2', mockListener);
@@ -58,14 +58,14 @@ describe('EventsEmitter', () => {
         });
 
         it('should not unregistered listener if not exists', () => {
-            console.warn = jest.fn();
+            console.warn = vi.fn();
             eventsEmitter.unlisten('testEvent', mockListener2);
             expect(eventsEmitter.listeners.testEvent).toHaveLength(1);
             expect(console.warn).toBeCalledWith('EventsEmitter->unlisten - "testEvent" listener not exists');
         });
 
         it('should unregistered listener', () => {
-            console.warn = jest.fn();
+            console.warn = vi.fn();
             eventsEmitter.unlisten('testEvent', mockListener);
             expect(eventsEmitter.listeners.testEvent).toBe(undefined);
             expect(console.warn).not.toBeCalled();
@@ -74,34 +74,34 @@ describe('EventsEmitter', () => {
 
     describe('emit', () => {
         let eventsEmitter = new EventsEmitter();
-        let mockListener = jest.fn();
+        let mockListener = vi.fn();
         let store: any = {
             state: {},
             receivers: {},
-            setState: jest.fn(),
-            getState: jest.fn(),
-            useReceiver: jest.fn(),
-            removeReceiver: jest.fn(),
-            getEventData: jest.fn(),
-            runListeners: jest.fn(),
-            emitWild: jest.fn(),
+            setState: vi.fn(),
+            getState: vi.fn(),
+            useReceiver: vi.fn(),
+            removeReceiver: vi.fn(),
+            getEventData: vi.fn(),
+            runListeners: vi.fn(),
+            emitWild: vi.fn(),
             runReceivers: () => ['test'],
         };
         beforeEach(() => {
             store = {
                 state: {},
                 receivers: {},
-                setState: jest.fn(),
-                getState: jest.fn(),
-                useReceiver: jest.fn(),
-                removeReceiver: jest.fn(),
-                getEventData: jest.fn(),
-                runListeners: jest.fn(),
-                emitWild: jest.fn(),
+                setState: vi.fn(),
+                getState: vi.fn(),
+                useReceiver: vi.fn(),
+                removeReceiver: vi.fn(),
+                getEventData: vi.fn(),
+                runListeners: vi.fn(),
+                emitWild: vi.fn(),
                 runReceivers: () => ['test'],
             };
             eventsEmitter = new EventsEmitter();
-            mockListener = jest.fn();
+            mockListener = vi.fn();
             eventsEmitter.listen('testEvent', mockListener);
         });
 
@@ -121,9 +121,9 @@ describe('EventsEmitter', () => {
         describe('emitWild', () => {
             it('should call all matched events listeners with data and set matched listeners cache', () => {
                 eventsEmitter.useStore(store);
-                const fooMockListener = jest.fn();
-                const fooBarMockListener = jest.fn();
-                const fooBarFooMockListener = jest.fn();
+                const fooMockListener = vi.fn();
+                const fooBarMockListener = vi.fn();
+                const fooBarFooMockListener = vi.fn();
                 eventsEmitter.listen('foo', fooMockListener);
                 eventsEmitter.listen('foo.bar', fooBarMockListener);
                 eventsEmitter.listen('foo.bar.foo', fooBarFooMockListener);
@@ -142,9 +142,9 @@ describe('EventsEmitter', () => {
 
             it('should use matched listeners cache when is available', () => {
                 eventsEmitter.useStore(store);
-                const fooMockListener = jest.fn();
-                const fooBarMockListener = jest.fn();
-                const fooBarFooMockListener = jest.fn();
+                const fooMockListener = vi.fn();
+                const fooBarMockListener = vi.fn();
+                const fooBarFooMockListener = vi.fn();
                 eventsEmitter.listen('foo', fooMockListener);
                 eventsEmitter.listen('foo.bar', fooBarMockListener);
                 eventsEmitter.listen('foo.bar.foo', fooBarFooMockListener);
@@ -165,13 +165,13 @@ describe('EventsEmitter', () => {
             const storeWithPromiseReceivers: any = {
                 state: {},
                 receivers: {},
-                setState: jest.fn(),
-                getState: jest.fn(),
-                useReceiver: jest.fn(),
-                removeReceiver: jest.fn(),
-                getEventData: jest.fn(),
-                runListeners: jest.fn(),
-                emitWild: jest.fn(),
+                setState: vi.fn(),
+                getState: vi.fn(),
+                useReceiver: vi.fn(),
+                removeReceiver: vi.fn(),
+                getEventData: vi.fn(),
+                runListeners: vi.fn(),
+                emitWild: vi.fn(),
                 runReceivers: () => Promise.resolve(['testResponse']),
             };
             eventsEmitter.useStore(storeWithPromiseReceivers);

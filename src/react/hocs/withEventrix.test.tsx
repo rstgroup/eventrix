@@ -19,7 +19,7 @@ describe('withEventrix', () => {
     const TestContainer = ({ eventrix, children }: any) => <EventrixProvider eventrix={eventrix}>{children}</EventrixProvider>;
 
     it('should run callback when component render', async () => {
-        const mockedCallback = jest.fn();
+        const mockedCallback = vi.fn();
         const eventrixInstance = new Eventrix({});
         eventrixInstance.listen('testEvent', mockedCallback);
         render(

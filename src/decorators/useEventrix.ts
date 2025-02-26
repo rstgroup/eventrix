@@ -23,6 +23,7 @@ export interface ServicesI {
 }
 
 export interface EventrixClassI {
+    // eslint-disable-next-line @typescript-eslint/no-misused-new
     new (services: ServicesI, ...args: any[]): EventrixClassI;
     eventrix?: EventrixI;
     eventrixReceiver?: ReceiverRegister[];

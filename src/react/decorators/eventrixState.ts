@@ -10,7 +10,7 @@ function eventrixState<StateI>(statePath: string, stateName: string): StateDecor
         return class extends Class {
             eventrixStates?: DecoratorEventrixStateI[];
             eventrixListeners?: DecoratorEventrixListenerI[];
-            // eslint-disable-next-line no-undef
+             
             [key: string]: any;
 
             constructor(props: any, context: any) {

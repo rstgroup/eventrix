@@ -14,10 +14,12 @@ const getStorageData = (storage: SyncStorage | AsyncStorage, storageKey: string)
     return JSON.parse(storageData || defaultData).data;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 const getStateKeys = <StateI extends {}>(storeState: StateI): StateKeysList<StateI> => {
     return Object.keys(storeState) as StateKeysList<StateI>;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 const connectPersistStore = <StateI extends {}>(eventrix: EventrixI, config: PersistStoreConfig<StateI>): void => {
     const {
         blackList,

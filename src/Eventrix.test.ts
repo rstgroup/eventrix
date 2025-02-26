@@ -24,9 +24,9 @@ describe('Eventrix', () => {
                 },
             },
         };
-        mockReceiver = jest.fn(() => 'testReceiverData');
+        mockReceiver = vi.fn(() => 'testReceiverData');
         eventsReceivers = [new EventsReceiver('getFoo', mockReceiver)];
-        mockListener = jest.fn();
+        mockListener = vi.fn();
         eventrix = new Eventrix(initialState, eventsReceivers);
     });
     it('should getState from store', () => {
@@ -84,14 +84,14 @@ describe('Eventrix', () => {
         expect(eventrix.getState('bar')).toEqual(newbarState);
     });
     it('should create new eventrix instance with event scope', () => {
-        const mockedListener = jest.fn();
+        const mockedListener = vi.fn();
         eventrix.listen('Test:setTest', mockedListener);
         const testInstance = eventrix.create({ eventScope: 'Test' });
         testInstance.emit('setTest', 'test');
         expect(mockedListener).toHaveBeenCalledWith('test', []);
     });
     it('should create new second level eventrix instance with event scope', () => {
-        const mockedListener = jest.fn();
+        const mockedListener = vi.fn();
         eventrix.listen('Test:List:setTest', mockedListener);
         const testInstance = eventrix.create({ eventScope: 'Test' });
         const testListInstance = testInstance.create({ eventScope: 'List' });
@@ -141,7 +141,7 @@ describe('Eventrix', () => {
             const eventsReceiver = new EventsReceiver(eventName, (name, data, store) => {
                 throw 'failedReceiver';
             });
-            const errorCallback = jest.fn();
+            const errorCallback = vi.fn();
             eventrix.onError(errorCallback);
             eventrix.useReceiver(eventsReceiver);
             return eventrix.emit(eventName, eventData).catch(() => {
@@ -157,7 +157,7 @@ describe('Eventrix', () => {
             const failedListener = () => {
                 throw 'failedListener';
             };
-            const errorCallback = jest.fn();
+            const errorCallback = vi.fn();
             eventrix.onError(errorCallback);
             eventrix.listen(eventName, failedListener);
             return eventrix.emit(eventName, eventData).catch(() => {

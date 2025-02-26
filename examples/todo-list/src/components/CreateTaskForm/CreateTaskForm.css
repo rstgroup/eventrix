@@ -1,0 +1,36 @@
+.taskFormWrapper {
+  display: block;
+  width: 100%;
+  background: #efefef;
+  padding: 10px;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 4px 4px 0 0;
+}
+
+.taskFormWrapper form {
+  display: flex;
+}
+
+.taskFormWrapper input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 4px 0 0 4px;
+  border: 1px solid #909090;
+  border-right: 0;
+}
+
+.taskFormWrapper button {
+  width: 120px;
+  padding: 8px 10px;
+  border-radius: 0 4px 4px 0;
+  background: #333;
+  color: #fff;
+  border: 1px solid #333;
+  cursor: pointer;
+}
+
+.taskFormWrapper button:hover {
+  background: #000;
+}

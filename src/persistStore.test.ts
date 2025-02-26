@@ -21,8 +21,8 @@ describe('persistStore', () => {
 
         beforeEach(() => {
             storage = {
-                setItem: jest.fn(),
-                getItem: jest.fn(() => ''),
+                setItem: vi.fn(),
+                getItem: vi.fn(() => ''),
             };
             initialState = {
                 a: 'a state',
@@ -117,8 +117,8 @@ describe('persistStore', () => {
 
         beforeEach(() => {
             storage = {
-                setItem: jest.fn(() => Promise.resolve()),
-                getItem: jest.fn(() => Promise.resolve('')),
+                setItem: vi.fn(() => Promise.resolve()),
+                getItem: vi.fn(() => Promise.resolve('')),
             };
             initialState = {
                 a: 'a state',
